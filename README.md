@@ -4,6 +4,13 @@ Joaquin &amp; Jacob Autonomous Mobile Robots Project
 # Lil' Github Tutorial
 Important commands to remember:
 
+
+connect to robot:
+
+ - "ssh pi@ip"
+ - password: pi
+ - type "yes"
+
 Push
 -"git add ."
 -"git commit -m "your commit message"
@@ -11,3 +18,4 @@ Push
 
 Pull
 -"git pull origin (name)"
+
