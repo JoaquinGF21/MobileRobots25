@@ -820,7 +820,7 @@ class control:
         Core of motion control.
 
         This method controls the movement of the robot. It is called from :meth:`lib_motion.control.turn` 
-        or :meth:`lib_motion.control.straight` and is not ment to be called directly. Four 
+        or :meth:`lib_motion.control.straight` and is not meant to be called directly. Four 
         digital PID controllers are used to make two cascade control loops, one cascade control loop
         for each wheel. Each cascade control loop has the same parameters (P/I/D parameters), so that 
         both wheels are controlled in the same way. Chosen default: Outer control loop is a PI 
