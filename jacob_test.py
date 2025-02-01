@@ -91,9 +91,33 @@ def move_straight(controller,speed,dist,tick_speed):
           time.sleep(controller.sampling_time -
                    ((time.time() - loop_time) % controller.sampling_time))
      return None
-# negative radius means curve to the left
-def move_curve(control,radius,radians,tick_speed):
+# direct will be left if negative
+#speed will be set at a percentage
+def move_curve(control,radius,radians,direct,speed,tick_speed):
+     controller.sampling_time = tick_speed
+     speed = speed/100
+     radius = radius/10
+
      central_dist = radians * radius
+     #refers to the individual circles created by the left and right wheel
+     #radians * radius(l/r)
+     dist_rw = radians * (radius - controller.width_robot())
+     dist_lw = radians * (radius + controller.width_robot())
+     #not (number of ticks)
+     not_r = dist_rw/controller.tick_length
+     not_l = dist_lw/controller.tick_length
+     
+     if radius < 0:
+          #spd (speed)
+          spd_rw = 1 * speed
+
+     else:
+          spd_lw = 1 * speed
 
      controller.sampling_time = tick_speed
+
+
+
+
+
 move_straight(controller,0.5,100,0.2)
