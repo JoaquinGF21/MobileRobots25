@@ -4,7 +4,6 @@ import pigpio
 import signal
 import threading
 import math
-import math.pi as pi
 
 pigpi = pigpio.pi()
 
@@ -91,33 +90,89 @@ def move_straight(controller,speed,dist,tick_speed):
           time.sleep(controller.sampling_time -
                    ((time.time() - loop_time) % controller.sampling_time))
      return None
-# direct will be left if negative
+#direct will be right if negative
 #speed will be set at a percentage
-def move_curve(control,radius,radians,direct,speed,tick_speed):
+def move_curve(control,radius,degrees,direct,speed,tick_speed):
+     radians = degrees *(math.pi/180)
      controller.sampling_time = tick_speed
      speed = speed/100
      radius = radius/10
-
+     turns_l = 0
+     turns_r = 0
+#dealing with distance each wheel must travel first
      central_dist = radians * radius
+     
      #refers to the individual circles created by the left and right wheel
      #radians * radius(l/r)
-     dist_rw = radians * (radius - controller.width_robot())
-     dist_lw = radians * (radius + controller.width_robot())
-     #not (number of ticks)
-     not_r = dist_rw/controller.tick_length
-     not_l = dist_lw/controller.tick_length
+     dist_lw = abs(radians * (radius - controller.width_robot()))
+     dist_rw = abs(radians * (radius + controller.width_robot()))
      
+     #not (number of ticks)
+     not_l = dist_rw/controller.tick_length
+     not_r = dist_lw/controller.tick_length
+     
+     #determine angles
+     angle_l = controller.get_angle_l()
+     angle_r = controller.get_angle_r()
+     
+     target_angle_l = controller.get_target_angle(not_l,angle_l)
+     target_angle_r = controller.get_target_angle(not_r,angle_r)
+     
+     #position reacher = pos
+     pos_l = False
+     pos_r = False
+     
+#find and set speeds
      if radius < 0:
           #spd (speed)
-          spd_rw = 1 * speed
-
-     else:
           spd_lw = 1 * speed
+          spd_rw = spd_lw((abs(radius) + controller.width_robot)/(abs(radius) - controller.width_robot))
+     else:
+          spd_rw = 1 * speed
+          spd_lw = spd_rw((abs(radius) - controller.width_robot)/(abs(radius) + controller.width_robot))
+          
+     controller.set_speed_l(spd_lw)
+     controller.set_speed_r(spd_rw)     
+     while not posr_r and not posr_l:
+               loop_time = time.time()
 
-     controller.sampling_time = tick_speed
+               angle_l = controller.get_angle_l()
+               angle_r = controller.get_angle_r()
+               try:
+                         #try needed for exception
+                         turns_l,total_angle_l = controller.get_total_angle(angle_l,controller.unitsFC,prev_angle_l,turns_l)
+                         turns_r,total_angle_r = controller.get_total_angle(angle_l,controller.unitsFC,prev_angle_r,turns_r)
+               except Exception:
+                    pass
+               prev_angle_l = angle_l
+               prev_angle_r = angle_r
 
 
-
+               try:
+                    prev_angle_l = total_angle_l
+                    prev_angle_r = total_angle_r
+               except Exception:
+                    pass
+               
+               try:
+                    
+                    if target_angle_r <= total_angle_r:
+                         controller .set_speed_r(0.0)
+                         posr_r = True
+                    else:
+                         pass
+                    if target_angle_l <= total_angle_l:
+                         controller.set_speed_l(0)
+                         posr_l = True
+                    else:
+                         pass
+               except Exception:
+                    pass
+               #pause controller for sampling_time
+               time.sleep(controller.sampling_time -
+                    ((time.time() - loop_time) % controller.sampling_time))
+     return None
+          
 
 
 move_straight(controller,0.5,100,0.2)
