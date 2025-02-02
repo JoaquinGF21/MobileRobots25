@@ -54,7 +54,7 @@ def move_straight(controller,speed,dist,tick_speed):
      print(f"Angle L: {str(angle_l)}\n")
      print(f"Angle R: {str(angle_r)}\n")
 
-     while not posr_r and not posr_l:
+     while not posr_r or not posr_l:
           loop_time = time.time()
 
           angle_l = controller.get_angle_l()
