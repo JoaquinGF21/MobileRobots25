@@ -14,6 +14,9 @@ def SignalHandler_SIGINT(SignalNumber,Frame):
      controller.set_speed_r(0)
      controller.set_speed_l(0)
      exit(0)
+     
+signal.signal(signal.SIGINT,SignalHandler_SIGINT)
+
 
 def stop(self):
       controller.set_speed_r(0)
@@ -22,14 +25,14 @@ def stop(self):
 #diameter of wheels is 66mm
 #width of robot is 102mm
 #register the signal with Signal handler
-signal.signal(signal.SIGINT,SignalHandler_SIGINT)
+
 
 
 #input dist in cm
 #speed is -1 to 1 min to max
 #CHANGE CONTROL BACK TO CONTROLLER (only used for ease)
 def move_straight(controller,speed,dist,tick_speed):
-     number_of_tics = (dist/10)/controller.diameter_wheels
+     number_of_tics = (dist*10)/controller.tick_length()
      controller.set_speed_l(speed)
      controller.set_speed_r(speed)
      controller.sampling_time = tick_speed
@@ -41,8 +44,8 @@ def move_straight(controller,speed,dist,tick_speed):
      angle_r = controller.get_angle_r()
 
      #find and set target angle
-     target_angle_l = controller.get_angle_l(number_of_tics,angle_l)
-     target_angle_r = controller.get_angle_r(number_of_tics,angle_r)
+     target_angle_l = controller.get_target_angle(number_of_tics,angle_l)
+     target_angle_r = controller.get_target_angle(number_of_tics,angle_r)
 
      #Posr_r (position_reached_r) Posr_l respectively
      posr_r = False
@@ -56,10 +59,14 @@ def move_straight(controller,speed,dist,tick_speed):
 
           angle_l = controller.get_angle_l()
           angle_r = controller.get_angle_r()
+          
+          print(controller.imu.gyro)
           try:
                     #try needed for exception
                     turns_l,total_angle_l = controller.get_total_angle(angle_l,controller.unitsFC,prev_angle_l,turns_l)
-                    turns_r,total_angle_r = controller.get_total_angle(angle_l,controller.unitsFC,prev_angle_r,turns_r)
+                    turns_r,total_angle_r = controller.get_total_angle(angle_r,controller.unitsFC,prev_angle_r,turns_r)
+                    print(f"total Angle L: {total_angle_l}")
+                    print(f"total Angle R: {total_angle_r}")
           except Exception:
                pass
           prev_angle_l = angle_l
@@ -75,7 +82,7 @@ def move_straight(controller,speed,dist,tick_speed):
           try:
                 
                if target_angle_r <= total_angle_r:
-                    controller .set_speed_r(0.0)
+                    controller.set_speed_r(0)
                     posr_r = True
                else:
                     pass
@@ -89,6 +96,7 @@ def move_straight(controller,speed,dist,tick_speed):
           #pause controller for sampling_time
           time.sleep(controller.sampling_time -
                    ((time.time() - loop_time) % controller.sampling_time))
+          print('{:.20f}'.format((time.time() - loop_time)))
      return None
 #direct will be right if negative
 #speed will be set at a percentage
@@ -141,7 +149,7 @@ def move_curve(control,radius,degrees,direct,speed,tick_speed):
                try:
                          #try needed for exception
                          turns_l,total_angle_l = controller.get_total_angle(angle_l,controller.unitsFC,prev_angle_l,turns_l)
-                         turns_r,total_angle_r = controller.get_total_angle(angle_l,controller.unitsFC,prev_angle_r,turns_r)
+                         turns_r,total_angle_r = controller.get_total_angle(angle_r,controller.unitsFC,prev_angle_r,turns_r)
                except Exception:
                     pass
                prev_angle_l = angle_l
@@ -162,7 +170,7 @@ def move_curve(control,radius,degrees,direct,speed,tick_speed):
                     else:
                          pass
                     if target_angle_l <= total_angle_l:
-                         controller.set_speed_l(0)
+                         controller.set_speed_l(0.0)
                          posr_l = True
                     else:
                          pass
