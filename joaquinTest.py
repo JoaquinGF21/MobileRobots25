@@ -1,6 +1,6 @@
 import pigpio
 import time
-from paste import control 
+from robot_controller import control 
 
 def move_forward(robot, speed=0.5, duration=2.0):
     # Ensure speed is between 0 and 1
