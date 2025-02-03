@@ -2,13 +2,32 @@ import pigpio
 import time
 from robot_controller import control 
 
+"""
+IMPORTANT TO REMEMBER
+LEFT:   BACKWARDS IS +
+        FORWARDS IS -
+
+RIGHT:  BACKWARDS IS -
+        FORWARDS IS +
+"""
 def move_forward(robot, speed=0.5, duration=2.0):
-    # Ensure speed is between 0 and 1
     speed = max(0, min(1, speed))
     
-    # Set both wheels to move forward
-    robot.servo_l.set_speed(-speed)  # Negative for forward
-    robot.servo_r.set_speed(speed)   # Positive for forward
+    robot.servo_l.set_speed(-speed)
+    robot.servo_r.set_speed(speed)
+    
+    time.sleep(duration)
+    
+    robot.servo_l.set_speed(0)
+    robot.servo_r.set_speed(0)
+
+def turn_robot(robot, left_speed, right_speed, duration):
+
+    left_speed = max(-1, min(1, left_speed))
+    right_speed = max(-1, min(1, right_speed))
+    
+    robot.servo_l.set_speed(-left_speed)
+    robot.servo_r.set_speed(right_speed)
     
     time.sleep(duration)
     
@@ -22,7 +41,8 @@ def main():
     robot = control(pi=pi)
     
     try:
-        move_forward(robot, speed=0.5, duration=2.0)
+        move_forward(robot, speed = 0.5, duration = 9.8)
+        turn_robot(robot, left_speed = -0.613, right_speed = 0.5, duration = 2.765)
     
     finally:
         robot.cancel()
