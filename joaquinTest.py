@@ -13,7 +13,7 @@ RIGHT:  BACKWARDS IS -
 def move_forward(robot, speed=0.5, duration=2.0):
     speed = max(0, min(1, speed))
     
-    robot.servo_l.set_speed(-speed)
+    robot.servo_l.set_speed(-speed) #DON'T FLIP THE NEGATIVE
     robot.servo_r.set_speed(speed)
     
     time.sleep(duration)
@@ -26,7 +26,7 @@ def turn_robot(robot, left_speed, right_speed, duration):
     left_speed = max(-1, min(1, left_speed))
     right_speed = max(-1, min(1, right_speed))
     
-    robot.servo_l.set_speed(-left_speed)
+    robot.servo_l.set_speed(-left_speed) #DON'T FLIP THE NEGATIVE
     robot.servo_r.set_speed(right_speed)
     
     time.sleep(duration)
