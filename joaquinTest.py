@@ -1,5 +1,6 @@
 import pigpio
 import time
+import signal
 from robot_controller import control 
 
 """
@@ -9,11 +10,21 @@ LEFT:   BACKWARDS IS +
 
 RIGHT:  BACKWARDS IS -
         FORWARDS IS +
+        
 """
+def SignalHandler_SIGINT(SignalNumber,Frame):
+     print('Stopping Controller')
+     controller.set_speed_r(0)
+     controller.set_speed_l(0)
+     exit(0)
+
+#register the signal with Signal handler
+signal.signal(signal.SIGINT,SignalHandler_SIGINT)
+
 def move_forward(robot, speed=0.5, duration=2.0):
     speed = max(0, min(1, speed))
     
-    robot.servo_l.set_speed(-speed)
+    robot.servo_l.set_speed(-0.54)
     robot.servo_r.set_speed(speed)
     
     time.sleep(duration)
@@ -41,8 +52,7 @@ def main():
     robot = control(pi=pi)
     
     try:
-        move_forward(robot, speed = 0.5, duration = 9.8)
-        turn_robot(robot, left_speed = 0.613, right_speed = 0.5, duration = 2.765)
+        move_forward(robot, speed = 0.5, duration = 5)
     
     finally:
         robot.cancel()

@@ -223,5 +223,6 @@ def move_curve(control,radius,degrees,direct,speed,tick_speed):
      return None
           
 
-
+controller.set_speed_r(0.5)
+controller.set_speed_l(0.5)
 move(controller,2,2,1000,0.2)
