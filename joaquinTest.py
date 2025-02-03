@@ -42,7 +42,7 @@ def main():
     
     try:
         move_forward(robot, speed = 0.5, duration = 9.8)
-        turn_robot(robot, left_speed = -0.613, right_speed = 0.5, duration = 2.765)
+        turn_robot(robot, left_speed = 0.613, right_speed = 0.5, duration = 2.765)
     
     finally:
         robot.cancel()
