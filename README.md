@@ -19,3 +19,6 @@ Push
 Pull
 -"git pull origin (name)"
 
+# Robot Dimensions
+Wheel diameter: 90mm
+Distance between wheels: 152mm
