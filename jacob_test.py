@@ -5,7 +5,7 @@ import signal
 import threading
 import math
 
-adjl = .04
+adjl = .048
 pigpi = pigpio.pi()
 
 controller = robot_controller.control(pi=pigpi)
@@ -33,7 +33,8 @@ def stop(self):
 #speed is -1 to 1 min to max
 #CHANGE CONTROL BACK TO CONTROLLER (only used for ease)
 def move_straight(controller,speed,dist,tick_speed):
-     number_of_tics = (dist*10)/controller.tick_length()
+     dist = dist*10
+     number_of_tics = (dist)/controller.tick_length()
      controller.set_speed_l(speed+adjl)
      controller.set_speed_r(speed)
      controller.sampling_time = tick_speed
