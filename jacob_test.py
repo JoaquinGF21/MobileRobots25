@@ -5,6 +5,7 @@ import signal
 import threading
 import math
 
+adjl = .04
 pigpi = pigpio.pi()
 
 controller = robot_controller.control(pi=pigpi)
@@ -33,7 +34,7 @@ def stop(self):
 #CHANGE CONTROL BACK TO CONTROLLER (only used for ease)
 def move_straight(controller,speed,dist,tick_speed):
      number_of_tics = (dist*10)/controller.tick_length()
-     controller.set_speed_l(speed)
+     controller.set_speed_l(speed+adjl)
      controller.set_speed_r(speed)
      controller.sampling_time = tick_speed
      turns_l = 0
@@ -82,12 +83,12 @@ def move_straight(controller,speed,dist,tick_speed):
           try:
                 
                if target_angle_r <= total_angle_r:
-                    controller.set_speed_r(0)
+                    stop()
                     posr_r = True
                else:
                     pass
                if target_angle_l <= total_angle_l:
-                    controller.set_speed_l(0)
+                    stop()
                     posr_l = True
                else:
                     pass
