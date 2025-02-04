@@ -18,6 +18,3 @@ def SignalHandler_SIGINT(SignalNumber,Frame):
      exit(0)
      
 signal.signal(signal.SIGINT,SignalHandler_SIGINT)
-#takes input and finds time
-def  time_to_pos(dist, speed):
-    print()
