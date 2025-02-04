@@ -140,47 +140,53 @@ def move_curve(control,radius,degrees,direct,speed,tick_speed):
      else:
           spd_rw = 1 * speed
           spd_lw = spd_rw((abs(radius) - controller.width_robot)/(abs(radius) + controller.width_robot))
+          spd_lw += adjl
           
      controller.set_speed_l(spd_lw)
      controller.set_speed_r(spd_rw)     
-     while not posr_r and not posr_l:
-               loop_time = time.time()
+     while not posr_r or not posr_l:
+          loop_time = time.time()
 
-               angle_l = controller.get_angle_l()
-               angle_r = controller.get_angle_r()
-               try:
-                         #try needed for exception
-                         turns_l,total_angle_l = controller.get_total_angle(angle_l,controller.unitsFC,prev_angle_l,turns_l)
-                         turns_r,total_angle_r = controller.get_total_angle(angle_r,controller.unitsFC,prev_angle_r,turns_r)
-               except Exception:
-                    pass
-               prev_angle_l = angle_l
-               prev_angle_r = angle_r
+          angle_l = controller.get_angle_l()
+          angle_r = controller.get_angle_r()
+          
+          print(controller.imu.gyro)
+          try:
+                    #try needed for exception
+                    turns_l,total_angle_l = controller.get_total_angle(angle_l,controller.unitsFC,prev_angle_l,turns_l)
+                    turns_r,total_angle_r = controller.get_total_angle(angle_r,controller.unitsFC,prev_angle_r,turns_r)
+                    print(f"total Angle L: {total_angle_l}")
+                    print(f"total Angle R: {total_angle_r}")
+          except Exception:
+               pass
+          prev_angle_l = angle_l
+          prev_angle_r = angle_r
 
 
-               try:
-                    prev_angle_l = total_angle_l
-                    prev_angle_r = total_angle_r
-               except Exception:
+          try:
+               prev_angle_l = total_angle_l
+               prev_angle_r = total_angle_r
+          except Exception:
+               pass
+          
+          try:
+                
+               if target_angle_r <= total_angle_r:
+                    stop()
+                    posr_r = True
+               else:
                     pass
-               
-               try:
-                    
-                    if target_angle_r <= total_angle_r:
-                         controller .set_speed_r(0.0)
-                         posr_r = True
-                    else:
-                         pass
-                    if target_angle_l <= total_angle_l:
-                         controller.set_speed_l(0.0)
-                         posr_l = True
-                    else:
-                         pass
-               except Exception:
+               if target_angle_l <= total_angle_l:
+                    stop()
+                    posr_l = True
+               else:
                     pass
-               #pause controller for sampling_time
-               time.sleep(controller.sampling_time -
-                    ((time.time() - loop_time) % controller.sampling_time))
+          except Exception:
+                pass
+          #pause controller for sampling_time
+          time.sleep(controller.sampling_time -
+                   ((time.time() - loop_time) % controller.sampling_time))
+          print('{:.20f}'.format((time.time() - loop_time)))
      return None
           
 
