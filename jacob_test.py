@@ -5,7 +5,7 @@ import signal
 import threading
 import math
 
-adjl = .049
+adjl = .04
 pigpi = pigpio.pi()
 
 controller = robot_controller.control(pi=pigpi)
@@ -191,11 +191,8 @@ def move_curve(control,radius,degrees,speed,tick_speed):
                     ((time.time() - loop_time) % controller.sampling_time))
      time.sleep(1)
      return None
-          
+#move_straight(controller,0.5,69,0.2)
 
+move_straight(controller,0.5,170,0.2)
 
-# baseline move_straight(controller,0.5,69,0.2)
-
-#move_straight(controller,0.5,170,0.2)
-
-move_curve(controller,34.5,90,50,0.2)
+#move_curve(controller,34.5,90,50,0.2)
