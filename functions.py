@@ -25,7 +25,6 @@ def stop():
 
 
 def move_straight(controller,speed,dist,tick_speed):
-
      number_of_tics = (dist*10)/controller.tick_length()
      controller.set_speed_l(speed+adjl)
      controller.set_speed_r(speed)
@@ -97,7 +96,8 @@ def move_straight(controller,speed,dist,tick_speed):
           print('{:.20f}'.format((time.time() - loop_time)))
      time.sleep(1)
      return None
-print()
+
+
 def manual_curve(controller,degrees,radius,Vr,Vl,tick_speed):
      radians = degrees *(math.pi/180)
      controller.sampling_time = tick_speed

@@ -19,6 +19,10 @@ Push
 Pull
 -"git pull origin (name)"
 
+Reset
+git reset --hard 
+# in directory
+
 # Robot Dimensions
 Wheel diameter: 90mm
 Distance between wheels: 152mm
