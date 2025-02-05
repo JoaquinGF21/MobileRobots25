@@ -102,6 +102,7 @@ def move_straight(controller,speed,dist,tick_speed):
           time.sleep(controller.sampling_time -
                    ((time.time() - loop_time) % controller.sampling_time))
           print('{:.20f}'.format((time.time() - loop_time)))
+     time.sleep(1)
      return None
 #direct will be right if negative
 #speed will be set at a percentage
