@@ -105,7 +105,7 @@ def move_straight(controller,speed,dist,tick_speed):
      return None
 #direct will be right if negative
 #speed will be set at a percentage
-def move_curve(control,radius,degrees,direct,speed,tick_speed):
+def move_curve(control,radius,degrees,speed,tick_speed):
      radians = degrees *(math.pi/180)
      controller.sampling_time = tick_speed
      speed = speed/100
@@ -195,3 +195,4 @@ def move_curve(control,radius,degrees,direct,speed,tick_speed):
 
 #move_straight(controller,0.5,170,0.2)
 
+move_curve(controller,34.5,90,50,0.2)
