@@ -191,6 +191,76 @@ def move_curve(control,radius,degrees,speed,tick_speed):
                     ((time.time() - loop_time) % controller.sampling_time))
      time.sleep(1)
      return None
+def manual_curve(controller,degrees,radius,Vr,Vl,tick_speed):
+     radians = degrees *(math.pi/180)
+     controller.sampling_time = tick_speed
+     radius = radius/10
+     turns_l = 0
+     turns_r = 0
+#dealing with distance each wheel must travel first
+     central_dist = radians * radius
+     
+     #refers to the individual circles created by the left and right wheel
+     #radians * radius(l/r)
+     dist_lw = abs(radians * (radius - controller.width_robot))
+     dist_rw = abs(radians * (radius + controller.width_robot))
+     
+     #not (number of ticks)
+     not_l = dist_rw/controller.tick_length()
+     not_r = dist_lw/controller.tick_length()
+     
+     #determine angles
+     angle_l = controller.get_angle_l()
+     angle_r = controller.get_angle_r()
+     
+     target_angle_l = controller.get_target_angle(not_l,angle_l)
+     target_angle_r = controller.get_target_angle(not_r,angle_r)
+     
+     #position reacher = pos
+     pos_l = False
+     pos_r = False
+     while not pos_r and not pos_l:
+               loop_time = time.time()
+
+               angle_l = controller.get_angle_l()
+               angle_r = controller.get_angle_r()
+               try:
+                         #try needed for exception
+                         turns_l,total_angle_l = controller.get_total_angle(angle_l,controller.unitsFC,prev_angle_l,turns_l)
+                         turns_r,total_angle_r = controller.get_total_angle(angle_r,controller.unitsFC,prev_angle_r,turns_r)
+               except Exception:
+                    pass
+               prev_angle_l = angle_l
+               prev_angle_r = angle_r
+
+
+               try:
+                    prev_angle_l = total_angle_l
+                    prev_angle_r = total_angle_r
+               except Exception:
+                    pass
+               
+               try:
+                    
+                    if target_angle_r <= total_angle_r:
+                         controller .set_speed_r(0.0)
+                         posr_r = True
+                         break
+                    else:
+                         pass
+                    if target_angle_l <= total_angle_l:
+                         controller.set_speed_l(0.0)
+                         posr_l = True
+                         break
+                    else:
+                         pass
+               except Exception:
+                    pass
+               #pause controller for sampling_time
+               time.sleep(controller.sampling_time -
+                    ((time.time() - loop_time) % controller.sampling_time))
+     time.sleep(1)
+     return None
 #move_straight(controller,0.5,69,0.2)
 
 move_straight(controller,0.5,170,0.2)
