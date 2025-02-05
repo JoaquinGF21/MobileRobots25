@@ -117,12 +117,12 @@ def move_curve(control,radius,degrees,speed,tick_speed):
      
      #refers to the individual circles created by the left and right wheel
      #radians * radius(l/r)
-     dist_lw = abs(radians * (radius - controller.width_robot()))
-     dist_rw = abs(radians * (radius + controller.width_robot()))
+     dist_lw = abs(radians * (radius - controller.width_robot))
+     dist_rw = abs(radians * (radius + controller.width_robot))
      
      #not (number of ticks)
-     not_l = dist_rw/controller.tick_length
-     not_r = dist_lw/controller.tick_length
+     not_l = dist_rw/controller.tick_length()
+     not_r = dist_lw/controller.tick_length()
      
      #determine angles
      angle_l = controller.get_angle_l()
@@ -139,10 +139,12 @@ def move_curve(control,radius,degrees,speed,tick_speed):
      if radius < 0:
           #spd (speed)
           spd_lw = 1 * speed
-          spd_rw = spd_lw((abs(radius) + controller.width_robot)/(abs(radius) - controller.width_robot))
+          spd_rw = spd_lw*((abs(radius) + controller.width_robot)/(abs(radius) - controller.width_robot))
+          spd_rw = abs(spd_rw)
      else:
           spd_rw = 1 * speed
-          spd_lw = spd_rw((abs(radius) - controller.width_robot)/(abs(radius) + controller.width_robot))
+          spd_lw = spd_rw*((abs(radius) - controller.width_robot)/(abs(radius) + controller.width_robot))
+          spd_lw = abs(spd_lw)
           
      controller.set_speed_l(spd_lw)
      controller.set_speed_r(spd_rw)     
