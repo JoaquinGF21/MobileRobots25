@@ -86,11 +86,13 @@ def move_straight(controller,speed,dist,tick_speed):
                if target_angle_r <= total_angle_r:
                     stop()
                     posr_r = True
+                    break
                else:
                     pass
                if target_angle_l <= total_angle_l:
                     stop()
                     posr_l = True
+                    break
                else:
                     pass
           except Exception:
@@ -191,4 +193,4 @@ def move_curve(control,radius,degrees,direct,speed,tick_speed):
           
 
 
-move_straight(controller,0.5,100,0.2)
+# base move_straight(controller,0.5,69,0.2)
