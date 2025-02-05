@@ -5,6 +5,7 @@ import signal
 import threading
 import math
 
+adjl = .049
 pigpi = pigpio.pi()
 
 controller = robot_controller.control(pi=pigpi)
@@ -18,7 +19,7 @@ def SignalHandler_SIGINT(SignalNumber,Frame):
 signal.signal(signal.SIGINT,SignalHandler_SIGINT)
 
 
-def stop(self):
+def stop():
       controller.set_speed_r(0)
       controller.set_speed_l(0)
 
@@ -33,7 +34,7 @@ def stop(self):
 #CHANGE CONTROL BACK TO CONTROLLER (only used for ease)
 def move_straight(controller,speed,dist,tick_speed):
      number_of_tics = (dist*10)/controller.tick_length()
-     controller.set_speed_l(speed)
+     controller.set_speed_l(speed+adjl)
      controller.set_speed_r(speed)
      controller.sampling_time = tick_speed
      turns_l = 0
@@ -46,7 +47,9 @@ def move_straight(controller,speed,dist,tick_speed):
      #find and set target angle
      target_angle_l = controller.get_target_angle(number_of_tics,angle_l)
      target_angle_r = controller.get_target_angle(number_of_tics,angle_r)
-
+     
+     print(f"TargetangleL: {target_angle_l}")
+     print(f"targetangleR: {target_angle_r}")
      #Posr_r (position_reached_r) Posr_l respectively
      posr_r = False
      posr_l = False
@@ -82,13 +85,15 @@ def move_straight(controller,speed,dist,tick_speed):
           try:
                 
                if target_angle_r <= total_angle_r:
-                    controller.set_speed_r(0)
+                    stop()
                     posr_r = True
+                    break
                else:
                     pass
                if target_angle_l <= total_angle_l:
-                    controller.set_speed_l(0)
+                    stop()
                     posr_l = True
+                    break
                else:
                     pass
           except Exception:
@@ -167,11 +172,13 @@ def move_curve(control,radius,degrees,direct,speed,tick_speed):
                     if target_angle_r <= total_angle_r:
                          controller .set_speed_r(0.0)
                          posr_r = True
+                         break
                     else:
                          pass
                     if target_angle_l <= total_angle_l:
                          controller.set_speed_l(0.0)
                          posr_l = True
+                         break
                     else:
                          pass
                except Exception:
@@ -179,8 +186,11 @@ def move_curve(control,radius,degrees,direct,speed,tick_speed):
                #pause controller for sampling_time
                time.sleep(controller.sampling_time -
                     ((time.time() - loop_time) % controller.sampling_time))
+     time.sleep(1)
      return None
           
 
 
-move_straight(controller,0.5,100,0.2)
+# baseline move_straight(controller,0.5,69,0.2)
+
+move_straight(controller,0.5,170,0.2)
