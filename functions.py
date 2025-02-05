@@ -128,7 +128,7 @@ def manual_curve(controller,degrees,radius,Vr,Vl,tick_speed):
      #position reacher = pos
      pos_l = False
      pos_r = False
-     while not posr_r or not posr_l:
+     while not pos_r or not pos_l:
           loop_time = time.time()
 
           angle_l = controller.get_angle_l()
