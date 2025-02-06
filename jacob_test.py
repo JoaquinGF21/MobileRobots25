@@ -111,21 +111,21 @@ def manual_curve(controller,degrees,radius,Vr,Vl,tick_speed):
      controller.set_speed_l(Vl)
      radians = degrees *(math.pi/180)
      controller.sampling_time = tick_speed
-     radius = radius/10
+     radius = radius*10
      turns_l = 0
      turns_r = 0
 #dealing with distance each wheel must travel first
      central_dist = radians * radius
-     
+     print(f"Arc Length: {central_dist}\n")
      #refers to the individual circles created by the left and right wheel
      #radians * radius(l/r)
      dist_lw = abs(radians * (radius - controller.width_robot))
      dist_rw = abs(radians * (radius + controller.width_robot))
-     
+     print(f"dist_lw: {dist_lw}\ndist_rw: {dist_rw}")
      #not (number of ticks)
      not_l = dist_rw/controller.tick_length()
      not_r = dist_lw/controller.tick_length()
-     
+     print(f"not_l: {not_l}\n not_r: {not_r}")
      #determine angles
      angle_l = controller.get_angle_l()
      angle_r = controller.get_angle_r()
@@ -138,7 +138,7 @@ def manual_curve(controller,degrees,radius,Vr,Vl,tick_speed):
      pos_r = False
      while not pos_r and not pos_l:
                loop_time = time.time()
-
+               
                angle_l = controller.get_angle_l()
                angle_r = controller.get_angle_r()
                try:
@@ -156,17 +156,21 @@ def manual_curve(controller,degrees,radius,Vr,Vl,tick_speed):
                     prev_angle_r = total_angle_r
                except Exception:
                     pass
-               
+               print(f"Angle_l/r:        {angle_l} | {angle_r}")
+               print(f"target_angle_l/r: {target_angle_l} | {target_angle_r}")
+               print(f"total_angle_l/r:  {target_angle_l} | {target_angle_r} ")
                try:
                     
                     if target_angle_r <= total_angle_r:
-                         controller .set_speed_r(0.0)
+                         stop()
+                         print("r/stop")
                          posr_r = True
                          break
                     else:
                          pass
                     if target_angle_l <= total_angle_l:
-                         controller.set_speed_l(0.0)
+                         stop()
+                         print("l/stop")
                          posr_l = True
                          break
                     else:
@@ -182,6 +186,6 @@ def manual_curve(controller,degrees,radius,Vr,Vl,tick_speed):
 
 #move_straight(controller,0.5,69,0.2)
 
-move_straight(controller,0.5,170,0.2)
+#move_straight(controller,0.5,170,0.2)
 
-#move_curve(controller,34.5,90,50,0.2)
+manual_curve(controller,155,34.5,0.25,0.5,0.2)
