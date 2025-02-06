@@ -5,7 +5,7 @@ import signal
 import threading
 import math
 
-adjl = .04
+adjl = .0463
 pigpi = pigpio.pi()
 
 controller = robot_controller.control(pi=pigpi)
@@ -119,8 +119,8 @@ def manual_curve(controller,degrees,radius,Vr,Vl,tick_speed):
      print(f"Arc Length: {central_dist}\n")
      #refers to the individual circles created by the left and right wheel
      #radians * radius(l/r)
-     dist_lw = abs(radians * (radius - controller.width_robot))
-     dist_rw = abs(radians * (radius + controller.width_robot))
+     dist_lw = abs(radians * (radius - (controller.width_robot/2)))
+     dist_rw = abs(radians * (radius + (controller.width_robot/2)))
      print(f"dist_lw: {dist_lw}\ndist_rw: {dist_rw}")
      #not (number of ticks)
      not_l = dist_rw/controller.tick_length()
@@ -159,6 +159,7 @@ def manual_curve(controller,degrees,radius,Vr,Vl,tick_speed):
                print(f"Angle_l/r:        {angle_l} | {angle_r}")
                print(f"target_angle_l/r: {target_angle_l} | {target_angle_r}")
                print(f"total_angle_l/r:  {target_angle_l} | {target_angle_r} ")
+               print()
                try:
                     
                     if target_angle_r <= total_angle_r:
