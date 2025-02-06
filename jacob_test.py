@@ -81,7 +81,10 @@ def move_straight(controller,speed,dist,tick_speed):
                prev_angle_r = total_angle_r
           except Exception:
                pass
-          
+          print(f"Angle_l/r:        {angle_l} | {angle_r}")
+          print(f"target_angle_l/r: {target_angle_l} | {target_angle_r}")
+          print(f"total_angle_l/r:  {total_angle_l} | {total_angle_r} ")
+          print()
           try:
                 
                if target_angle_r <= total_angle_r:
@@ -185,8 +188,8 @@ def manual_curve(controller,degrees,radius,Vr,Vl,tick_speed):
      return None
 
 
-#move_straight(controller,0.5,69,0.2)
+move_straight(controller,0.5,69,0.2)
 
 #move_straight(controller,0.5,170,0.2)
 
-manual_curve(controller,155,34.5,0.25,0.5,0.2)
+#manual_curve(controller,155,34.5,0.25,0.5,0.2)
