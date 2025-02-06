@@ -158,7 +158,7 @@ def manual_curve(controller,degrees,radius,Vr,Vl,tick_speed):
                     pass
                print(f"Angle_l/r:        {angle_l} | {angle_r}")
                print(f"target_angle_l/r: {target_angle_l} | {target_angle_r}")
-               print(f"total_angle_l/r:  {target_angle_l} | {target_angle_r} ")
+               print(f"total_angle_l/r:  {total_angle_l} | {total_angle_r} ")
                print()
                try:
                     
