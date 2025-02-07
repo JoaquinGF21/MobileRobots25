@@ -42,8 +42,9 @@ def move_straight(control, speed, distance, tick_speed, kp=0.0005):
     last = time.perf_counter()
     controller.sampling_time = tick_speed
     # Sets speed for the wheels
+    speed_l = speed + adjl
     controller.set_speed_r(speed)
-    controller.set_speed_l(speed)
+    controller.set_speed_l(speed_l)
     # Get initial heading as setpoint
     values = controller.imu.magnetic
     setpoint = 180 + math.atan2(values[1], values[0]) * 180 / math.pi
@@ -59,9 +60,9 @@ def move_straight(control, speed, distance, tick_speed, kp=0.0005):
         # Calculate heading error and correction
         error = setpoint - current_heading
         correction = kp * error
-        
+        print(f"correction {correction}")
         # Apply corrections to the LEFT WHEEL speeds
-        controller.set_speed_l(speed + correction)
+        controller.set_speed_l(speed_l + correction)
         
         # Distance calculation
         accel = controller.imu.linear_acceleration or Default_accel
@@ -79,4 +80,4 @@ def move_straight(control, speed, distance, tick_speed, kp=0.0005):
     
 # relativily 1m seems to vary about 1 square
 #move_straight(controller,0.5,160,.03)
-move_straight(controller,0.5,450,0.03)
+move_straight(controller,0.5,100,0.03)
