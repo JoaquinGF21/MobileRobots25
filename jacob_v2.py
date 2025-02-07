@@ -73,8 +73,10 @@ def move_straight(control,speed,distance,tick_speed,kp = .001):
         print(correction)
         # Apply corrections to the LEFT WHEEL speeds
         controller.set_speed_l(speed_l + correction)
-        
-        accel = controller.imu.linear_acceleration or Default_accel
+
+        accel = controller.imu.linear_acceleration
+        if accel[1] == None:
+            accel = Default_accel
         #try needed because last isn't initialized yet
         #use accel[1]
         #print(f"{accel[1]} : {calculate_distance(accel[1],current - last)}")
