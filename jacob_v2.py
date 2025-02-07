@@ -52,7 +52,7 @@ def move_straight(control,speed,distance,tick_speed,kp = .001):
     speed_l = speed + adjl
     controller.set_speed_r(speed)
     controller.set_speed_l(speed_l)
-
+    correction = 0
     #gets starting heading 
     values = controller.imu.magnetic
     setpoint = 180 + math.atan2(values[1], values[0]) * 180 / math.pi
@@ -66,11 +66,11 @@ def move_straight(control,speed,distance,tick_speed,kp = .001):
         print(f"current: {current_heading}")
         # Calculate heading error and correction
         error = setpoint - current_heading
-        if current_heading < setpoint:
+        if current_heading > setpoint:
             correction += .0005
         else:
-            corection -= .0005
-        
+            correction -= .0005
+        print(correction)
         # Apply corrections to the LEFT WHEEL speeds
         controller.set_speed_l(speed_l + correction)
         
