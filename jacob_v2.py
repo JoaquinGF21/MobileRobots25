@@ -30,7 +30,7 @@ velocity = 0
 distance = 0
 def calculate_distance(acceleration,dt):
     global velocity, distance
-    if -.05 <= acceleration <= .05:
+    if -.3 <= acceleration <= .3:
         acceleration = 0
     else:
         pass
@@ -67,7 +67,9 @@ def move_straight(control,speed,distance,tick_speed):
         last = current
         
     stop()
-
+    time.sleep(1)
     
 # relativily 1m seems to vary about 10cm
-move_straight(controller,0.5,450,.03)
+move_straight(controller,0.5,160,.03)
+move_straight(controller,0.5,160,.03)
+move_straight(controller,0.5,160,.03)
