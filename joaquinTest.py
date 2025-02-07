@@ -37,7 +37,7 @@ def calculate_distance(acceleration,dt):
     distance += velocity *dt
     return distance * 100
 
-def move_straight(control, speed, distance, tick_speed, kp=0.001):
+def move_straight(control, speed, distance, tick_speed, kp=0.002):
     current = time.perf_counter()
     last = time.perf_counter()
     controller.sampling_time = tick_speed
@@ -71,6 +71,7 @@ def move_straight(control, speed, distance, tick_speed, kp=0.001):
         time.sleep(controller.sampling_time -
                    ((time.perf_counter() - current) % controller.sampling_time))
         last = current
+        print("Heading: " + str(180 + math.atan2(values[1], values[0]) * 180 / math.pi))
         
     stop()
 
