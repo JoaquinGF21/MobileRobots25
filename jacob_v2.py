@@ -7,7 +7,7 @@ import math
 
 adjl = .0465
 pigpi = pigpio.pi()
-
+Default_accel = (0,0,0)
 controller = robot_controller.control(pi=pigpi)
 
 def SignalHandler_SIGINT(SignalNumber,Frame):
@@ -51,7 +51,7 @@ def move_straight(control,speed,distance,tick_speed):
         current = time.perf_counter()
         # values = controller.imu.magnetic
         # print("Heading: " + str(180 + math.atan2(values[1], values[0]) * 180 / math.pi))
-        accel = controller.imu.linear_acceleration
+        accel = controller.imu.linear_acceleration or Default_accel
         #try needed because last isn't initialized yet
         #use accel[1]
         print(f"{accel[1]} : {calculate_distance(accel[1],current - last)}")
