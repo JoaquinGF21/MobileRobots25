@@ -30,10 +30,14 @@ velocity = 0
 distance = 0
 def calculate_distance(acceleration,dt):
     global velocity, distance
-    
+    if acceleration <=.05 or acceleration >=-.05:
+        acceleration = 0
+    else:
+        pass
     velocity += acceleration *dt
     
     distance += velocity *dt
+    
     return distance * 100
 
 def move_straight(control,speed,distance,tick_speed):
@@ -50,7 +54,7 @@ def move_straight(control,speed,distance,tick_speed):
         accel = controller.imu.linear_acceleration
         #try needed because last isn't initialized yet
         #use accel[1]
-        print(calculate_distance(accel[1],current - last))
+        print(f"{accel[1]} : {calculate_distance(accel[1],current - last)}")
         if distance <= calculate_distance(accel[1],current - last):
             pos = True
             break
@@ -65,6 +69,5 @@ def move_straight(control,speed,distance,tick_speed):
     stop()
 
     
-# relativily 1m seems to vary about 1 square
-#move_straight(controller,0.5,160,.03)
-move_straight(controller,0.5,450,0.03)
+# relativily 1m seems to vary about 10cm
+move_straight(controller,0.5,450,.03)
