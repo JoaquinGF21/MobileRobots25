@@ -66,4 +66,4 @@ def move_straight(control,speed,distance,tick_speed):
 
     
 # relativily 1m seems to vary about 10cm
-move_straight(controller,0.25,340,.03)
+move_straight(controller,0.5,340,.03)
