@@ -1,82 +1,79 @@
-import pigpio
 import time
+import robot_controller
+import pigpio
 import signal
-from robot_controller import control 
+import threading
+import math
 
-"""
-IMPORTANT TO REMEMBER
-LEFT:   BACKWARDS IS +
-        FORWARDS IS -
+adjl = .0465
+pigpi = pigpio.pi()
 
-RIGHT:  BACKWARDS IS -
-        FORWARDS IS +
-        
-"""
-<<<<<<< HEAD
+controller = robot_controller.control(pi=pigpi)
+
 def SignalHandler_SIGINT(SignalNumber,Frame):
      print('Stopping Controller')
      controller.set_speed_r(0)
      controller.set_speed_l(0)
      exit(0)
-
-#register the signal with Signal handler
+     
 signal.signal(signal.SIGINT,SignalHandler_SIGINT)
-=======
 
 
-# I threw some comments for things to change
-
->>>>>>> 12719d55b9a11f7bcef8e04d592d14eae222d5de
-
-def move_forward(robot, speed=0.5, duration=2.0):
-    #what is this for?
-    speed = max(0, min(1, speed))
+def stop():
+    controller.set_speed_r(0)
+    controller.set_speed_l(0)
+    return None
+#{x,y,z} for linear_acceleration
+#dt is the time interval between use of the function
+# I took the skeleton of this function from Clause ai
+velocity = 0
+distance = 0
+def calculate_distance(acceleration,dt):
+    global velocity, distance
     
-<<<<<<< HEAD
-    robot.servo_l.set_speed(-0.54)
-=======
-    robot.servo_l.set_speed(-speed) #DON'T FLIP THE NEGATIVE
->>>>>>> 12719d55b9a11f7bcef8e04d592d14eae222d5de
-    robot.servo_r.set_speed(speed)
+    velocity += acceleration *dt
     
-    time.sleep(duration)
+    distance += velocity *dt
+    return distance * 100
+
+def move_straight(control, speed, distance, tick_speed, kp=0.1):
+    current = time.perf_counter()
+    last = time.perf_counter()
+    controller.sampling_time = tick_speed
     
-    robot.servo_l.set_speed(0)
-    robot.servo_r.set_speed(0)
-
-def turn_robot(robot, left_speed, right_speed, duration):
-
-    left_speed = max(-1, min(1, left_speed))
-    right_speed = max(-1, min(1, right_speed))
-
-
-#for this just use the command controller.set_speed_l/speed_r just makes it so you don't have to include the negative
-    robot.servo_l.set_speed(-left_speed) #DON'T FLIP THE NEGATIVE
-    robot.servo_r.set_speed(right_speed)
+    # Get initial heading as setpoint
+    values = controller.imu.magnetic
+    setpoint = 180 + math.atan2(values[1], values[0]) * 180 / math.pi
     
+    pos = False
+    while not pos:
+        current = time.perf_counter()
+        
+        # Get current heading
+        values = controller.imu.magnetic
+        current_heading = 180 + math.atan2(values[1], values[0]) * 180 / math.pi
+        
+        # Calculate heading error and correction
+        error = setpoint - current_heading
+        correction = kp * error
+        
+        # Apply corrections to wheel speeds
+        controller.set_speed_l(speed + correction)
+        controller.set_speed_r(speed - correction)
+        
+        # Distance calculation
+        accel = controller.imu.linear_acceleration
+        if distance <= calculate_distance(accel[1], current - last):
+            pos = True
+            break
+            
+        time.sleep(controller.sampling_time -
+                   ((time.perf_counter() - current) % controller.sampling_time))
+        last = current
+        
+    stop()
 
-
-    time.sleep(duration)
-
-
-# same here
-    robot.servo_l.set_speed(0)
-    robot.servo_r.set_speed(0)
-
-
-
-def main():
-
-    pi = pigpio.pi()
     
-    robot = control(pi=pi)
-    
-    try:
-        move_forward(robot, speed = 0.5, duration = 5)
-    
-    finally:
-        robot.cancel()
-        pi.stop()
-
-if __name__ == "__main__":
-    main()
+# relativily 1m seems to vary about 1 square
+#move_straight(controller,0.5,160,.03)
+move_straight(controller,0.5,450,0.03)
