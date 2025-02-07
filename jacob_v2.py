@@ -5,7 +5,7 @@ import signal
 import threading
 import math
 
-adjl = .0465
+adjl = .0466
 pigpi = pigpio.pi()
 Default_accel = (0,0,0)
 controller = robot_controller.control(pi=pigpi)
@@ -34,7 +34,7 @@ velocity = 0
 distance = 0
 def calculate_distance(acceleration,dt):
     global velocity, distance
-    if -.3 <= acceleration <= .3:
+    if -.4 <= acceleration <= .4:
         acceleration = 0
     else:
         pass
@@ -48,7 +48,7 @@ def move_straight(control,speed,distance,tick_speed,kp = .001):
     current = time.perf_counter()
     last = time.perf_counter()
     controller.sampling_time = tick_speed
-    
+    accel = controller.imu.linear_acceleration
     speed_l = speed + adjl
     controller.set_speed_r(speed)
     controller.set_speed_l(speed_l)
@@ -63,14 +63,11 @@ def move_straight(control,speed,distance,tick_speed,kp = .001):
         # Get current heading
         values = controller.imu.magnetic
         current_heading = 180 + math.atan2(values[1], values[0]) * 180 / math.pi
-        print(f"current: {current_heading}")
+        
         # Calculate heading error and correction
         error = setpoint - current_heading
-        if current_heading > setpoint:
-            correction += .0005
-        else:
-            correction -= .0005
-        print(correction)
+        correction = error * kp 
+        
         # Apply corrections to the LEFT WHEEL speeds
         controller.set_speed_l(speed_l + correction)
 
@@ -79,7 +76,7 @@ def move_straight(control,speed,distance,tick_speed,kp = .001):
             accel = Default_accel
         #try needed because last isn't initialized yet
         #use accel[1]
-        #print(f"{accel[1]} : {calculate_distance(accel[1],current - last)}")
+        print(f"{accel[1]} : {calculate_distance(accel[1],current - last)}")
         if distance <= calculate_distance(accel[1],current - last):
             pos = True
             break
@@ -96,9 +93,12 @@ def move_straight(control,speed,distance,tick_speed,kp = .001):
     
 # relativily 1m seems to vary about 10cm
 reset_distance()
-move_straight(controller,0.5,160,.03)
-# reset_distance()
-# move_straight(controller,0.5,160,.03)
-# reset_distance()
-# move_straight(controller,0.5,160,.03)
-# reset_distance()
+move_straight(controller,0.5,140,.03)
+print("\n\n\n")
+reset_distance()
+move_straight(controller,0.5,140,.03)
+print("\n\n\n")
+reset_distance()
+move_straight(controller,0.5,140,.03)
+print("\n\n\n")
+reset_distance()
