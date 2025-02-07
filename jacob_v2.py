@@ -30,7 +30,7 @@ velocity = 0
 distance = 0
 def calculate_distance(acceleration,dt):
     global velocity, distance
-    if acceleration <=.05 or acceleration >=-.05:
+    if -.05 <= acceleration <= .05:
         acceleration = 0
     else:
         pass
