@@ -18,6 +18,10 @@ def SignalHandler_SIGINT(SignalNumber,Frame):
      
 signal.signal(signal.SIGINT,SignalHandler_SIGINT)
 
+def reset_distance():
+    global velocity, distance
+    velocity = 0
+    distance = 0
 
 def stop():
     controller.set_speed_r(0)
@@ -70,6 +74,10 @@ def move_straight(control,speed,distance,tick_speed):
     time.sleep(1)
     
 # relativily 1m seems to vary about 10cm
+reset_distance()
 move_straight(controller,0.5,160,.03)
+reset_distance()
 move_straight(controller,0.5,160,.03)
+reset_distance()
 move_straight(controller,0.5,160,.03)
+reset_distance()
