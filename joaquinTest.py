@@ -37,11 +37,13 @@ def calculate_distance(acceleration,dt):
     distance += velocity *dt
     return distance * 100
 
-def move_straight(control, speed, distance, tick_speed, kp=0.002):
+def move_straight(control, speed, distance, tick_speed, kp=0.0005):
     current = time.perf_counter()
     last = time.perf_counter()
     controller.sampling_time = tick_speed
-    
+    # Sets speed for the wheels
+    controller.set_speed_r(speed)
+    controller.set_speed_l(speed)
     # Get initial heading as setpoint
     values = controller.imu.magnetic
     setpoint = 180 + math.atan2(values[1], values[0]) * 180 / math.pi
@@ -58,9 +60,8 @@ def move_straight(control, speed, distance, tick_speed, kp=0.002):
         error = setpoint - current_heading
         correction = kp * error
         
-        # Apply corrections to wheel speeds
+        # Apply corrections to the LEFT WHEEL speeds
         controller.set_speed_l(speed + correction)
-        controller.set_speed_r(speed - correction)
         
         # Distance calculation
         accel = controller.imu.linear_acceleration or Default_accel
