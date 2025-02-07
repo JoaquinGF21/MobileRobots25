@@ -66,7 +66,10 @@ def move_straight(control,speed,distance,tick_speed,kp = .001):
         print(f"current: {current_heading}")
         # Calculate heading error and correction
         error = setpoint - current_heading
-        correction = kp * error
+        if current_heading < setpoint:
+            correction += .0005
+        else:
+            corection -= .0005
         
         # Apply corrections to the LEFT WHEEL speeds
         controller.set_speed_l(speed_l + correction)
