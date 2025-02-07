@@ -37,8 +37,8 @@ def calculate_distance(acceleration,dt):
     return distance * 100
 
 def move_straight(control,speed,distance,tick_speed):
-    current = time.time()
-    last = time.time()
+    current = time.perf_counter
+    last = time.perf_counter
     controller.sampling_time = tick_speed
     controller.set_speed_l(speed + adjl)
     controller.set_speed_r(speed)
@@ -49,6 +49,7 @@ def move_straight(control,speed,distance,tick_speed):
         # print("Heading: " + str(180 + math.atan2(values[1], values[0]) * 180 / math.pi))
         accel = controller.imu.linear_acceleration
         #try needed because last isn't initialized yet
+        #use accel[1]
         print(calculate_distance(accel[1],current - last))
         if distance <= calculate_distance(accel[1],current - last):
             pos = True
@@ -56,10 +57,11 @@ def move_straight(control,speed,distance,tick_speed):
         else:
             pass
         
+
         time.sleep(controller.sampling_time -
-                   ((time.time() - current) % controller.sampling_time))
+                   ((time.perf_counter() - current) % controller.sampling_time))
         last = current
-        #use accel[1]
+        
     stop()
 
     
