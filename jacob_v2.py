@@ -37,14 +37,14 @@ def calculate_distance(acceleration,dt):
     return distance * 100
 
 def move_straight(control,speed,distance,tick_speed):
-    current = time.perf_counter
-    last = time.perf_counter
+    current = time.perf_counter()
+    last = time.perf_counter()
     controller.sampling_time = tick_speed
     controller.set_speed_l(speed + adjl)
     controller.set_speed_r(speed)
     pos = False
     while not pos:
-        current = time.time()
+        current = time.perf_counter()
         # values = controller.imu.magnetic
         # print("Heading: " + str(180 + math.atan2(values[1], values[0]) * 180 / math.pi))
         accel = controller.imu.linear_acceleration
@@ -65,5 +65,6 @@ def move_straight(control,speed,distance,tick_speed):
     stop()
 
     
-# relativily 1m seems to vary about 10cm
-move_straight(controller,0.5,340,.03)
+# relativily 1m seems to vary about 1 square
+#move_straight(controller,0.5,160,.03)
+move_straight(controller,0.5,450,0.03)
