@@ -44,34 +44,37 @@ def calculate_distance(acceleration,dt):
     
     return distance * 100
 
-def move_straight(control,speed,distance,tick_speed,kp = .0005):
+def move_straight(control,speed,distance,tick_speed,kp = .001):
     current = time.perf_counter()
     last = time.perf_counter()
     controller.sampling_time = tick_speed
-    controller.set_speed_l(speed + adjl)
+    
+    speed_l = speed + adjl
     controller.set_speed_r(speed)
+    controller.set_speed_l(speed_l)
+
     #gets starting heading 
     values = controller.imu.magnetic
     setpoint = 180 + math.atan2(values[1], values[0]) * 180 / math.pi
-    
+    print(f"Start heading: {setpoint}")
     pos = False
     while not pos:
         current = time.perf_counter()
         # Get current heading
         values = controller.imu.magnetic
         current_heading = 180 + math.atan2(values[1], values[0]) * 180 / math.pi
-        
+        print(f"current: {current_heading}")
         # Calculate heading error and correction
         error = setpoint - current_heading
         correction = kp * error
         
         # Apply corrections to the LEFT WHEEL speeds
-        controller.set_speed_l(speed + correction)
+        controller.set_speed_l(speed_l + correction)
         
         accel = controller.imu.linear_acceleration or Default_accel
         #try needed because last isn't initialized yet
         #use accel[1]
-        print(f"{accel[1]} : {calculate_distance(accel[1],current - last)}")
+        #print(f"{accel[1]} : {calculate_distance(accel[1],current - last)}")
         if distance <= calculate_distance(accel[1],current - last):
             pos = True
             break
