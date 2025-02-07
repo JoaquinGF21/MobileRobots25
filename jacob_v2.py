@@ -44,17 +44,30 @@ def calculate_distance(acceleration,dt):
     
     return distance * 100
 
-def move_straight(control,speed,distance,tick_speed):
+def move_straight(control,speed,distance,tick_speed,kp = .0005):
     current = time.perf_counter()
     last = time.perf_counter()
     controller.sampling_time = tick_speed
     controller.set_speed_l(speed + adjl)
     controller.set_speed_r(speed)
+    #gets starting heading 
+    values = controller.imu.magnetic
+    setpoint = 180 + math.atan2(values[1], values[0]) * 180 / math.pi
+    
     pos = False
     while not pos:
         current = time.perf_counter()
-        # values = controller.imu.magnetic
-        # print("Heading: " + str(180 + math.atan2(values[1], values[0]) * 180 / math.pi))
+        # Get current heading
+        values = controller.imu.magnetic
+        current_heading = 180 + math.atan2(values[1], values[0]) * 180 / math.pi
+        
+        # Calculate heading error and correction
+        error = setpoint - current_heading
+        correction = kp * error
+        
+        # Apply corrections to the LEFT WHEEL speeds
+        controller.set_speed_l(speed + correction)
+        
         accel = controller.imu.linear_acceleration or Default_accel
         #try needed because last isn't initialized yet
         #use accel[1]
@@ -76,8 +89,8 @@ def move_straight(control,speed,distance,tick_speed):
 # relativily 1m seems to vary about 10cm
 reset_distance()
 move_straight(controller,0.5,160,.03)
-reset_distance()
-move_straight(controller,0.5,160,.03)
-reset_distance()
-move_straight(controller,0.5,160,.03)
-reset_distance()
+# reset_distance()
+# move_straight(controller,0.5,160,.03)
+# reset_distance()
+# move_straight(controller,0.5,160,.03)
+# reset_distance()
