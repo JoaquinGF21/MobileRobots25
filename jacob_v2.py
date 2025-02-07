@@ -29,6 +29,7 @@ def stop():
 velocity = 0
 distance = 0
 def calculate_distance(acceleration,dt):
+    global velocity, distance
     
     velocity += acceleration *dt
     
@@ -48,7 +49,7 @@ def move_straight(control,speed,distance,tick_speed):
         accel = controller.imu.linear_acceleration
         #try needed because last isn't initialized yet
         try:
-            if distance >= calculate_distance(accel[1],last - current):
+            if distance >= calculate_distance(accel[1],current - last):
                 pos = True
                 break
             else:
