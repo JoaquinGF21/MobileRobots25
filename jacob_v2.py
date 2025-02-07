@@ -23,14 +23,16 @@ def stop():
       controller.set_speed_r(0)
       controller.set_speed_l(0)
 
-def move_straight(controller,speed,distance,tick_speed):
+def move_straight(control,speed,distance,tick_speed):
     start = time.time()
     controller.sampling_time = tick_speed
     controller.set_speed_l(speed + adjl)
     controller.set_speed_r(speed)
     while time.time() != start + 2:
         loop_time = time.time()
-        print(controller.imu.acceleration)
+        accel = controller.imu.linear_acceleration
+        print(accel[0])
+#{z, }
         time.sleep(controller.sampling_time -
                    ((time.time() - loop_time) % controller.sampling_time))
         print('{:.20f}'.format((time.time() - loop_time)))
