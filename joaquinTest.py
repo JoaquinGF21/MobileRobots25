@@ -28,6 +28,7 @@ def stop():
 # I took the skeleton of this function from Clause ai
 velocity = 0
 distance = 0
+Default_accel = (0,0,0)
 def calculate_distance(acceleration,dt):
     global velocity, distance
     
@@ -62,7 +63,7 @@ def move_straight(control, speed, distance, tick_speed, kp=0.1):
         controller.set_speed_r(speed - correction)
         
         # Distance calculation
-        accel = controller.imu.linear_acceleration
+        accel = controller.imu.linear_acceleration or Default_accel
         if distance <= calculate_distance(accel[1], current - last):
             pos = True
             break
