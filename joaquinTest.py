@@ -37,7 +37,7 @@ def calculate_distance(acceleration,dt):
     distance += velocity *dt
     return distance * 100
 
-def move_straight(control, speed, distance, tick_speed, kp=0.1):
+def move_straight(control, speed, distance, tick_speed, kp=0.001):
     current = time.perf_counter()
     last = time.perf_counter()
     controller.sampling_time = tick_speed
