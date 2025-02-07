@@ -30,9 +30,9 @@ def move_straight(control,speed,distance,tick_speed):
     controller.set_speed_r(speed)
     while time.time() != start + 2:
         loop_time = time.time()
-        accel = controller.imu.linear_acceleration
-        print(accel[0])
-#{z, }
+        values = controller.imu.magnetic
+        print("Heading: " + str(180 + math.atan2(values[1], values[0]) * 180 / math.pi))
+#{x,y,z} for linear_acceleration
         time.sleep(controller.sampling_time -
                    ((time.time() - loop_time) % controller.sampling_time))
         print('{:.20f}'.format((time.time() - loop_time)))
