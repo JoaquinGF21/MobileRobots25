@@ -1,3 +1,28 @@
+import time
+import robot_controller
+import pigpio
+import signal
+import threading
+import math
+
+adjl = .0465
+pigpi = pigpio.pi()
+
+controller = robot_controller.control(pi=pigpi)
+
+def SignalHandler_SIGINT(SignalNumber,Frame):
+     print('Stopping Controller')
+     controller.set_speed_r(0)
+     controller.set_speed_l(0)
+     exit(0)
+     
+signal.signal(signal.SIGINT,SignalHandler_SIGINT)
+
+def stop():
+    controller.set_speed_r(0)
+    controller.set_speed_l(0)
+    return None
+
 def turn(control, speed, target_angle, tick_speed, kp=0.001):
     """
     Turn the robot by a specified angle
