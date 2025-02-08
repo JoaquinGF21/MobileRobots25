@@ -88,10 +88,10 @@ def turn(controller, speed, target_angle, tick_speed, kp=0.001):
     stop()
 
 # Test the turn function
-if __name__ == "__main__":
+
     # Example: Turn 90 degrees right
-    turn(controller, 0.3, 90, 0.03)
-    time.sleep(1)  # Wait a second between turns
+turn(controller, 0.3, 90, 0.03)
+time.sleep(1)  # Wait a second between turns
     
     # Example: Turn 90 degrees left
-    turn(controller, 0.3, -90, 0.03)
+turn(controller, 0.3, -90, 0.03)
