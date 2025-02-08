@@ -55,6 +55,7 @@ def move_straight(control,speed,distance,tick_speed,kp = .001):
     correction = 0
     #gets starting heading 
     values = controller.imu.magnetic
+    print(values)
     setpoint = 180 + math.atan2(values[1], values[0]) * 180 / math.pi
     print(f"Start heading: {setpoint}")
     pos = False
@@ -93,12 +94,12 @@ def move_straight(control,speed,distance,tick_speed,kp = .001):
     
 # relativily 1m seems to vary about 10cm
 reset_distance()
-move_straight(controller,0.5,140,.03)
-print("\n\n\n")
-reset_distance()
-move_straight(controller,0.5,140,.03)
-print("\n\n\n")
-reset_distance()
-move_straight(controller,0.5,140,.03)
-print("\n\n\n")
-reset_distance()
+move_straight(controller,0,140,.03)
+# print("\n\n\n")
+# reset_distance()
+# move_straight(controller,0.5,140,.03)
+# print("\n\n\n")
+# reset_distance()
+# move_straight(controller,0.5,140,.03)
+# print("\n\n\n")
+# reset_distance()
