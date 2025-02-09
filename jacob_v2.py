@@ -42,16 +42,30 @@ def find_ROC_Angle(current_a):
         ROC_last_a = current_a
         return 0.0
     
+    # Handle angle wrapping around 360 degrees
     angle_change = current_a - ROC_last_a
+    if angle_change > 180:
+        angle_change -= 360
+    elif angle_change < -180:
+        angle_change += 360
+        
     time_change = current_time - ROC_last_t
-
-    #ROC rate of change
+    
+    # Prevent division by zero and extreme values
+    if time_change < 1e-6:  # Less than 1 microsecond
+        return 0.0
+        
+    # Calculate rate of change in degrees per second
     ROC = angle_change / time_change
-
+    
+    # Optional: Add smoothing with moving average
+    # ROC = smooth_value(ROC)  # You would need to implement this
+    
     ROC_last_t = current_time
     ROC_last_a = current_a
-
+    
     return ROC
+
 #{x,y,z} for linear_acceleration
 #dt is the time interval between use of the function
 # I took the skeleton of this function from Clause ai
