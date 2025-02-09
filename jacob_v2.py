@@ -6,6 +6,10 @@ import threading
 import math
 
 adjl = .0466
+velocity = 0
+distance = 0
+ROC_last_t = None
+ROC_last_a = None
 pigpi = pigpio.pi()
 Default_accel = (0,0,0)
 controller = robot_controller.control(pi=pigpi)
@@ -18,20 +22,40 @@ def SignalHandler_SIGINT(SignalNumber,Frame):
      
 signal.signal(signal.SIGINT,SignalHandler_SIGINT)
 
-def reset_distance():
+def reset():
     global velocity, distance
     velocity = 0
     distance = 0
+    ROC_last_t = None
+    ROC_last_a = None
 
 def stop():
     controller.set_speed_r(0)
     controller.set_speed_l(0)
     return None
+def find_ROC_Angle(current_a):
+    global ROC_last_a, ROC_last_t
+    current_time = time.perf_counter()
+    
+    if ROC_last_t is None or ROC_last_a is None:
+        ROC_last_t = current_time
+        ROC_last_a = current_a
+        return 0.0
+    
+    angle_change = current_a - ROC_last_a
+    time_change = current_time - ROC_last_t
+
+    #ROC rate of change
+    ROC = angle_change / time_change
+
+    ROC_last_t = current_time
+    ROC_last_a = current_a
+
+    return ROC
 #{x,y,z} for linear_acceleration
 #dt is the time interval between use of the function
 # I took the skeleton of this function from Clause ai
-velocity = 0
-distance = 0
+
 def calculate_distance(acceleration,dt):
     global velocity, distance
     if -.4 <= acceleration <= .4:
@@ -63,15 +87,12 @@ def move_straight(control,speed,distance,tick_speed,kp = .001):
         current = time.perf_counter()
         # Get current heading
         values = controller.imu.magnetic
-        current_heading = 180 + math.atan2(values[1], values[0]) * 180 / math.pi
-        
-        # Calculate heading error and correction
-        error = setpoint - current_heading
-        correction = error * kp 
-        
-        # Apply corrections to the LEFT WHEEL speeds
-        controller.set_speed_l(speed_l + correction)
-
+        current_angle = 180 + math.atan2(values[1], values[0]) * 180 / math.pi
+        rate = find_ROC_Angle(current_angle)
+        if rate <= -.05:
+            correction += .001
+        elif rate >=.05:
+            correction += .001
         accel = controller.imu.linear_acceleration
         if accel[1] == None:
             accel = Default_accel
@@ -93,7 +114,7 @@ def move_straight(control,speed,distance,tick_speed,kp = .001):
     time.sleep(1)
     
 # relativily 1m seems to vary about 10cm
-reset_distance()
+reset()
 move_straight(controller,0,140,.03)
 # print("\n\n\n")
 # reset_distance()
