@@ -30,7 +30,6 @@ def stop():
 
 def straightTest():
     duration = 1
-    
     # Set speeds once before the loop
     controller.set_speed_r(0.5)
     controller.set_speed_l(0.5)
