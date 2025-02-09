@@ -28,8 +28,13 @@ def stop():
     controller.set_speed_l(0)
     return None
 
+<<<<<<< HEAD
 def straightTest():
     duration = 1
+=======
+def turnTest():
+    duration = .5
+>>>>>>> 0d21d124ab1df6ccdb68713a82cc923b8506b7b8
     
     # Set speeds once before the loop
     controller.set_speed_r(0.5)
