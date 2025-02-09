@@ -31,7 +31,7 @@ def stop():
 def straightTest(duration):
     # Set speeds once before the loop
     controller.set_speed_r(0.5)
-    controller.set_speed_l(0.5)
+    controller.set_speed_l(0.5 + adlj)
     
     end_time = time.perf_counter() + duration
     print(time.perf_counter())
@@ -48,8 +48,8 @@ def turnTest():
     duration = 1
     
     # Set speeds once before the loop
-    controller.set_speed_r(0.5)
-    controller.set_speed_l(-0.5)
+    controller.set_speed_r(-0.5)
+    controller.set_speed_l(0.5)
     
     end_time = time.perf_counter() + duration
     print(time.perf_counter())
@@ -57,7 +57,7 @@ def turnTest():
         print("Still running...")
         time.sleep(0.5)
 
-        
+
     # Stop the motors after the loop
     stop()
     print(time.perf_counter())
