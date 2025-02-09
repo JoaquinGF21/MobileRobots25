@@ -95,6 +95,7 @@ def move_straight(control,speed,distance,tick_speed,kp = .001):
     values = controller.imu.magnetic
     print(values)
     setpoint = 180 + math.atan2(values[1], values[0]) * 180 / math.pi
+    setpoint = setpoint % 360
     print(f"Start heading: {setpoint}")
     pos = False
     while not pos:
@@ -102,6 +103,7 @@ def move_straight(control,speed,distance,tick_speed,kp = .001):
         # Get current heading
         values = controller.imu.magnetic
         current_angle = 180 + math.atan2(values[1], values[0]) * 180 / math.pi
+        current_angle = current_angle % 360
         rate = find_ROC_Angle(current_angle)
         print(f"{current_angle} : {rate}")
         
