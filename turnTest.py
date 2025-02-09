@@ -41,3 +41,5 @@ def turnTest():
         time.sleep(0.5)
 
     print("Time's up!")
+
+turnTest()
