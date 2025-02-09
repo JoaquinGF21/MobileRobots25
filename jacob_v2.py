@@ -89,16 +89,19 @@ def move_straight(control,speed,distance,tick_speed,kp = .001):
         values = controller.imu.magnetic
         current_angle = 180 + math.atan2(values[1], values[0]) * 180 / math.pi
         rate = find_ROC_Angle(current_angle)
+        print(f"{current_angle} : {rate}")
+        
         if rate <= -.05:
             correction += .001
         elif rate >=.05:
-            correction += .001
+            correction -= .001
+        controller.set_speed_l(speed_l + correction)
         accel = controller.imu.linear_acceleration
         if accel[1] == None:
             accel = Default_accel
         #try needed because last isn't initialized yet
         #use accel[1]
-        print(f"{accel[1]} : {calculate_distance(accel[1],current - last)}")
+        #print(f"{accel[1]} : {calculate_distance(accel[1],current - last)}")
         if distance <= calculate_distance(accel[1],current - last):
             pos = True
             break
@@ -115,7 +118,7 @@ def move_straight(control,speed,distance,tick_speed,kp = .001):
     
 # relativily 1m seems to vary about 10cm
 reset()
-move_straight(controller,0,140,.03)
+move_straight(controller,0.5,300,.03)
 # print("\n\n\n")
 # reset_distance()
 # move_straight(controller,0.5,140,.03)
