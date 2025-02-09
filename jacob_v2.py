@@ -36,14 +36,14 @@ def stop():
 def find_ROC_Angle(current_a):
     global ROC_last_a, ROC_last_t
     current_time = time.perf_counter()
-    
-    # Initialize on first call
+    #normalize the angle
+    current_a = current_a % 360
+
     if ROC_last_t is None or ROC_last_a is None:
         ROC_last_t = current_time
         ROC_last_a = current_a
         return 0.0
     
-    # Handle angle wrapping around 360 degrees
     angle_change = current_a - ROC_last_a
     if angle_change > 180:
         angle_change -= 360
@@ -51,23 +51,14 @@ def find_ROC_Angle(current_a):
         angle_change += 360
         
     time_change = current_time - ROC_last_t
-    
-    # Only update if enough time has passed (e.g., at least 10ms)
-    if time_change < 0.01:  
-        return 0.0
-        
-    # Calculate rate of change in degrees per second
+
+    #ROC rate of change
     ROC = angle_change / time_change
-    
-    # Limit maximum ROC to reasonable values (e.g., ±360 degrees per second)
-    ROC = max(min(ROC, 360), -360)
-    
-    # Only update last values if we calculated a new ROC
+
     ROC_last_t = current_time
     ROC_last_a = current_a
-    
-    return ROC
 
+    return ROC
 #{x,y,z} for linear_acceleration
 #dt is the time interval between use of the function
 # I took the skeleton of this function from Clause ai
@@ -97,7 +88,6 @@ def move_straight(control,speed,distance,tick_speed,kp = .001):
     values = controller.imu.magnetic
     print(values)
     setpoint = 180 + math.atan2(values[1], values[0]) * 180 / math.pi
-    setpoint = setpoint % 360
     print(f"Start heading: {setpoint}")
     pos = False
     while not pos:
@@ -105,21 +95,17 @@ def move_straight(control,speed,distance,tick_speed,kp = .001):
         # Get current heading
         values = controller.imu.magnetic
         current_angle = 180 + math.atan2(values[1], values[0]) * 180 / math.pi
-        current_angle = current_angle % 360
         rate = find_ROC_Angle(current_angle)
-        print(f"{current_angle} : {rate}")
-        
         if rate <= -.05:
             correction += .001
-        elif rate >=.05:
-            correction -= .001
-        controller.set_speed_l(speed_l + correction)
+        elif rate >= 0.5:
+            correction += .001
         accel = controller.imu.linear_acceleration
         if accel[1] == None:
             accel = Default_accel
         #try needed because last isn't initialized yet
         #use accel[1]
-        #print(f"{accel[1]} : {calculate_distance(accel[1],current - last)}")
+        print(f"{accel[1]} : {calculate_distance(accel[1],current - last)}")
         if distance <= calculate_distance(accel[1],current - last):
             pos = True
             break
@@ -136,7 +122,7 @@ def move_straight(control,speed,distance,tick_speed,kp = .001):
     
 # relativily 1m seems to vary about 10cm
 reset()
-move_straight(controller,0.5,300,.03)
+move_straight(controller,0,140,.03)
 # print("\n\n\n")
 # reset_distance()
 # move_straight(controller,0.5,140,.03)
