@@ -37,6 +37,7 @@ def find_ROC_Angle(current_a):
     global ROC_last_a, ROC_last_t
     current_time = time.perf_counter()
     
+    # Initialize on first call
     if ROC_last_t is None or ROC_last_a is None:
         ROC_last_t = current_time
         ROC_last_a = current_a
@@ -51,16 +52,17 @@ def find_ROC_Angle(current_a):
         
     time_change = current_time - ROC_last_t
     
-    # Prevent division by zero and extreme values
-    if time_change < 1e-6:  # Less than 1 microsecond
+    # Only update if enough time has passed (e.g., at least 10ms)
+    if time_change < 0.01:  
         return 0.0
         
     # Calculate rate of change in degrees per second
     ROC = angle_change / time_change
     
-    # Optional: Add smoothing with moving average
-    # ROC = smooth_value(ROC)  # You would need to implement this
+    # Limit maximum ROC to reasonable values (e.g., ±360 degrees per second)
+    ROC = max(min(ROC, 360), -360)
     
+    # Only update last values if we calculated a new ROC
     ROC_last_t = current_time
     ROC_last_a = current_a
     
