@@ -28,8 +28,7 @@ def stop():
     controller.set_speed_l(0)
     return None
 
-def straightTest():
-    duration = 1
+def straightTest(duration):
     # Set speeds once before the loop
     controller.set_speed_r(0.5)
     controller.set_speed_l(0.5)
@@ -63,4 +62,12 @@ def turnTest():
     print(time.perf_counter())
     print("Time's up!")
 
-straightTest()
+straightTest(4)
+turnTest()
+straightTest(4)
+turnTest()
+straightTest(4)
+turnTest()
+straightTest(2.5)
+turnTest()
+straightTest(2.5)
