@@ -31,7 +31,7 @@ def stop():
 def straightTest(duration):
     # Set speeds once before the loop
     controller.set_speed_r(0.5)
-    controller.set_speed_l(0.5 + adlj)
+    controller.set_speed_l(0.5 + adjl)
     
     end_time = time.perf_counter() + duration
     print(time.perf_counter())
