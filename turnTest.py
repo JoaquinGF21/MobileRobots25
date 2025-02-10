@@ -63,12 +63,4 @@ def turnTest():
     print(time.perf_counter())
     print("Time's up!")
 
-straightTest(4)
 turnTest()
-straightTest(4)
-turnTest()
-straightTest(4)
-turnTest()
-straightTest(2.5)
-turnTest()
-straightTest(2.5)
