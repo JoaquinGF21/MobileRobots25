@@ -61,17 +61,40 @@ def turnTest():
     print("Time's up!")
 
 turnTest()
-"""
+
 straightTest(5.5)
+print("VL: 1.15m/s VR: 1.15m/s")
+print("Dist: 1.07 m")
+print("Time: 1 sec")
 turnTest()
+print("VL: 1.15m/s VR: 1.15m/s")
+print("Dist:0.72")
+print("Time:")
+
 straightTest(5.5)
+print("VL: 1.15m/s VR: 1.15m/s")
+print("Dist: 0.91 m")
+print("Time:")
 turnTest()
+print("VL: 1.15m/s VR: 1.15m/s")
+print("Dist:0.72")
+print("Time:")
 straightTest(5.5)
+print("VL: 1.15m/s VR: 1.15m/s")
+print("Dist: 0.457 m")
+print("Time:")
 turnTest()
+print("VL: 1.15m/s VR: 1.15m/s")
+print("Dist:0.95")
+print("Time:")
 straightTest(3)
+
 turnTest()
 straightTest(2)
+print("VL: 1.15m/s VR: 1.15m/s")
+print("Dist: 1.91")
+print("Time:")
 turnTest()
 straightTest(1)
+
 turnTest()
-"""
