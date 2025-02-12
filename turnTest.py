@@ -60,8 +60,6 @@ def turnTest():
     print(time.perf_counter())
     print("Time's up!")
 
-turnTest()
-
 straightTest(5.5)
 print("VL: 1.15m/s VR: 1.15m/s")
 print("Dist: 1.07 m")
