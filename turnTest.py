@@ -45,7 +45,7 @@ def straightTest(duration):
     print("Time's up!")
 
 def turnTest():
-    duration = 1
+    duration = .5
     
     # Set speeds once before the loop
     controller.set_speed_r(-0.5)
@@ -64,3 +64,17 @@ def turnTest():
     print("Time's up!")
 
 turnTest()
+"""
+straightTest(5.5)
+turnTest()
+straightTest(5.5)
+turnTest()
+straightTest(5.5)
+turnTest()
+straightTest(3)
+turnTest()
+straightTest(2)
+turnTest()
+straightTest(1)
+turnTest()
+"""
