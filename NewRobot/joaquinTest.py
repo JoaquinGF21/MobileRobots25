@@ -2,9 +2,7 @@ from robot_systems.robot import HamBot
 
 robot = HamBot
 
-robot.set_left_motor_speed(25)
-robot.set_right_motor_speed(25)
-
-robot.run_left_motor_for_seconds(3)
+robot.run_left_motor_for_seconds(robot, 3, speed=25, blocking=False)
+robot.run_right_motor_for_seconds(robot, 3, speed=25, blocking=False)
 
 robot.stop_motors()
