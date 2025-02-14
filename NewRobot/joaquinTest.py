@@ -10,4 +10,4 @@ def moveForward(t, v, blocking):
 
     robot.stop_motors()
 
-moveForward(5.0, 50, False)
+moveForward(5.0, 50, True)
