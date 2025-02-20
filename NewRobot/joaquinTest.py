@@ -9,6 +9,7 @@ def moveForward(t, v, blocking):
     robot.stop_motors()
 
 #moveForward(5.0, 50, True)
+j = 0
 while j < 10:
     j = HamBot.get_range_image
     print(j)
