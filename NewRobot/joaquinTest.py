@@ -1,6 +1,6 @@
 from robot_systems.robot import HamBot
 # Create instance of HamBot
-robot = HamBot()
+robot = HamBot(lidar_enabled=True)
 
 #Inputs: time (float), velocity (int), block (bool)
 def moveForward(t, v, blocking):
