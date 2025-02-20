@@ -1,5 +1,5 @@
 from robot_systems.robot import HamBot
-
+from robot_systems.lidar import get_current_scan
 # Create instance of HamBot
 robot = HamBot()
 
@@ -9,4 +9,6 @@ def moveForward(t, v, blocking):
 
     robot.stop_motors()
 
-moveForward(5.0, 50, True)
+#moveForward(5.0, 50, True)
+j = get_current_scan()
+print(j)
