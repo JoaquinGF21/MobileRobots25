@@ -10,5 +10,5 @@ def moveForward(t, v, blocking):
     robot.stop_motors()
 
 #moveForward(5.0, 50, True)
-j = Lidar.get_current_scan()
+j = Lidar.get_current_scan(HamBot)
 print(j)
