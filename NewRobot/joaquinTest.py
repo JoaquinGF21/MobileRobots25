@@ -11,6 +11,6 @@ def moveForward(t, v, blocking):
 #moveForward(5.0, 50, True)
 j = 0
 while j < 10:
-    j = HamBot.get_range_image()
+    j = robot.get_range_image()
     print(j)
     j = j + 1
