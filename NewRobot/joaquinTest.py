@@ -9,8 +9,7 @@ def moveForward(t, v, blocking):
     robot.stop_motors()
 
 #moveForward(5.0, 50, True)
-j = 0
-while j < 10:
-    j = robot.get_range_image()
-    print(j)
-    j = j + 1
+
+# Get the current range image from the Lidar
+range_image = robot.get_range_image()
+print(f"Range image: {range_image[:10]}")  # Print the first 10 values
