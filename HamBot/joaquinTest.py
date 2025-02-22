@@ -1,4 +1,4 @@
-from HamBot.robot import HamBot
+from robot_systems.robot import HamBot
 # Create instance of HamBot
 robot = HamBot(lidar_enabled=True)
 
