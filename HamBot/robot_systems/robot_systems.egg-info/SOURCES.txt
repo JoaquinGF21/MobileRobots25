@@ -1,0 +1,8 @@
+LICENSE
+README.md
+setup.py
+robot_systems.egg-info/PKG-INFO
+robot_systems.egg-info/SOURCES.txt
+robot_systems.egg-info/dependency_links.txt
+robot_systems.egg-info/requires.txt
+robot_systems.egg-info/top_level.txt
