@@ -4,7 +4,7 @@ import time
 
 
 Chris_R = HamBot()
-time.sleep(22)
+#time.sleep(22)
 
 # Lidar_l = [89,90,91]
 # Lidar_r = [269,270,271]
@@ -18,6 +18,6 @@ time.sleep(22)
 temp_array = Chris_R.get_range_image()
 print(temp_array)
 def corner():
-    Chris_R.run_left_motor_for_rotations(0.75,-50,False)
-    Chris_R.run_right_motor_for_rotations(0.75,50,True)
+    Chris_R.run_left_motor_for_rotations(0.6,-50,False)
+    Chris_R.run_right_motor_for_rotations(0.6,50,True)
 corner()

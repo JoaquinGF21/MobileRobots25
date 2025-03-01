@@ -4,7 +4,7 @@ import time
 
 
 Chris_R = HamBot()
-time.sleep(20)
+time.sleep(22)
  #balls
 #initialize directions and base speed
 Lidar_l = [89,90,91]
