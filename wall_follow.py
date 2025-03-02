@@ -12,7 +12,7 @@ Lidar_r = [269,270,271]
 Lidar_f = [179,180,181]
 Lidar_b = [359,0,1]
 base_speed = 50
-p = 0.05
+p = 0.5
 set_dist = 300
 def corner(dir):
     if dir == 'right':
@@ -39,6 +39,7 @@ def wall_follow(dir):
         front_dist_curr = min(temp_array[Lidar_f[0]],temp_array[Lidar_f[1]],temp_array[Lidar_f[2]])
         if (dir == 'left'):
             side_dist_curr = min(temp_array[Lidar_l[0]],temp_array[Lidar_l[1]],temp_array[Lidar_l[2]])
+            print(side_dist_curr)
         if (dir == 'right'):
             side_dist_curr = min(temp_array[Lidar_r[0]],temp_array[Lidar_r[1]],temp_array[Lidar_r[2]])
         if front_dist_curr <= 300:
