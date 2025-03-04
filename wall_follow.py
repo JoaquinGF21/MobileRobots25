@@ -14,9 +14,9 @@ Lidar_b = [359,0,1]
 base_speed = 50
 target = 300
 
-kp = 0.1
-ki = 0.005
-kd = 0.1
+kp = 0.05
+ki = 0.001
+kd = 0.2
 
 
 set_dist = 300
