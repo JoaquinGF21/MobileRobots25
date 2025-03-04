@@ -23,8 +23,8 @@ set_dist = 300
 
 def corner(dir):
     if (dir == 'left'):
-        Chris_R.run_left_motor_for_rotations(0.6,30,False)
-        Chris_R.run_right_motor_for_rotations(0.6,-30,True)
+        Chris_R.run_left_motor_for_rotations(0.5,30,False)
+        Chris_R.run_right_motor_for_rotations(0.5,-30,True)
     if (dir == 'right'):
         print()
     
