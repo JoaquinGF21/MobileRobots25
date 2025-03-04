@@ -22,23 +22,11 @@ kd = 0.1
 set_dist = 300
 
 def corner(dir):
-    temp_array = Chris_R.get_range_image()
-    front_dist_curr = min(temp_array[Lidar_f[0]],temp_array[Lidar_f[1]],temp_array[Lidar_f[2]])
-    print(dir)
     if (dir == 'left'):
-        while (True):
-            temp_array = Chris_R.get_range_image()
-            front_dist_curr = min(temp_array[Lidar_f[0]],temp_array[Lidar_f[1]],temp_array[Lidar_f[2]])
-            Chris_R.set_left_motor_speed(30)
-            Chris_R.set_right_motor_speed(-30)
-            if (front_dist_curr > 1000):
-                break
+        Chris_R.run_left_motor_for_rotations(0.6,30,False)
+        Chris_R.run_right_motor_for_rotations(0.6,-30,True)
     if (dir == 'right'):
-        while ((temp_array[295]-5 <= temp_array[255] <= temp_array[295]+5) and (front_dist_curr < 350)):
-            temp_array = Chris_R.get_range_image()
-            front_dist_curr = min(temp_array[Lidar_f[0]],temp_array[Lidar_f[1]],temp_array[Lidar_f[2]])
-            Chris_R.set_left_motor_speed(-30)
-            Chris_R.set_right_motor_speed(30)
+        print()
     
     Chris_R.stop_motors()
 
