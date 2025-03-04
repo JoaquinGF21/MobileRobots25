@@ -98,10 +98,10 @@ def pidAlgorithm(targetDistanceFromWall, currentDistance, previousError, integra
     # Converts PID output to velocity command
     velocity_command = pid_output
     
-    # Apply limits to velocity
+    # Apply limits to velocityy
     max_velocity = 75
     min_velocity = -75
-    velocity_command = max(min_velocity, min(velocity_command, max_velocity))
+    velocity_command = -(max(min_velocity, min(velocity_command, max_velocity)))
     
     return velocity_command, error, integral
 
