@@ -71,8 +71,8 @@ def main():
         # star_wars_crawl(22)
 
 # Function to get lidar readings
-def getLidarImage(robot, lidar_angles):
-    temp_array = robot.get_range_image()
+def getLidarImage(lidar_angles):
+    temp_array = Chris_R.get_range_image()
     front_dist_curr = min(temp_array[lidar_angles[0]], temp_array[lidar_angles[1]], temp_array[lidar_angles[2]])
     return front_dist_curr
 
@@ -99,8 +99,8 @@ def pidAlgorithm(targetDistanceFromWall, currentDistance, previousError, integra
     velocity_command = pid_output
     
     # Apply limits to velocity
-    max_velocity = 1.0
-    min_velocity = -1.0
+    max_velocity = 75
+    min_velocity = -75
     velocity_command = max(min_velocity, min(velocity_command, max_velocity))
     
     return velocity_command, error, integral
