@@ -3,10 +3,10 @@ import math
 import time
 import os
 import sys
-
+Chris_R = HamBot()
 def main():
     # Initialize robot
-    Chris_R = HamBot()
+    
     
     # Important variables
     targetDistanceFromWall = 500  # mm
@@ -62,7 +62,7 @@ def main():
             
     except KeyboardInterrupt:
         # Stop robot when Ctrl+C is pressed
-        robotStop(Chris_R)
+        robotStop()
         print("Program terminated by user")
         
         # Secret easter egg - uncomment this line to activate it when terminating with Ctrl+C
@@ -104,8 +104,8 @@ def pidAlgorithm(targetDistanceFromWall, currentDistance, previousError, integra
     return velocity_command, error, integral
 
 # Function to stop the robot
-def robotStop(robot):
-    robot.set_velocity(0, 0)  # Set both linear and angular velocity to 0
+def robotStop():
+    Chris_R.stop_motors()    # Set both linear and angular velocity to 0
 
 # Star Wars crawl easter egg function
 def star_wars_crawl(duration=22):
