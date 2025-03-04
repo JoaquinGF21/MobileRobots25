@@ -82,14 +82,14 @@ def wall_follow(dir):
         Chris_R.set_right_motor_speed(base_speed)
         
         temp_array = Chris_R.get_range_image()
-        front_dist_curr = min(temp_array[Lidar_f[0]],temp_array[Lidar_f[1]],temp_array[Lidar_f[2]])
+        front_dist_curr = max(0,min(temp_array[Lidar_f[0]],temp_array[Lidar_f[1]],temp_array[Lidar_f[2]]))
         
         
         if (dir == 'left'):
-            side_dist_curr = min(temp_array[Lidar_l[0]],temp_array[Lidar_l[1]],temp_array[Lidar_l[2]])
+            side_dist_curr = max(0,min(temp_array[Lidar_l[0]],temp_array[Lidar_l[1]],temp_array[Lidar_l[2]]))
             
         if (dir == 'right'):
-            side_dist_curr = min(temp_array[Lidar_r[0]],temp_array[Lidar_r[1]],temp_array[Lidar_r[2]])
+            side_dist_curr = max(0,min(temp_array[Lidar_r[0]],temp_array[Lidar_r[1]],temp_array[Lidar_r[2]]))
         if front_dist_curr <= target + 100:
             Chris_R.stop_motors()
             corner(dir)
