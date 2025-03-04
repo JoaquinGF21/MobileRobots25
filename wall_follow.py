@@ -18,8 +18,7 @@ kp = 0.1
 ki = 0.01
 kd = 0.05
 
-integral = 0
-prev_error = 0.0
+
 set_dist = 300
 
 def corner(dir):
@@ -59,6 +58,8 @@ def wall_follow(dir):
     adj = 0
     temp_array = []
     prevTime = time.perf_counter()
+    integral = 0
+    prev_error = 0.0
     while(True):
         currentTime = time.perf_counter()
         
