@@ -71,7 +71,7 @@ def wall_follow(dir):
         
         if (dir == 'left'):
             side_dist_curr = min(temp_array[Lidar_l[0]],temp_array[Lidar_l[1]],temp_array[Lidar_l[2]])
-            print(side_dist_curr)
+            
         if (dir == 'right'):
             side_dist_curr = min(temp_array[Lidar_r[0]],temp_array[Lidar_r[1]],temp_array[Lidar_r[2]])
         if front_dist_curr <= target:
@@ -81,6 +81,7 @@ def wall_follow(dir):
         try:
             dt = currentTime - prevTime
             adj, prev_error, integral = PID(target,side_dist_curr,prev_error,integral,dt)
+            print(adj)
         except:
             pass
             
