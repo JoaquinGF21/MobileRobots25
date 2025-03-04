@@ -31,7 +31,7 @@ def corner(dir):
             front_dist_curr = min(temp_array[Lidar_f[0]],temp_array[Lidar_f[1]],temp_array[Lidar_f[2]])
             Chris_R.set_left_motor_speed(30)
             Chris_R.set_right_motor_speed(-30)
-            if (temp_array[75] == temp_array(105)):
+            if (temp_array[75] == temp_array[105]):
                 break
     if (dir == 'right'):
         while ((temp_array[295]-5 <= temp_array[255] <= temp_array[295]+5) and (front_dist_curr < 350)):
