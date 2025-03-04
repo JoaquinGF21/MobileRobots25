@@ -53,6 +53,7 @@ def main():
             if abs(velocity) < 0.05:# If velocity is very small, stop the robot
                 print("Hurray!!!") 
                 robotStop()
+                break
             else:
                 # Convert normalized velocity (-1 to 1) to robot speed commands
                 # You might need to adjust this based on your robot's API
