@@ -50,7 +50,7 @@ def main():
             
             # Apply velocity command to robot
             # Assuming positive velocity means moving forward
-            if abs(velocity) < 0.05:# If velocity is very small, stop the robot
+            if (targetDistanceFromWall - currentDistance < 5) and (498 <= currentDistance <=502):# If velocity is very small, stop the robot
                 print("Hurray!!!") 
                 robotStop()
                 temp_array = Chris_R.get_range_image()
