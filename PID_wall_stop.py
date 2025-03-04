@@ -50,8 +50,8 @@ def main():
             
             # Apply velocity command to robot
             # Assuming positive velocity means moving forward
-            if abs(velocity) < 0.05:  # If velocity is very small, stop the robot
-                robotStop(Chris_R)
+            if abs(velocity) < 0.001:  # If velocity is very small, stop the robot
+                robotStop()
             else:
                 # Convert normalized velocity (-1 to 1) to robot speed commands
                 # You might need to adjust this based on your robot's API
