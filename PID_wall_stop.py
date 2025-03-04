@@ -55,7 +55,9 @@ def main():
             else:
                 # Convert normalized velocity (-1 to 1) to robot speed commands
                 # You might need to adjust this based on your robot's API
-                Chris_R.set_velocity(velocity, 0)  # velocity, angular_velocity
+                Chris_R.set_left_motor_speed(velocity)
+                Chris_R.set_right_motor_speed(velocity)
+                # velocity, angular_velocity
             
             # Small delay to prevent CPU overuse
             time.sleep(0.05)
