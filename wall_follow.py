@@ -24,7 +24,7 @@ set_dist = 300
 def corner(dir):
     temp_array = Chris_R.get_range_image()
     front_dist_curr = min(temp_array[Lidar_f[0]],temp_array[Lidar_f[1]],temp_array[Lidar_f[2]])
-     
+    
     if (dir == 'left'):
         while ((temp_array[105]-5 <= temp_array[75] <= temp_array[105]+5) and (front_dist_curr > 350)):
             temp_array = Chris_R.get_range_image()
@@ -37,6 +37,8 @@ def corner(dir):
             front_dist_curr = min(temp_array[Lidar_f[0]],temp_array[Lidar_f[1]],temp_array[Lidar_f[2]])
             Chris_R.set_left_motor_speed(30)
             Chris_R.set_right_motor_speed(-30)
+    print(f"{temp_array[75]} : {temp_array[105]}")
+    Chris_R.stop_motors()
 
         
 
@@ -74,7 +76,7 @@ def wall_follow(dir):
     while(True):
         currentTime = time.perf_counter()
         
-        Chris_R.set_left_motor_speed(base_speed + adj)
+        Chris_R.set_left_motor_speed(max(-75,min(75,base_speed + adj)))
         Chris_R.set_right_motor_speed(base_speed)
         
         temp_array = Chris_R.get_range_image()
@@ -93,7 +95,7 @@ def wall_follow(dir):
 
         dt = currentTime - prevTime
         adj, prev_error, integral = PID(target,side_dist_curr,prev_error,integral,dt)
-        print(adj)
+        
         
             
             
