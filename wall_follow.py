@@ -58,7 +58,7 @@ def wall_follow(dir):
     side_dist_prev = 0
     adj = 0
     temp_array = []
-    
+    prevTime = time.perf_counter()
     while(True):
         currentTime = time.perf_counter()
         
@@ -78,12 +78,11 @@ def wall_follow(dir):
             Chris_R.stop_motors()
             corner(dir)
             
-        try:
-            dt = currentTime - prevTime
-            adj, prev_error, integral = PID(target,side_dist_curr,prev_error,integral,dt)
-            print(adj)
-        except:
-            pass
+
+        dt = currentTime - prevTime
+        adj, prev_error, integral = PID(target,side_dist_curr,prev_error,integral,dt)
+        print(adj)
+        
             
             
             
