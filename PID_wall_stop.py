@@ -53,6 +53,9 @@ def main():
             if abs(velocity) < 0.05:# If velocity is very small, stop the robot
                 print("Hurray!!!") 
                 robotStop()
+                temp_array = Chris_R.get_range_image()
+                front_dist_curr = min(temp_array[lidar_angles[0]], temp_array[lidar_angles[1]], temp_array[lidar_angles[2]])
+                print(front_dist_curr)
                 break
             else:
                 # Convert normalized velocity (-1 to 1) to robot speed commands
