@@ -54,7 +54,7 @@ def main():
                 print("Hurray!!!") 
                 robotStop()
                 temp_array = Chris_R.get_range_image()
-                front_dist_curr = min(temp_array[lidar_angles[0]], temp_array[lidar_angles[1]], temp_array[lidar_angles[2]])
+                front_dist_curr = min(temp_array[Lidar_f[0]], temp_array[Lidar_f[1]], temp_array[Lidar_f[2]])
                 print(front_dist_curr)
                 break
             else:
