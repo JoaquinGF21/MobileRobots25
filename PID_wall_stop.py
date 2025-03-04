@@ -36,7 +36,7 @@ def main():
             prev_time = current_time
             
             # Get current distance from lidar
-            currentDistance = getLidarImage(Chris_R, Lidar_f)
+            currentDistance = getLidarImage(Lidar_f)
             
             # Call PID controller
             velocity, previousError, integral = pidAlgorithm(
