@@ -5,7 +5,8 @@ import os
 import sys
 Chris_R = HamBot()
 def main():
-    # important variables
+
+    # Important variables
     targetDistanceFromWall = 500  # mm
     previousError = 0.0
     integral = 0.0
@@ -15,27 +16,27 @@ def main():
     ki = 0.01
     kd = 0.05
     
-    # definition of lidar "Target Areas"
+    # Definition of lidar "Target Areas"
     Lidar_l = [89, 90, 91]
     Lidar_r = [269, 270, 271]
     Lidar_f = [179, 180, 181]
     Lidar_b = [359, 0, 1]
     
-    # control loop timing
+    # Control loop timing
     prev_time = time.time()
     
-    # main control loop
+    # Main control loop
     try:
         while True:
-            # get current time and calculate dt
+            # Get current time and calculate dt
             current_time = time.time()
             dt = current_time - prev_time
             prev_time = current_time
             
-            # get current distance from lidar
+            # Get current distance from lidar
             currentDistance = getLidarImage(Lidar_f)
             
-            # call PID controller
+            # Call PID controller
             velocity, previousError, integral = pidAlgorithm(
                 targetDistanceFromWall, 
                 currentDistance, 
@@ -45,6 +46,8 @@ def main():
                 kp, ki, kd
             )
             
+            # Apply velocity command to robot
+            # Assuming positive velocity means moving forward
             if (targetDistanceFromWall - currentDistance < 5) and (498 <= currentDistance <=502):# If velocity is very small, stop the robot
                 print("Hurray!!!") 
                 robotStop()
@@ -53,11 +56,22 @@ def main():
                 print(front_dist_curr)
                 break
             else:
+                # Convert normalized velocity (-1 to 1) to robot speed commands
+                # You might need to adjust this based on your robot's API
                 Chris_R.set_left_motor_speed(velocity)
                 Chris_R.set_right_motor_speed(velocity)
                 # velocity, angular_velocity
-                
+            
+            # Small delay to prevent CPU overuse
             time.sleep(0.05)
+            
+    except KeyboardInterrupt:
+        # Stop robot when Ctrl+C is pressed
+        robotStop()
+        print("Program terminated by user")
+        
+        # Secret easter egg - uncomment this line to activate it when terminating with Ctrl+C
+        # star_wars_crawl(22)
 
 # Function to get lidar readings
 def getLidarImage(lidar_angles):
