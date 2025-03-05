@@ -59,43 +59,44 @@ def main():
                 
             time.sleep(0.05)
 
-# function to get lidar readings
+# Function to get lidar readings
 def getLidarImage(lidar_angles):
     temp_array = Chris_R.get_range_image()
     front_dist_curr = min(temp_array[lidar_angles[0]], temp_array[lidar_angles[1]], temp_array[lidar_angles[2]])
     return front_dist_curr
 
-# PID algorithm function
+# PID Algorithm function
 def pidAlgorithm(targetDistanceFromWall, currentDistance, previousError, integral, dt, kp, ki, kd):
-    # calculates error
+    # Calculates error
     error = targetDistanceFromWall - currentDistance
     
-    # proportional term
+    # Proportional term
     p_term = kp * error
     
-    # integral term, gets error over time
+    # Integral term, gets error over time
     integral += error * dt
     i_term = ki * integral
     
-    # derivative term, rate of change of said error
+    # Derivative term, rate of change of said error
     derivative = (error - previousError) / dt
     d_term = kd * derivative
     
-    # calculates PID output
+    # Calculates PID output
     pid_output = p_term + i_term + d_term
     
-    # converts PID output to velocity command
+    # Converts PID output to velocity command
     velocity_command = pid_output
     
-    # apply limits to velocityy
+    # Apply limits to velocityy
     max_velocity = 75
     min_velocity = -75
     velocity_command = -(max(min_velocity, min(velocity_command, max_velocity)))
     
     return velocity_command, error, integral
 
+# Function to stop the robot
 def robotStop():
-    Chris_R.stop_motors() 
+    Chris_R.stop_motors()    # Set both linear and angular velocity to 0
 
 # Star Wars crawl easter egg function
 def star_wars_crawl(duration=22):
