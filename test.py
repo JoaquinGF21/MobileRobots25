@@ -18,6 +18,6 @@ Chris_R = HamBot()
 temp_array = Chris_R.get_range_image()
 print(temp_array)
 def corner():
-    Chris_R.run_left_motor_for_rotations(0.6,-25,False)
-    Chris_R.run_right_motor_for_rotations(0.6,25,True)
+    Chris_R.set_right_motor_speed(30)
+    Chris_R.set_left_motor_speed(-30)
 corner()
