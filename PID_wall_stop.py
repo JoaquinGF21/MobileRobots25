@@ -5,10 +5,7 @@ import os
 import sys
 Chris_R = HamBot()
 def main():
-    # Initialize robot
-    
-    
-    # Important variables
+    # important variables
     targetDistanceFromWall = 500  # mm
     previousError = 0.0
     integral = 0.0
@@ -18,27 +15,27 @@ def main():
     ki = 0.01
     kd = 0.05
     
-    # Definition of lidar "Target Areas"
+    # definition of lidar "Target Areas"
     Lidar_l = [89, 90, 91]
     Lidar_r = [269, 270, 271]
     Lidar_f = [179, 180, 181]
     Lidar_b = [359, 0, 1]
     
-    # Control loop timing
+    # control loop timing
     prev_time = time.time()
     
-    # Main control loop
+    # main control loop
     try:
         while True:
-            # Get current time and calculate dt
+            # get current time and calculate dt
             current_time = time.time()
             dt = current_time - prev_time
             prev_time = current_time
             
-            # Get current distance from lidar
+            # get current distance from lidar
             currentDistance = getLidarImage(Lidar_f)
             
-            # Call PID controller
+            # call PID controller
             velocity, previousError, integral = pidAlgorithm(
                 targetDistanceFromWall, 
                 currentDistance, 
@@ -48,8 +45,6 @@ def main():
                 kp, ki, kd
             )
             
-            # Apply velocity command to robot
-            # Assuming positive velocity means moving forward
             if (targetDistanceFromWall - currentDistance < 5) and (498 <= currentDistance <=502):# If velocity is very small, stop the robot
                 print("Hurray!!!") 
                 robotStop()
@@ -58,61 +53,49 @@ def main():
                 print(front_dist_curr)
                 break
             else:
-                # Convert normalized velocity (-1 to 1) to robot speed commands
-                # You might need to adjust this based on your robot's API
                 Chris_R.set_left_motor_speed(velocity)
                 Chris_R.set_right_motor_speed(velocity)
                 # velocity, angular_velocity
-            
-            # Small delay to prevent CPU overuse
+                
             time.sleep(0.05)
-            
-    except KeyboardInterrupt:
-        # Stop robot when Ctrl+C is pressed
-        robotStop()
-        print("Program terminated by user")
-        
-        # Secret easter egg - uncomment this line to activate it when terminating with Ctrl+C
-        # star_wars_crawl(22)
 
-# Function to get lidar readings
+# function to get lidar readings
 def getLidarImage(lidar_angles):
     temp_array = Chris_R.get_range_image()
     front_dist_curr = min(temp_array[lidar_angles[0]], temp_array[lidar_angles[1]], temp_array[lidar_angles[2]])
     return front_dist_curr
 
-# PID Algorithm function
+# PID algorithm function
 def pidAlgorithm(targetDistanceFromWall, currentDistance, previousError, integral, dt, kp, ki, kd):
-    # Calculates error
+    # calculates error
     error = targetDistanceFromWall - currentDistance
     
-    # Proportional term
+    # proportional term
     p_term = kp * error
     
-    # Integral term, gets error over time
+    # integral term, gets error over time
     integral += error * dt
     i_term = ki * integral
     
-    # Derivative term, rate of change of said error
+    # derivative term, rate of change of said error
     derivative = (error - previousError) / dt
     d_term = kd * derivative
     
-    # Calculates PID output
+    # calculates PID output
     pid_output = p_term + i_term + d_term
     
-    # Converts PID output to velocity command
+    # converts PID output to velocity command
     velocity_command = pid_output
     
-    # Apply limits to velocityy
+    # apply limits to velocityy
     max_velocity = 75
     min_velocity = -75
     velocity_command = -(max(min_velocity, min(velocity_command, max_velocity)))
     
     return velocity_command, error, integral
 
-# Function to stop the robot
 def robotStop():
-    Chris_R.stop_motors()    # Set both linear and angular velocity to 0
+    Chris_R.stop_motors() 
 
 # Star Wars crawl easter egg function
 def star_wars_crawl(duration=22):
