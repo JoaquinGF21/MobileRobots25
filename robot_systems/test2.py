@@ -63,7 +63,15 @@ def identify_color(r, g, b):
     # Find the dominant color channel
     max_channel = max(r, g, b)
     
-    if r == max_channel and r > g + 50 and r > b + 50:
+    # 2x4 wood brown detection (approximately 165, 120, 80)
+    if 145 < r < 185 and 100 < g < 140 and 60 < b < 100:
+        return "2x4 Wood Brown"
+    
+    # Pink detection
+    if r > 200 and 100 < g < 180 and 100 < b < 200 and r > g + 30 and r > b + 20:
+        return "Pink"
+    
+    elif r == max_channel and r > g + 50 and r > b + 50:
         return "Red"
     elif g == max_channel and g > r + 50 and g > b + 50:
         return "Green"
