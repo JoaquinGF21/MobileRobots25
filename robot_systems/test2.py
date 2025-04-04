@@ -12,7 +12,7 @@ def get_dominant_color(camera, sample_size=50):
     
     Returns:
         tuple: (R, G, B) color values
-        str: Color name approximation
+        str: Color name from the specified set of colors
     """
     # Get the current image
     image = camera.get_image()
@@ -39,78 +39,109 @@ def get_dominant_color(camera, sample_size=50):
     
     # Calculate the average color in this region
     avg_color = np.mean(center_region, axis=(0, 1)).astype(int)
-    r, g, b = avg_color
     
-    # Simple color name approximation
-    color_name = identify_color(r, g, b)
+    # The camera likely gives BGR format, so we may need to reverse for RGB
+    b, g, r = avg_color  # Adjust this line if your camera returns RGB directly
+    
+    # Identify which of the specified colors it matches
+    color_name = identify_color_range(r, g, b)
     
     return (r, g, b), color_name
 
-def identify_color(r, g, b):
+def identify_color_range(r, g, b):
     """
-    Returns an approximate color name based on RGB values.
-    This is a simple implementation and can be expanded.
+    Returns the name of the color based on predefined ranges for each target color.
+    
+    Original Colors (variable lighting):
+    Light Yellow - #98843b (RGB: 152, 132, 59)
+    Green - #60961c (RGB: 96, 150, 28)
+    Pink - #b72947 (RGB: 183, 41, 71)
+    Blue - #3c2d30 (RGB: 60, 45, 48)
+    
+    Ideal Lighting Colors:
+    Blue - #6e77a2 (RGB: 110, 119, 162)
+    Yellow - #fbea74 (RGB: 251, 234, 116)
+    Green - #7be720 (RGB: 123, 231, 32)
+    Pink - #ff3e8e (RGB: 255, 62, 142)
     """
-    # Check if it's mostly a shade of gray
-    if abs(r - g) < 20 and abs(r - b) < 20 and abs(g - b) < 20:
-        if r < 50:
-            return "Black"
-        elif r > 200:
-            return "White"
-        else:
-            return "Gray"
+    # Define comprehensive color ranges that account for both sets of colors
+    color_ranges = {
+        "Yellow": {
+            "r": (130, 255),  # Wide range to capture both light yellow variants
+            "g": (110, 240),  # Wide range for G
+            "b": (40, 130)    # Yellow has relatively low B, but wider for the brighter version
+        },
+        "Green": {
+            "r": (70, 140),   # Range to capture both green variants
+            "g": (130, 240),  # High G values (green is dominant)
+            "b": (15, 60)     # Low B values for both variants
+        },
+        "Pink": {
+            "r": (160, 255),  # High R values for both pink variants
+            "g": (25, 90),    # Low to moderate G values
+            "b": (50, 150)    # Range to capture both pink variants
+        },
+        "Blue": {
+            "r": (40, 130),   # Range to capture both blue variants
+            "g": (30, 140),   # Range to capture both blue variants
+            "b": (35, 180)    # Higher for bright blue, lower for dark blue
+        }
+    }
     
-    # Find the dominant color channel
-    max_channel = max(r, g, b)
+    # If the color doesn't match any range, use closest match from the ideal lighting colors
+    ideal_colors = {
+        "Blue": (110, 119, 162),
+        "Yellow": (251, 234, 116),
+        "Green": (123, 231, 32),
+        "Pink": (255, 62, 142)
+    }
     
-    # 2x4 wood brown detection (approximately 165, 120, 80)
-    if 145 < r < 185 and 100 < g < 140 and 60 < b < 100:
-        return "2x4 Wood Brown"
+    # First check if the color falls within any of the defined ranges
+    for color_name, ranges in color_ranges.items():
+        if (ranges["r"][0] <= r <= ranges["r"][1] and
+            ranges["g"][0] <= g <= ranges["g"][1] and
+            ranges["b"][0] <= b <= ranges["b"][1]):
+            return color_name
     
-    # Pink detection
-    if r > 200 and 100 < g < 180 and 100 < b < 200 and r > g + 30 and r > b + 20:
-        return "Pink"
+    # If no direct range match, find the closest ideal color
+    min_distance = float('inf')
+    closest_color = "Unknown"
     
-    elif r == max_channel and r > g + 50 and r > b + 50:
-        return "Red"
-    elif g == max_channel and g > r + 50 and g > b + 50:
-        return "Green"
-    elif b == max_channel and b > r + 50 and b > g + 50:
-        return "Blue"
-    elif r > 200 and g > 200 and b < 100:
-        return "Yellow"
-    elif r > 200 and g < 100 and b > 200:
-        return "Purple"
-    elif r < 100 and g > 150 and b > 150:
-        return "Cyan"
-    elif r > 200 and g > 100 and b < 100:
-        return "Orange"
-    else:
+    for color_name, (target_r, target_g, target_b) in ideal_colors.items():
+        # Calculate Euclidean distance
+        distance = np.sqrt((r - target_r)**2 + (g - target_g)**2 + (b - target_b)**2)
+        
+        # Update closest color if this distance is smaller
+        if distance < min_distance:
+            min_distance = distance
+            closest_color = color_name
+    
+    # Only return the closest color if it's within a reasonable distance
+    if min_distance > 150:  # This threshold can be adjusted
         return "Unknown"
-
-def main():
-    # Initialize the camera
-    print("Initializing camera...")
-    camera = Camera(fps=10)  # Higher FPS for more responsive readings
     
-    try:
-        # Give the camera time to warm up
-        time.sleep(2)
-        
-        print("Ready! Press Ctrl+C to exit.")
-        
-        # Continuously detect and display the color
-        while True:
-            rgb_color, color_name = get_dominant_color(camera)
-            if rgb_color is not None:
-                print(f"Detected color: {color_name} - RGB: {rgb_color}")
-            time.sleep(0.5)  # Update twice per second
-            
-    except KeyboardInterrupt:
-        print("\nExiting...")
-    finally:
-        # Clean up
-        camera.stop_camera()
+    return closest_color
 
-if __name__ == "__main__":
-    main()
+# Initialize the camera
+print("Initializing camera...")
+camera = Camera(fps=10)  # Higher FPS for more responsive readings
+
+try:
+    # Give the camera time to warm up
+    time.sleep(2)
+    
+    print("Ready! Press Ctrl+C to exit.")
+    print("Detecting colors: Yellow, Green, Pink, Blue")
+    
+    # Continuously detect and display the color
+    while True:
+        rgb_color, color_name = get_dominant_color(camera)
+        if rgb_color is not None:
+            print(f"Detected color: {color_name} - RGB: {rgb_color}")
+        time.sleep(0.5)  # Update twice per second
+        
+except KeyboardInterrupt:
+    print("\nExiting...")
+finally:
+    # Clean up
+    camera.stop_camera()
