@@ -10,27 +10,27 @@ os.system("sudo killall -9 libcamera_vid libcamera_still 2>/dev/null")
 # Initialize robot with camera enabled
 robot = HamBot(camera_enabled=True)
 
-# Define color ranges for detection
+# Define color ranges for detection - MUCH wider ranges to improve detection
 color_ranges = {
     "Yellow": {
-        "r": (130, 255),
-        "g": (110, 240),
-        "b": (40, 130)
+        "r": (100, 255),  # Wider range
+        "g": (100, 255),  # Wider range
+        "b": (0, 150)     # Wider range, yellow has low blue
     },
     "Green": {
-        "r": (50, 140),
-        "g": (150, 255),
-        "b": (15, 60)
+        "r": (0, 150),    # Wider range
+        "g": (100, 255),  # Wider range, must have strong green
+        "b": (0, 150)     # Wider range
     },
     "Pink": {
-        "r": (160, 255),
-        "g": (25, 90),
-        "b": (50, 150)
+        "r": (150, 255),  # Strong red component
+        "g": (0, 150),    # Lower green
+        "b": (50, 255)    # Variable blue
     },
     "Blue": {
-        "r": (40, 130),
-        "g": (30, 140),
-        "b": (120, 210)
+        "r": (0, 150),    # Low red
+        "g": (0, 150),    # Low to moderate green
+        "b": (100, 255)   # Must have strong blue
     }
 }
 
@@ -46,17 +46,23 @@ ki = 0.01
 kd = 0.05
 
 def identify_color(r, g, b):
-    """Identify color based on RGB values"""
-    # Check for Green-Blue differentiation
-    if g > b * 2 and g > 120:
-        if 50 <= r <= 140 and g >= 120:
-            return "Green"
+    """Identify color based on RGB values using relative channel strengths"""
+    # Check relative strengths of color channels - this is often more reliable than absolute values
     
-    if b > g and b > 100:
-        if 40 <= r <= 130 and 30 <= g <= 140:
-            return "Blue"
+    # Simple color ratio checks
+    if r > g and r > b and g > b*0.8:  # High red, medium-high green, low blue
+        return "Yellow"
     
-    # Check color ranges
+    if g > r*1.2 and g > b*1.2:  # Green significantly stronger than others
+        return "Green"
+    
+    if r > g*1.5 and r > b and b > g:  # High red, low green, medium blue
+        return "Pink"
+    
+    if b > r and b > g:  # Blue is strongest channel
+        return "Blue"
+    
+    # Fallback to range checks
     for color_name, ranges in color_ranges.items():
         if (ranges["r"][0] <= r <= ranges["r"][1] and
             ranges["g"][0] <= g <= ranges["g"][1] and
@@ -66,7 +72,7 @@ def identify_color(r, g, b):
     return "Unknown"
 
 def detect_color():
-    """Detect color using the robot's camera"""
+    """Detect color using the robot's camera with multiple sampling zones"""
     if robot.camera is None:
         print("Camera not available")
         return "Unknown"
@@ -80,60 +86,107 @@ def detect_color():
         # Get image dimensions
         height, width = image.shape[:2]
         
-        # Sample center area
-        sample_size = 50
-        x_start = width // 2 - sample_size // 2
-        y_start = height // 2 - sample_size // 2
-        x_end = x_start + sample_size
-        y_end = y_start + sample_size
+        # Sample multiple regions instead of just center
+        # This improves detection when color object isn't perfectly centered
+        sample_regions = [
+            # Center (larger)
+            (width//2 - 40, height//2 - 40, 80, 80),
+            # Left of center
+            (width//2 - 70, height//2, 40, 40),
+            # Right of center
+            (width//2 + 30, height//2, 40, 40),
+            # Above center
+            (width//2, height//2 - 70, 40, 40),
+            # Below center
+            (width//2, height//2 + 30, 40, 40)
+        ]
         
-        # Ensure boundaries
-        x_start = max(0, x_start)
-        y_start = max(0, y_start)
-        x_end = min(width, x_end)
-        y_end = min(height, y_end)
+        # Track color detections from each region
+        color_votes = {}
         
-        # Extract center region
-        center_region = image[y_start:y_end, x_start:x_end]
+        for i, (x, y, w, h) in enumerate(sample_regions):
+            # Ensure boundaries
+            x_start = max(0, x)
+            y_start = max(0, y)
+            x_end = min(width, x + w)
+            y_end = min(height, y + h)
+            
+            # Skip if region is too small
+            if x_end - x_start < 10 or y_end - y_start < 10:
+                continue
+                
+            # Extract region
+            region = image[y_start:y_end, x_start:x_end]
+            
+            # Calculate average color
+            avg_color = np.mean(region, axis=(0, 1)).astype(int)
+            r, g, b = avg_color
+            
+            # Identify color
+            color_name = identify_color(r, g, b)
+            
+            # Add to vote tally
+            if color_name not in color_votes:
+                color_votes[color_name] = 0
+            color_votes[color_name] += 1
+            
+            # Print debug info
+            print(f"Region {i}: RGB({r},{g},{b}) -> {color_name}")
         
-        # Calculate average color
-        avg_color = np.mean(center_region, axis=(0, 1)).astype(int)
-        r, g, b = avg_color  # The camera might return RGB directly
+        # Determine winner by votes (exclude Unknown)
+        if "Unknown" in color_votes:
+            del color_votes["Unknown"]
+            
+        if not color_votes:
+            return "Unknown"
+            
+        # Find color with most votes
+        winner = max(color_votes.items(), key=lambda x: x[1])
+        print(f"Color detection result: {winner[0]} with {winner[1]} votes")
         
-        # Identify color
-        color_name = identify_color(r, g, b)
-        print(f"Detected color: {color_name}, RGB: ({r}, {g}, {b})")
-        
-        return color_name
+        return winner[0]
         
     except Exception as e:
         print(f"Error detecting color: {e}")
         return "Unknown"
 
-def turn_complete_circle():
-    """Turn robot 360 degrees while looking for target color"""
-    print(f"Performing 360° search for {target_color}...")
+def slower_turn_with_pauses():
+    """Turn robot 360 degrees slowly with pauses to improve detection"""
+    print(f"Performing slow 360° search for {target_color}...")
     
     # Parameters for rotation
-    rotation_speed = 20
-    rotation_time = 10  # seconds for 360 degrees
+    rotation_speed = 10  # Slower rotation
+    segment_time = 0.7   # Time to rotate a bit
+    pause_time = 0.5     # Time to pause and check for color
     
-    start_time = time.time()
+    # We'll do 20 segments to complete 360 degrees
+    segments = 20
     found_color = False
     
-    # Start turning
-    robot.set_left_motor_speed(-rotation_speed)
-    robot.set_right_motor_speed(rotation_speed)
-    
-    # Keep turning until complete or color found
-    while time.time() - start_time < rotation_time and not found_color:
-        color_name = detect_color()
+    for segment in range(segments):
+        if found_color:
+            break
+            
+        # Rotate a bit
+        robot.set_left_motor_speed(-rotation_speed)
+        robot.set_right_motor_speed(rotation_speed)
+        time.sleep(segment_time)
         
-        if color_name == target_color:
+        # Stop and check for color
+        robot.stop_motors()
+        time.sleep(pause_time)  # Pause to let camera stabilize
+        
+        # Check multiple times for more reliable detection
+        detections = []
+        for _ in range(3):
+            color_name = detect_color()
+            detections.append(color_name)
+            time.sleep(0.1)
+        
+        # If target color appears in majority of detections
+        if detections.count(target_color) >= 2:
             found_color = True
             print(f"Found {target_color}!")
-        
-        time.sleep(0.1)
     
     # Stop robot
     robot.stop_motors()
@@ -147,6 +200,10 @@ def approach_object(target_distance=500):
     integral = 0.0
     previous_error = 0.0
     prev_time = time.time()
+    
+    # Count consecutive frames where color is lost
+    lost_color_count = 0
+    max_lost_frames = 5  # More tolerant of momentary losses
     
     # Approach loop
     while True:
@@ -186,8 +243,8 @@ def approach_object(target_distance=500):
         velocity = p_term + i_term + d_term
         
         # Limit velocity
-        max_velocity = 75
-        min_velocity = -75
+        max_velocity = 50  # Lower max speed for more stability
+        min_velocity = -50
         velocity = max(min_velocity, min(velocity, max_velocity))
         
         # Drive robot
@@ -200,9 +257,16 @@ def approach_object(target_distance=500):
         # Check if still seeing target color
         color_name = detect_color()
         if color_name != target_color:
-            print(f"Lost sight of {target_color}")
-            robot.stop_motors()
-            return False
+            lost_color_count += 1
+            print(f"Lost sight of {target_color} ({lost_color_count}/{max_lost_frames})")
+            
+            # Only stop if we've lost the color for multiple consecutive frames
+            if lost_color_count >= max_lost_frames:
+                robot.stop_motors()
+                return False
+        else:
+            # Reset counter when we see the color again
+            lost_color_count = 0
         
         time.sleep(0.05)
 
@@ -213,10 +277,14 @@ def find_and_approach_color(color):
     
     print(f"Looking for {target_color} object...")
     
-    # Check if can see color directly
-    detected_color = detect_color()
+    # Take multiple readings for initial detection
+    color_detections = []
+    for _ in range(5):
+        color_detections.append(detect_color())
+        time.sleep(0.1)
     
-    if detected_color == target_color:
+    # Check if target color appears in majority of detections
+    if color_detections.count(target_color) >= 3:
         print(f"Found {target_color} directly ahead!")
         if approach_object(500):  # 50cm
             print(f"Successfully approached {target_color}!")
@@ -224,11 +292,22 @@ def find_and_approach_color(color):
     
     # Do 360° search if not found initially
     print(f"Cannot see {target_color}. Performing 360° search...")
-    if turn_complete_circle():
+    if slower_turn_with_pauses():
         print(f"Found {target_color} during rotation!")
-        if approach_object(500):
-            print(f"Successfully approached {target_color}!")
-            return True
+        # Double-check detection after stopping
+        time.sleep(0.5)  # Wait for camera to stabilize
+        
+        color_check = []
+        for _ in range(3):
+            color_check.append(detect_color())
+            time.sleep(0.1)
+            
+        if color_check.count(target_color) >= 2:
+            if approach_object(500):
+                print(f"Successfully approached {target_color}!")
+                return True
+        else:
+            print(f"False detection - color disappeared after stopping")
     
     # If still not found
     print(f"Could not find {target_color} after complete rotation.")
@@ -246,8 +325,15 @@ def main():
         sys.exit(1)
     
     # Give camera time to initialize
-    print("Warming up camera (2 seconds)...")
-    time.sleep(2)
+    print("Warming up camera (3 seconds)...")
+    time.sleep(3)
+    
+    # Display color calibration info
+    print("\nCalibrating color detection. Please show each color to the camera:")
+    print("Sampling color ranges...")
+    for _ in range(5):
+        detect_color()
+        time.sleep(0.5)
     
     # Prompt for color selection
     valid_colors = ["Blue", "Yellow", "Pink", "Green"]
