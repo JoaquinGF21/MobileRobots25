@@ -1,6 +1,23 @@
 from camera import Camera
+from robot_systems.robot import HamBot
 import numpy as np
 import time
+import math
+
+# Initialize robot and camera
+robot = HamBot()
+camera = Camera(fps=10)  # Higher FPS for more responsive readings
+
+# Definition of lidar "Target Areas" - reused from your wall follow code
+Lidar_l = [89, 90, 91]
+Lidar_r = [269, 270, 271]
+Lidar_f = [179, 180, 181]
+Lidar_b = [359, 0, 1]
+
+# PID constants for approach control
+kp = 0.1
+ki = 0.01
+kd = 0.05
 
 def get_dominant_color(camera, sample_size=50):
     """
@@ -51,18 +68,6 @@ def get_dominant_color(camera, sample_size=50):
 def identify_color_range(r, g, b):
     """
     Returns the name of the color based on predefined ranges for each target color.
-    
-    Original Colors (variable lighting):
-    Light Yellow - #98843b (RGB: 152, 132, 59)
-    Green - #60961c (RGB: 96, 150, 28)
-    Pink - #b72947 (RGB: 183, 41, 71)
-    Blue - #3c2d30 (RGB: 60, 45, 48)
-    
-    Ideal Lighting Colors:
-    Blue - #6e77a2 (RGB: 110, 119, 162)
-    Yellow - #fbea74 (RGB: 251, 234, 116)
-    Green - #7be720 (RGB: 123, 231, 32)
-    Pink - #ff3e8e (RGB: 255, 62, 142)
     """
     # Define comprehensive color ranges that account for both sets of colors
     color_ranges = {
@@ -72,9 +77,9 @@ def identify_color_range(r, g, b):
             "b": (40, 130)    # Yellow has relatively low B, but wider for the brighter version
         },
         "Green": {
-            "r": (70, 140),   # Range to capture both green variants
-            "g": (130, 240),  # High G values (green is dominant)
-            "b": (15, 60)     # Low B values for both variants
+            "r": (50, 140),    # Range to capture both green variants
+            "g": (150, 255),   # Higher minimum G value to better distinguish from blue
+            "b": (15, 60)      # Low B values for green
         },
         "Pink": {
             "r": (160, 255),  # High R values for both pink variants
@@ -83,18 +88,23 @@ def identify_color_range(r, g, b):
         },
         "Blue": {
             "r": (40, 130),   # Range to capture both blue variants
-            "g": (30, 140),   # Range to capture both blue variants
-            "b": (35, 180)    # Higher for bright blue, lower for dark blue
+            "g": (30, 140),   # Lower maximum G value to distinguish from green
+            "b": (120, 210)   # Higher minimum B value to distinguish from green
         }
     }
     
-    # If the color doesn't match any range, use closest match from the ideal lighting colors
-    ideal_colors = {
-        "Blue": (110, 119, 162),
-        "Yellow": (251, 234, 116),
-        "Green": (123, 231, 32),
-        "Pink": (255, 62, 142)
-    }
+    # Check for Green-Blue differentiation specifically
+    # Green has high G-to-B ratio
+    if g > b * 2 and g > 120:
+        # Check if it's in the general green range
+        if 50 <= r <= 140 and g >= 120:
+            return "Green"
+    
+    # Blue has higher B than G usually
+    if b > g and b > 100:
+        # Check if it's in the general blue range
+        if 40 <= r <= 130 and 30 <= g <= 140:
+            return "Blue"
     
     # First check if the color falls within any of the defined ranges
     for color_name, ranges in color_ranges.items():
@@ -103,45 +113,180 @@ def identify_color_range(r, g, b):
             ranges["b"][0] <= b <= ranges["b"][1]):
             return color_name
     
-    # If no direct range match, find the closest ideal color
-    min_distance = float('inf')
-    closest_color = "Unknown"
+    return "Unknown"
+
+def approach_object(target_distance=500):
+    """
+    Use PID control to approach the detected colored object
+    """
+    # PID control variables
+    integral = 0.0
+    previous_error = 0.0
+    prev_time = time.time()
     
-    for color_name, (target_r, target_g, target_b) in ideal_colors.items():
-        # Calculate Euclidean distance
-        distance = np.sqrt((r - target_r)**2 + (g - target_g)**2 + (b - target_b)**2)
+    # Main approach loop
+    while True:
+        # Get current time for PID
+        current_time = time.time()
+        dt = current_time - prev_time
+        prev_time = current_time
         
-        # Update closest color if this distance is smaller
-        if distance < min_distance:
-            min_distance = distance
-            closest_color = color_name
-    
-    # Only return the closest color if it's within a reasonable distance
-    if min_distance > 150:  # This threshold can be adjusted
-        return "Unknown"
-    
-    return closest_color
+        # Get current distance from lidar (front-facing)
+        temp_array = robot.get_range_image()
+        current_distance = min(temp_array[Lidar_f[0]], temp_array[Lidar_f[1]], temp_array[Lidar_f[2]])
+        
+        # Calculate error
+        error = current_distance - target_distance
+        
+        # If we're already at the target distance (within tolerance), stop
+        if abs(error) < 50:  # 5cm tolerance
+            robot.stop_motors()
+            print(f"Target reached! Current distance: {current_distance}mm")
+            return True
+        
+        # Proportional term
+        p_term = kp * error
+        
+        # Integral term
+        integral += error * dt
+        i_term = ki * integral
+        
+        # Derivative term
+        derivative = (error - previous_error) / dt if dt > 0 else 0
+        d_term = kd * derivative
+        
+        # Calculate velocity command
+        velocity = p_term + i_term + d_term
+        
+        # Limit velocity
+        max_velocity = 75
+        min_velocity = -75
+        velocity = max(min_velocity, min(velocity, max_velocity))
+        
+        # Drive robot
+        robot.set_left_motor_speed(velocity)
+        robot.set_right_motor_speed(velocity)
+        
+        # Update previous error
+        previous_error = error
+        
+        # Check if we still see the target color
+        _, color_name = get_dominant_color(camera)
+        if color_name == "Unknown" or color_name != target_color:
+            robot.stop_motors()
+            print("Lost sight of target color!")
+            return False
+        
+        # Small delay to prevent CPU overuse
+        time.sleep(0.05)
 
-# Initialize the camera
-print("Initializing camera...")
-camera = Camera(fps=10)  # Higher FPS for more responsive readings
+def turn_complete_circle():
+    """
+    Turn the robot in a complete 360-degree circle while looking for the target color
+    """
+    # Parameters for rotation
+    rotation_speed = 20  # Slow enough to detect colors
+    
+    # Calculate time needed for a full rotation based on the robot's turning characteristics
+    # This will need calibration for your specific robot
+    rotation_time = 10  # seconds for a full 360-degree turn (adjust as needed)
+    
+    start_time = time.time()
+    found_color = False
+    
+    # Start turning
+    robot.set_left_motor_speed(-rotation_speed)
+    robot.set_right_motor_speed(rotation_speed)
+    
+    # Keep turning until we complete the circle or find the color
+    while time.time() - start_time < rotation_time and not found_color:
+        # Check for target color
+        _, color_name = get_dominant_color(camera)
+        
+        if color_name == target_color:
+            found_color = True
+            print(f"Found target color: {target_color}!")
+        
+        time.sleep(0.1)  # Small delay
+    
+    # Stop the robot
+    robot.stop_motors()
+    return found_color
 
-try:
-    # Give the camera time to warm up
+def find_and_approach_color(color):
+    """
+    Main function to find and approach a specific colored object
+    """
+    global target_color
+    target_color = color
+    
+    print(f"Looking for {target_color} object...")
+    
+    # First, check if we can immediately see the target color
+    _, detected_color = get_dominant_color(camera)
+    
+    if detected_color == target_color:
+        print(f"Found {target_color} directly in front! Approaching...")
+        if approach_object(500):  # 50cm = 500mm
+            print(f"Successfully approached {target_color} object!")
+            return True
+    
+    # If not found initially, do a 360° search
+    print(f"Cannot see {target_color}. Performing 360° search...")
+    if turn_complete_circle():
+        # If found during rotation, approach it
+        print(f"Found {target_color} during rotation. Approaching...")
+        if approach_object(500):  # 50cm = 500mm
+            print(f"Successfully approached {target_color} object!")
+            return True
+        else:
+            print(f"Lost sight of {target_color} while approaching.")
+            return False
+    
+    # If still not found after 360° rotation
+    print(f"Could not find {target_color} after complete rotation.")
+    print("Work in progress: Add more search patterns here.")
+    return False
+
+def main():
+    # Give the camera time to initialize
+    print("Initializing camera...")
     time.sleep(2)
     
-    print("Ready! Press Ctrl+C to exit.")
-    print("Detecting colors: Yellow, Green, Pink, Blue")
+    # Prompt user to select a color
+    valid_colors = ["Blue", "Yellow", "Pink", "Green"]
     
-    # Continuously detect and display the color
     while True:
-        rgb_color, color_name = get_dominant_color(camera)
-        if rgb_color is not None:
-            print(f"Detected color: {color_name} - RGB: {rgb_color}")
-        time.sleep(0.5)  # Update twice per second
+        print("\nSelect a color to find:")
+        for i, color in enumerate(valid_colors, 1):
+            print(f"{i}. {color}")
         
-except KeyboardInterrupt:
-    print("\nExiting...")
-finally:
-    # Clean up
-    camera.stop_camera()
+        try:
+            choice = int(input("Enter choice (1-4): "))
+            if 1 <= choice <= 4:
+                target_color = valid_colors[choice-1]
+                break
+            else:
+                print("Invalid choice. Please enter a number between 1 and 4.")
+        except ValueError:
+            print("Invalid input. Please enter a number.")
+    
+    try:
+        # Find and approach the selected color
+        result = find_and_approach_color(target_color)
+        
+        if result:
+            print(f"Mission accomplished! Found and approached {target_color} object.")
+        else:
+            print(f"Mission not completed. Could not find or approach {target_color} object.")
+            
+    except KeyboardInterrupt:
+        print("\nProgram terminated by user.")
+        
+    finally:
+        # Clean up
+        camera.stop_camera()
+        robot.stop_motors()
+
+# Start the program
+main()
