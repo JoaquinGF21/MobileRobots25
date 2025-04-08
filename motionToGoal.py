@@ -26,11 +26,11 @@ while(True):
     if not landmarks:
         Chris_R.set_left_motor_speed(25)
         Chris_R.set_right_motor_speed(-25)
-    if landmarks:
+    else:
+        Chris_R.stop_motors
+        print("Success!")
         break
     
-    print("Success!")
-    Chris_R.stop_motors
         
 #We have the robots current direction
 #We have the final landmarks position
