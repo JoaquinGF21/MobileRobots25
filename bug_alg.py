@@ -54,8 +54,8 @@ def WallFollow(dist_from_line):
     print()
 i = 1
 while True:
-    print(i)
-    print()
+    
+    
     objectDetection()
-    time.sleep(10)
+    
     i = i + 1
