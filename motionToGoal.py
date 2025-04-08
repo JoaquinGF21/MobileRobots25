@@ -3,6 +3,8 @@ from robot_systems.camera import Camera
 import math
 import time
 
+targetDistanceFromWall = 300  # mm
+
 #Initialize robot
 Chris_R = HamBot()
 camera = Chris_R.camera
@@ -31,6 +33,10 @@ while(True):
         print("Success!")
         break
     break
+
+if()
+    Chris_R.set_left_motor_speed(50)
+    Chris_R.set_right_motor_speed(50)
     
         
 #We have the robots current direction
