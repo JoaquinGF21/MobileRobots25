@@ -49,16 +49,13 @@ def objectDetection():
     for idx, dist in objects:
         print(idx)
     print()
-    while( i <= len(sight)):
-        sight[i] = 0
+    
         
 
 def WallFollow(dist_from_line):
     print()
 i = 1
 while True:
-    
-    
     objectDetection()
     
     i = i + 1
