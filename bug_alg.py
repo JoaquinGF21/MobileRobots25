@@ -47,7 +47,8 @@ def objectDetection():
             objects.append(temp_tuple)
         idx = idx + 1
     for idx, dist in objects:
-        print(f"Points: {idx} deg , {dist}mm \n")
+        print(idx)
+    print()
         
 
 def WallFollow(dist_from_line):
