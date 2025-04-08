@@ -24,7 +24,7 @@ while(True):
     #If target is not visible, rotate 360 degrees until it is detected
     if not landmarks:
         Chris_R.set_left_motor_speed(50)
-        Chris_R.set_right_motor_speed(50)
+        Chris_R.set_right_motor_speed(-50)
     if landmarks:
         print("Success")
 #We have the robots current direction
