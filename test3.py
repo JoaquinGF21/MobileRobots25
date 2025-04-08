@@ -11,5 +11,4 @@ camera.set_landmark_colors(color,0.1)
 while(True):
     camera.set_landmark_colors(color,0.1)
     landmarks = camera.find_landmarks()
-    print(landmarks)
 
