@@ -12,11 +12,13 @@ color = (158,0,255)
 camera.set_landmark_colors(color,0.1)
 
 #Find the starting direction the robot is looking in
+
 currentDirection = Chris_R.get_heading()
 print(currentDirection)
 
 #Loop to return current landmark value
 while(True):
+    image = Chris_R.camera.get_image()
     camera.set_landmark_colors(color,0.1)
     landmarks = camera.find_landmarks()
 
