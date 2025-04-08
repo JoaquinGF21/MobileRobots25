@@ -36,19 +36,21 @@ def PID(target, current,prev_error,integral,dt):
     
     return adj, err, integral
 def objectDetection():
-    range = target
+    ranget = target
     objects = []
     sight = Chris_R.get_range_image()
     
     idx = 0
     for dist in sight:
-        if(dist <= range) and (dist > 0):
+        if(dist <= ranget) and (dist > 0):
             temp_tuple = (idx, dist)
             objects.append(temp_tuple)
         idx = idx + 1
     for idx, dist in objects:
         print(idx)
     print()
+    while( i <= len(sight)):
+        sight[i] = 0
         
 
 def WallFollow(dist_from_line):
