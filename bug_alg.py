@@ -39,10 +39,12 @@ def objectDetection():
     range = target
     objects = []
     sight = Chris_R.get_range_image()
-    for i in sight:
-        if(sight[i] <= range):
-            temp_tuple = (i, sight[i])
+    idx = 0
+    for dist in sight:
+        if(dist <= range):
+            temp_tuple = (idx, dist)
             objects.append(temp_tuple)
+        idx = idx + 1
     for idx, dist in objects:
         print(f"Points: {idx} deg , {dist}mm \n")
         
