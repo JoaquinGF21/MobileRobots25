@@ -39,15 +39,15 @@ def objectDetection():
     range = target
     objects = []
     sight = Chris_R.get_range_image()
-    print(sight)
+    
     idx = 0
     for dist in sight:
-        if(dist <= range):
+        if(dist <= range) and (dist > 0):
             temp_tuple = (idx, dist)
             objects.append(temp_tuple)
         idx = idx + 1
-    # for idx, dist in objects:
-    #     print(f"Points: {idx} deg , {dist}mm \n")
+    for idx, dist in objects:
+        print(f"Points: {idx} deg , {dist}mm \n")
         
 
 def WallFollow(dist_from_line):
@@ -57,5 +57,5 @@ while True:
     print(i)
     print()
     objectDetection()
-    time.sleep(2)
+    time.sleep(10)
     i = i + 1
