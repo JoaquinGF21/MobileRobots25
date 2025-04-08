@@ -23,9 +23,9 @@ color_ranges = {
         "b": (0, 150)     # Wider range
     },
     "Pink": {
-        "r": (150, 255),  # Strong red component
-        "g": (0, 150),    # Lower green
-        "b": (50, 255)    # Variable blue
+        "r": (150, 255),     # Strong red component, includes 185
+        "g": (0, 100),       # Very low green (adjusted for RGB 185,0,255)
+        "b": (180, 255)      # Very high blue (adjusted for RGB 185,0,255)
     },
     "Blue": {
         "r": (0, 150),    # Low red
@@ -49,14 +49,21 @@ def identify_color(r, g, b):
     """Identify color based on RGB values using relative channel strengths"""
     # Check relative strengths of color channels - this is often more reliable than absolute values
     
-    # Simple color ratio checks
+    # Check specifically for the new pink color (185, 0, 255)
+    # Allow some tolerance around these values
+    pink_r_diff = abs(r - 185)
+    pink_b_diff = abs(b - 255)
+    if pink_r_diff < 50 and g < 50 and b > 200:
+        return "Pink"
+    
+    # Simple color ratio checks for other colors
     if r > g and r > b and g > b*0.8:  # High red, medium-high green, low blue
         return "Yellow"
     
     if g > r*1.2 and g > b*1.2:  # Green significantly stronger than others
         return "Green"
     
-    if r > g*1.5 and r > b and b > g:  # High red, low green, medium blue
+    if r > g*1.5 and b > g*1.5 and b > 180:  # High red, low green, high blue (another pink check)
         return "Pink"
     
     if b > r and b > g:  # Blue is strongest channel
@@ -104,6 +111,9 @@ def detect_color():
         # Track color detections from each region
         color_votes = {}
         
+        # Debug information for pink detection
+        pink_debug = []
+        
         for i, (x, y, w, h) in enumerate(sample_regions):
             # Ensure boundaries
             x_start = max(0, x)
@@ -132,6 +142,10 @@ def detect_color():
             
             # Print debug info
             print(f"Region {i}: RGB({r},{g},{b}) -> {color_name}")
+            
+            # Extra debug for pink detection
+            if r > 150 and g < 100 and b > 180:
+                pink_debug.append(f"Region {i}: Potential pink with RGB({r},{g},{b})")
         
         # Determine winner by votes (exclude Unknown)
         if "Unknown" in color_votes:
@@ -143,6 +157,12 @@ def detect_color():
         # Find color with most votes
         winner = max(color_votes.items(), key=lambda x: x[1])
         print(f"Color detection result: {winner[0]} with {winner[1]} votes")
+        
+        # Print extra debug info for pink detection
+        if pink_debug:
+            print("Pink detection details:")
+            for debug_line in pink_debug:
+                print(f"  {debug_line}")
         
         return winner[0]
         
@@ -334,6 +354,8 @@ def main():
     for _ in range(5):
         detect_color()
         time.sleep(0.5)
+    
+    print("\nSpecial detection enabled for Pink RGB(185, 0, 255)")
     
     # Prompt for color selection
     valid_colors = ["Blue", "Yellow", "Pink", "Green"]
