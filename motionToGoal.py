@@ -11,7 +11,7 @@ camera = Chris_R.camera
 color = (158,0,255)
 camera.set_landmark_colors(color,0.1)
 
-currentLocation = Chris_R.get_heading
+currentLocation = Chris_R.get_heading()
 print(currentLocation)
 #Loop to return current landmark value
 """while(True):
