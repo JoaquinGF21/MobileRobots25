@@ -27,9 +27,10 @@ while(True):
         Chris_R.set_left_motor_speed(25)
         Chris_R.set_right_motor_speed(-25)
     else:
-        Chris_R.stop_motors
+        Chris_R.stop_motors()
         print("Success!")
         break
+    break
     
         
 #We have the robots current direction
