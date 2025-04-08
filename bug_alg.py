@@ -49,7 +49,7 @@ def objectDetection():
     for idx, dist in objects:
         print(idx)
     print()
-    while( i <= range(sight)):
+    while( i <= len(sight)):
         sight[i] = 0
         
 
