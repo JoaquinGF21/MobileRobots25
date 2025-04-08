@@ -34,10 +34,11 @@ while(True):
         break
     break
 
-if()
+"""
+if():
     Chris_R.set_left_motor_speed(50)
     Chris_R.set_right_motor_speed(50)
-    
+    """
         
 #We have the robots current direction
 #We have the final landmarks position
