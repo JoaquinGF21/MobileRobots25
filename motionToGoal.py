@@ -26,13 +26,14 @@ while(True):
     #Actions to take to find target:
     #If target is not visible, rotate 360 degrees until it is detected
     if not landmarks:
-        Chris_R.set_left_motor_speed(25)
-        Chris_R.set_right_motor_speed(-25)
+        Chris_R.set_left_motor_speed(15)
+        Chris_R.set_right_motor_speed(-15)
+        
     else:
-        Chris_R.stop_motors()
         print("Success!")
         break
-    break
+Chris_R.stop_motors()    
+
 
 """
 if():
