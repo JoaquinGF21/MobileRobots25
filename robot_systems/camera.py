@@ -79,7 +79,7 @@ class Camera:
             list: A list of Landmark objects representing detected objects.
         """
         if self.image is None:
-
+            print("error no image set")
             return []
 
         if not self.landmark_colors:
