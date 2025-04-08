@@ -19,7 +19,6 @@ print(currentDirection)
 #Loop to return current landmark value
 while(True):
     image = Chris_R.camera.get_image()
-    camera.set_landmark_colors(color,0.1)
     landmarks = camera.find_landmarks()
 
     #Actions to take to find target:
@@ -28,7 +27,8 @@ while(True):
         Chris_R.set_left_motor_speed(50)
         Chris_R.set_right_motor_speed(-50)
     if landmarks:
-        print("Success")
+        print("Success!")
+        Chris_R.stop_motors
 #We have the robots current direction
 #We have the final landmarks position
 #If the robot changes angle, it must calculate how to get back
