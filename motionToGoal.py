@@ -1,9 +1,11 @@
 from robot_systems.robot import HamBot
 from robot_systems.camera import Camera
+from robot_systems.lidar import Lidar
 import math
 import time
 
 targetDistanceFromWall = 300  # mm
+Lidar_f = [179, 180, 181]
 
 #Initialize robot
 Chris_R = HamBot()
@@ -35,11 +37,25 @@ while(True):
 Chris_R.stop_motors()    
 
 
-"""
-if():
-    Chris_R.set_left_motor_speed(50)
-    Chris_R.set_right_motor_speed(50)
-    """
+while(True):
+    currentDistance = getLidarImage(Lidar_f)
+    if (targetDistanceFromWall - currentDistance < 5) and (498 <= currentDistance <=502):# If velocity is very small, stop the robot
+                print("Hurray!!!") 
+                robotStop()
+                temp_array = Chris_R.get_range_image()
+                front_dist_curr = min(temp_array[Lidar_f[0]], temp_array[Lidar_f[1]], temp_array[Lidar_f[2]])
+                print(front_dist_curr)
+                break
+    else:
+                # Convert normalized velocity (-1 to 1) to robot speed commands
+                # You might need to adjust this based on your robot's API
+                Chris_R.set_left_motor_speed(velocity)
+                Chris_R.set_right_motor_speed(velocity)
+                # velocity, angular_velocity
+            
+            # Small delay to prevent CPU overuse
+    time.sleep(0.05)
+    
         
 #We have the robots current direction
 #We have the final landmarks position
