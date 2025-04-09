@@ -61,8 +61,8 @@ while(True):
             break
         else:
             #robot rotates to find the landmark
-            Chris_R.set_left_motor_speed(15)
-            Chris_R.set_right_motor_speed(-15) 
+            Chris_R.set_left_motor_speed(10)
+            Chris_R.set_right_motor_speed(-10) 
         break
     Chris_R.set_left_motor_speed(25)
     Chris_R.set_right_motor_speed(25)
