@@ -43,7 +43,7 @@ currentDistance = getLidarImage(Lidar_f)
 
 #while should actually be until robot reaches target distance from objective
 
-while(targetDistanceFromGoal - currentDistance < 5) and (498 <= currentDistance < 502):
+while(targetDistanceFromGoal - currentDistance < 5) and (498 <= targetDistanceFromGoal - currentDistance < 502):
     #sets base landmark found state
     landmark_found = False
     
