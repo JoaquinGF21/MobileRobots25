@@ -7,7 +7,7 @@ Lidar_r = [269,270,271]
 Lidar_f = [179,180,181]
 Lidar_b = [359,0,1]
 base_speed = 50
-target = 300
+target = 500
 
 kp = 0.05
 ki = 0.001
@@ -36,19 +36,16 @@ def PID(target, current,prev_error,integral,dt):
     
     return adj, err, integral
 def objectDetection():
-    ranget = target
+    range = target
     objects = []
     sight = Chris_R.get_range_image()
     
     idx = 0
-    for dist in sight:
-        if(dist <= ranget) and (dist > 0):
-            temp_tuple = (idx, dist)
-            objects.append(temp_tuple)
-        idx = idx + 1
-    for idx, dist in objects:
-        print(idx)
-    print()
+    i = 0
+    while( i <= len(sight)):
+        if sight[i] < range:
+            objects.append((i,sight[i]))
+    print(objects)
     
         
 
@@ -56,6 +53,8 @@ def WallFollow(dist_from_line):
     print()
 i = 1
 while True:
+    print(f"interation {i}")
     objectDetection()
+    time.sleep(1)
+    i = i+1
     
-    i = i + 1
