@@ -24,7 +24,6 @@ def getLidarImage(lidar_angles):
     front_dist_curr = min(temp_array[lidar_angles[0]], temp_array[lidar_angles[1]], temp_array[lidar_angles[2]])
     return front_dist_curr
 
-currentDistance = getLidarImage(Lidar_f)
         
 #We have the robots current direction
 #We have the final landmarks position
@@ -43,13 +42,15 @@ currentDistance = getLidarImage(Lidar_f)
 
 #while should actually be until robot reaches target distance from objective
 
-while(targetDistanceFromGoal - currentDistance < 5) and (498 <= currentDistance < 502):
+while(True):
     #sets base landmark found state
     landmark_found = False
     
     #gets images
     image = Chris_R.camera.get_image()
     landmarks = camera.find_landmarks()
+    currentDistance = getLidarImage(Lidar_f)
+    time.sleep(.5)
     
     #while it has not found the landmark
     while(landmark_found == False):
@@ -60,8 +61,8 @@ while(targetDistanceFromGoal - currentDistance < 5) and (498 <= currentDistance 
             break
         else:
             #robot rotates to find the landmark
-            Chris_R.set_left_motor_speed(15)
-            Chris_R.set_right_motor_speed(-15) 
-    
+            Chris_R.set_left_motor_speed(10)
+            Chris_R.set_right_motor_speed(-10) 
+        
     Chris_R.set_left_motor_speed(25)
     Chris_R.set_right_motor_speed(25)
