@@ -45,6 +45,7 @@ def objectDetection():
     while( i <= len(sight)):
         if sight[i] < range:
             objects.append((i,sight[i]))
+        i+=1
     print(objects)
     
         
