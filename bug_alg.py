@@ -47,7 +47,7 @@ def objectDetection():
             objects.append(temp_tuple)
         idx = idx + 1
     for idx, dist in objects:
-        print(idx)
+        print(f"{idx}:{dist}")
     print()
     
         
@@ -56,6 +56,8 @@ def WallFollow(dist_from_line):
     print()
 i = 1
 while True:
+    print(f"interation {i}")
     objectDetection()
     time.sleep(1)
+    i = i+1
     
