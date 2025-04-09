@@ -7,7 +7,7 @@ Lidar_r = [269,270,271]
 Lidar_f = [179,180,181]
 Lidar_b = [359,0,1]
 base_speed = 50
-target = 300
+target = 500
 
 kp = 0.05
 ki = 0.001
@@ -57,5 +57,5 @@ def WallFollow(dist_from_line):
 i = 1
 while True:
     objectDetection()
-    time.sleep(0.5)
+    time.sleep(1)
     
