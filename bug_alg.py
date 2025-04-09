@@ -43,11 +43,12 @@ def objectDetection():
     idx = 0
     for dist in sight:
         if(dist <= range) and (dist > 0):
-            temp_tuple = (idx, dist)
-            objects.append(temp_tuple)
+            print(dist)
+            # temp_tuple = (idx, dist)
+            # objects.append(temp_tuple)
         idx = idx + 1
-    for idx, dist in objects:
-        print(f"{idx}:{dist}")
+    #for idx, dist in objects:
+        #print(f"{idx}:{dist}")
     print()
     
         
