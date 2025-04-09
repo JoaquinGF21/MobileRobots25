@@ -19,5 +19,6 @@ while True:
     for n in lidar:
         if n < range and n >= 0:
             print(n)
+    time.sleep(2)
 
 
