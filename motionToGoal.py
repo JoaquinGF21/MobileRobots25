@@ -51,6 +51,7 @@ while(True):
     landmarks = camera.find_landmarks()
     currentDistance = getLidarImage(Lidar_f)
     time.sleep(.5)
+    
     #while it has not found the landmark
     while(landmark_found == False):
         
@@ -62,6 +63,6 @@ while(True):
             #robot rotates to find the landmark
             Chris_R.set_left_motor_speed(15)
             Chris_R.set_right_motor_speed(-15) 
-    
+        break
     Chris_R.set_left_motor_speed(25)
     Chris_R.set_right_motor_speed(25)
