@@ -41,15 +41,11 @@ def objectDetection():
     sight = Chris_R.get_range_image()
     
     idx = 0
-    for dist in sight:
-        if(dist <= range) and (dist > 0):
-            print(dist)
-            # temp_tuple = (idx, dist)
-            # objects.append(temp_tuple)
-        idx = idx + 1
-    #for idx, dist in objects:
-        #print(f"{idx}:{dist}")
-    print()
+    i = 0
+    while( i <= len(sight)):
+        if sight[i] < range:
+            objects.append((i,sight[i]))
+    print(objects)
     
         
 
