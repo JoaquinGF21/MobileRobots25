@@ -6,9 +6,9 @@ import time
 base_speed = 30
 target = 500
 
-kp = 0.05
+kp = 0.01
 ki = 0.001
-kd = 0.2
+kd = 0.05
 target = 500
 Chris_R = HamBot()
 time.sleep(22)
