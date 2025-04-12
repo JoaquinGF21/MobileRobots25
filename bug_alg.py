@@ -46,7 +46,7 @@ def get_lidar(dir,prev):
     temp = []
     #sets initial prev to be an array
     if prev == None:
-        prev [0] * len(sight)
+        prev = [0] * len(sight)
     sight = Chris_R.get_range_image()
     
     for i in range(-5,11):
