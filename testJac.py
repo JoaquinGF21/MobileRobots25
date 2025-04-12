@@ -14,7 +14,9 @@ while(True):
     
     if landmarks:
         x_value = landmarks[0].x
-        print(x_value)
-
+        
+    if x_value == 320:
+        Chris_R.set_left_motor_speed(50)
+        Chris_R.set_right_motor_speed(50)
 
 
