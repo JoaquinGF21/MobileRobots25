@@ -9,7 +9,7 @@ target = 500
 kp = 0.05
 ki = 0.001
 kd = 0.2
-range = 500
+target = 500
 Chris_R = HamBot()
 time.sleep(22)
 
@@ -51,7 +51,7 @@ def get_lidar(dir,prev):
     return min(temp),prev
     
 
-def WallFollow(range):
+def WallFollow(target):
     tprev = time.perf_counter()
     prev = None
     left_s, prev = get_lidar("left",prev)
@@ -66,7 +66,7 @@ def WallFollow(range):
         left_s, prev = get_lidar("left",prev)
         tcurrent = time.perf_counter()
         dt = tcurrent - tprev
-        adj, p_error, integral  = PID(range,left_s,p_error,integral,dt)
+        adj, p_error, integral  = PID(target,left_s,p_error,integral,dt)
         tprev = tcurrent
 
-WallFollow(range)
+WallFollow(target)
