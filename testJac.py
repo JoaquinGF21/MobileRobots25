@@ -13,8 +13,7 @@ while(True):
     landmarks = camera.find_landmarks()
     
     if landmarks:
-        x_value = landmarks[0].x
-        if x_value == 320:
+        if landmarks[0].x == 320:
             Chris_R.set_left_motor_speed(50)
             Chris_R.set_right_motor_speed(50)
         
