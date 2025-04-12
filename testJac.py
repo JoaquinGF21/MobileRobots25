@@ -12,8 +12,8 @@ while(True):
     camera.set_landmark_colors(color,0.1)
     landmarks = camera.find_landmarks()
     
-    print(landmarks)
-    print(landmarks[0])
+    if landmarks:
+        print(landmarks[0])
 # def rotate(deg):
 #     axel = 115
 #     wheel_diameter = 90
