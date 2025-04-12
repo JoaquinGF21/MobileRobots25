@@ -53,7 +53,7 @@ while(True):
         Chris_R.set_right_motor_speed(-15)
     time.sleep(0.01)
 
-Chris_R.stop_motors
+Chris_R.stop_motors()
 
 front_dist_curr = 900
 while(front_dist_curr > 500):
