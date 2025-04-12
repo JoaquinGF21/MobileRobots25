@@ -49,7 +49,7 @@ while(True):
         Chris_R.set_left_motor_speed(15)
         Chris_R.set_right_motor_speed(-15)
 
-Chris_R.stop_motors
+Chris_R.stop_motors()
 
 
 
