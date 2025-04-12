@@ -78,7 +78,7 @@ while(True):
     if landmarks:
         adj, previousError, integral = PID(320, landmarks[0].x, previousError, integral, dt)
     else:
-        Chris_R.set_left_motor_speed(20)
+        Chris_R.set_left_motor_speed(40)
         Chris_R.set_right_motor_speed(50)
     previousTime = currentTime
     
