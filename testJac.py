@@ -39,7 +39,7 @@ while(True):
     camera.set_landmark_colors(color,0.1)
     landmarks = camera.find_landmarks()
     
-    if landmarks:
+    if landmarks < 320:
         print(landmarks[0].x)
         break
         # Chris_R.set_left_motor_speed(max(-75,min(75,base_speed + adj)))
