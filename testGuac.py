@@ -19,11 +19,10 @@ try:
         
         # Print when pink is detected
         if landmarks:
-            print(f"I SEE IT")
+            print(f"The center of the landmark is ({camera.x}, ({camera.y})")
         else:
             print("Found literally nothin bud.")
         # Short delay to prevent CPU overuse
-        time.sleep(0.2)
         
 except KeyboardInterrupt:
     print("Detection stopped by user")

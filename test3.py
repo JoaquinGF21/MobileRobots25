@@ -12,7 +12,7 @@ def track_pink_landmark():
     robot.camera.set_landmark_colors(pink, tolerance=0.1)
     
     # Define the center of the camera view
-    camera_center_x = 320  # Assuming 640x480 resolution, center is at 320
+    camera_center_x = 160  # Assuming 640x480 resolution, center is at 320
     
     # PID control variables
     targetPosition = camera_center_x
