@@ -1,7 +1,6 @@
 from robot_systems.robot import HamBot
 import numpy as np
 import time
-<<<<<<< HEAD
 import sys
 import os
 
