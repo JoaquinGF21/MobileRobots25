@@ -47,13 +47,13 @@ def track_pink_landmark():
                     if offset > 0:
                         # Landmark is to the right - turn right
                         print(f"Turning right, offset: {offset}, speed: {turn_speed}")
-                        robot.set_left_motor_speed(turn_speed)
-                        robot.set_right_motor_speed(-turn_speed)
+                        robot.set_left_motor_speed(-turn_speed)
+                        robot.set_right_motor_speed(turn_speed)
                     else:
                         # Landmark is to the left - turn left
                         print(f"Turning left, offset: {offset}, speed: {turn_speed}")
-                        robot.set_left_motor_speed(-turn_speed)
-                        robot.set_right_motor_speed(turn_speed)
+                        robot.set_left_motor_speed(turn_speed)
+                        robot.set_right_motor_speed(-turn_speed)
             else:
                 # No landmark detected - stop and wait
                 print("No pink detected")
