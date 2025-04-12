@@ -29,7 +29,7 @@ camera = Chris_R.camera
 color = (158,0,255)
 camera.set_landmark_colors(color,0.1)
 
-base_speed = 25
+base_speed = 50
 target = 320
 
 kp = 0.005
@@ -78,7 +78,7 @@ while(True):
     if landmarks:
         adj, previousError, integral = PID(320, landmarks[0].x, previousError, integral, dt)
     else:
-        Chris_R.set_left_motor_speed(45)
+        Chris_R.set_left_motor_speed(20)
         Chris_R.set_right_motor_speed(50)
     previousTime = currentTime
     
