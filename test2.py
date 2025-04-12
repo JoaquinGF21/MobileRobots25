@@ -48,7 +48,10 @@ def get_lidar(dir,prev):
             temp.append(sight[idx])
         
     prev = sight.copy()
-    return min(temp),prev
+    try:
+        return min(temp),prev
+    except:
+        pass
     
 
 def WallFollow(target):
@@ -70,4 +73,8 @@ def WallFollow(target):
         tprev = tcurrent
         time.sleep(0.7)
 
-WallFollow(target)
+while True:
+    prev = None
+    yes, prev = get_lidar(dir,prev)
+    print(yes)
+    time.sleep(0.5)
