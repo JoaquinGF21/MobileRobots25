@@ -32,9 +32,9 @@ camera.set_landmark_colors(color,0.1)
 base_speed = 25
 target = 320
 
-kp = 0.05
+kp = 0.005
 ki = 0.001
-kd = 0.2
+kd = 0.02
 dt = 0
 integral = 0
 previousError = 0.0
@@ -85,5 +85,5 @@ while(True):
         break
     time.sleep(0.7)
     
-Chris_R.stop_motors
+Chris_R.stop_motors()
 print("Robot Stopped!")
