@@ -6,7 +6,7 @@ import time
 camera = Camera()
 
 # Standard pink color in RGB (Red, Green, Blue)
-pink = (84, 0, 202)  # Hot pink
+pink = (158, 0, 255)  # Hot pink
 
 # Set the color to detect with 10% tolerance
 camera.set_landmark_colors(pink, tolerance=0.1)
@@ -15,7 +15,7 @@ try:
     print("Starting pink detection. Press Ctrl+C to stop.")
     while True:
         # Find landmarks in the current frame
-        landmarks = camera.find_landmarks(area_threshold=500)
+        landmarks = camera.find_landmarks()
         
         # Print when pink is detected
         if landmarks:
