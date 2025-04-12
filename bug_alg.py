@@ -35,18 +35,40 @@ def PID(target, current,prev_error,integral,dt):
     adj = p_term + i_term + d_term
     
     return adj, err, integral
-def objectDetection():
-    range = target
-    objects = []
+def get_lidar(dir,prev):
+    directions= {
+        "left" : 90,
+        "right": 270,
+        "forw" : 180,
+        "back" : 0
+    }
+    center = directions.get(dir)
+    temp = []
+    #sets initial prev to be an array
+    if prev == None:
+        prev = []
+        for i in range(0,15):
+            prev.append(0)
     sight = Chris_R.get_range_image()
     
-    idx = 0
-    i = 0
-    while( i <= len(sight)):
-        if sight[i] < range:
-            objects.append((i,sight[i]))
-        i+=1
-    print(objects)
+    for i in range(-5,11):
+        idx = center + i
+        if prev[idx] != sight[idx]:
+            temp.append(sight[idx])
+            prev[idx] = sight[idx]
+        else:
+            print(f"repeat :{prev[idx]}")
+    return min(temp),prev
+    
+            
+    
+    
+def objectDetection():
+    prev = None
+    while (True):
+        reading, prev = get_lidar("forw",prev)
+        print(reading)
+        time.sleep(.5)
     
         
 
