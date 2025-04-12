@@ -4,12 +4,6 @@ import math
 import time
 range = 500
 
-base_speed = 25
-target = 320
-
-kp = 0.05
-ki = 0.001
-kd = 0.2
 
 #Rotate to find
 
@@ -35,7 +29,17 @@ camera = Chris_R.camera
 color = (158,0,255)
 camera.set_landmark_colors(color,0.1)
 
+base_speed = 25
+target = 320
 
+kp = 0.05
+ki = 0.001
+kd = 0.2
+dt = 0
+integral = 0
+previousError = 0.0
+previousTime = time.perf_counter()
+adj = 0
 
 while(True):
     camera.set_landmark_colors(color,0.1)
@@ -53,16 +57,25 @@ while(True):
         Chris_R.set_right_motor_speed(-10)
     time.sleep(0.3)
 Chris_R.stop_motors()
-# time.sleep(5)
 
-# front_dist_curr = 900
-# while(front_dist_curr > 500):
-#     Lidar_f = [179,180,181]
-#     temp_array = Chris_R.get_range_image()
-#     front_dist_curr = min(temp_array[Lidar_f[0]], temp_array[Lidar_f[1]], temp_array[Lidar_f[2]])
+time.sleep(5)
 
-#     Chris_R.set_left_motor_speed(25)
-#     Chris_R.set_right_motor_speed(25)
+
+front_dist_curr = 900
+while(front_dist_curr > 500):
+
+    currentTime = time.perf_counter()
+    Lidar_f = [179,180,181]
+    temp_array = Chris_R.get_range_image()
+    front_dist_curr = min(temp_array[Lidar_f[0]], temp_array[Lidar_f[1]], temp_array[Lidar_f[2]])
+
+    Chris_R.set_left_motor_speed(max(-75,min(75,base_speed + adj)))
+    Chris_R.set_right_motor_speed(base_speed)
     
-# Chris_R.stop_motors
-# print("Robot Stopped!")
+    dt = currentTime - previousTime
+    adj, previousError, integral = PID(500, front_dist_curr, previousError, integral, dt)
+    previousTime = currentTime
+    time.sleep(0.7)
+    
+Chris_R.stop_motors
+print("Robot Stopped!")
