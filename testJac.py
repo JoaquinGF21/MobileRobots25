@@ -49,8 +49,8 @@ while(True):
         # Chris_R.set_right_motor_speed(base_speed)
         
     else:
-        Chris_R.set_left_motor_speed(15)
-        Chris_R.set_right_motor_speed(-15)
+        Chris_R.set_left_motor_speed(10)
+        Chris_R.set_right_motor_speed(-10)
     time.sleep(0.3)
 Chris_R.stop_motors()
 # time.sleep(5)
