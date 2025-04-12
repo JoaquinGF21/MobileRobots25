@@ -12,19 +12,12 @@ while(True):
     camera.set_landmark_colors(color,0.1)
     landmarks = camera.find_landmarks()
     
-    print(landmarks)
-    if not landmarks[0]:
-        print(landmarks)
-    else:
-        print(landmarks[0])
-# def rotate(deg):
-#     axel = 115
-#     wheel_diameter = 90
-#     rotations = (axel * deg) / (360 * wheel_diameter)
-#     Chris_R.run_left_motor_for_rotations(rotations, 20, False)
-#     Chris_R.run_right_motor_for_rotations(-rotations,20, False)
-# rotate(90)
-# time.sleep(7)
-# rotate(-90)
+    if landmarks:
+        x_value = landmarks[0].x
+        if x_value == 320:
+            Chris_R.set_left_motor_speed(50)
+            Chris_R.set_right_motor_speed(50)
+        
+
 
 
