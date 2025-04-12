@@ -59,7 +59,8 @@ while(True):
 Chris_R.stop_motors()
 
 time.sleep(0.5)
-Chris_R.reset_encoders()
+Chris_R.set_left_motor_speed(0)
+Chris_R.set_right_motor_speed(0)
 
 front_dist_curr = 900
 while(True):
