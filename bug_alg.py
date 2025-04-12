@@ -58,7 +58,7 @@ def get_lidar(dir,prev):
     
             
 def rotate(deg):
-    axel = 115
+    axel = 152
     wheel_diameter = 90
     rotations = (axel * deg) / (360 * wheel_diameter)
     Chris_R.run_left_motor_for_rotations(rotations, 20, False)
