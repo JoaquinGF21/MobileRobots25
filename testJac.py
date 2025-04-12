@@ -1,10 +1,9 @@
 from robot_systems.robot import HamBot
 from robot_systems.camera import Camera
-from robot_systems.camera import Landmark
 import math
 import time
 range = 500
-
+#s
 Chris_R = HamBot()
 camera = Chris_R.camera
 color = (158,0,255)
@@ -14,7 +13,8 @@ while(True):
     landmarks = camera.find_landmarks()
     
     if landmarks:
-        print(Landmark.landmark.x)
+        x_value = landmarks[0].x
+        print(x_value)
 
 
 
