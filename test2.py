@@ -73,4 +73,8 @@ def WallFollow(target):
         tprev = tcurrent
         time.sleep(0.7)
 
-WallFollow(target)
+while True:
+    prev = None
+    yes, prev = get_lidar(dir,prev)
+    print(yes)
+    time.sleep(0.5)
