@@ -19,8 +19,9 @@ try:
         
         # Print when pink is detected
         if landmarks:
-            print(f"Found {len(landmarks)} pink object(s)!")
-        
+            print(f"I SEE IT")
+        else:
+            print("Found literally nothin bud.")
         # Short delay to prevent CPU overuse
         time.sleep(0.2)
         
