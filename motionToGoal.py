@@ -57,7 +57,7 @@ while(True):
         
         if  landmarks:
             landmark_found = True
-            Chris_R.stop_motors()
+            Chris_R.stop_motors() 
             break
         else:
             #robot rotates to find the landmark
