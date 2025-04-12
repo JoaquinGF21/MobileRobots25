@@ -57,7 +57,9 @@ while(True):
         Chris_R.set_right_motor_speed(-10)
     time.sleep(0.3)
 Chris_R.stop_motors()
-
+time.sleep(0.1)
+Chris_R.set_left_motor_speed(45)
+Chris_R.set_right_motor_speed(50)
 time.sleep(0.5)
 front_dist_curr = 900
 while(True):
