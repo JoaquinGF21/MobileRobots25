@@ -6,7 +6,7 @@ def track_pink_landmark():
     robot = HamBot(lidar_enabled=False, camera_enabled=True)
     
     # Define pink color in RGB (Red, Green, Blue)
-    pink = (255, 105, 180)  # Hot pink
+    pink = (84, 0, )  # Hot pink
     
     # Set the color to detect with 10% tolerance
     robot.camera.set_landmark_colors(pink, tolerance=0.1)
