@@ -68,5 +68,6 @@ def WallFollow(target):
         dt = tcurrent - tprev
         adj, p_error, integral  = PID(target,left_s,p_error,integral,dt)
         tprev = tcurrent
+        time.sleep(0.7)
 
 WallFollow(target)
