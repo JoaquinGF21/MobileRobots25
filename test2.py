@@ -75,6 +75,6 @@ def WallFollow(target):
 
 while True:
     prev = None
-    yes, prev = get_lidar(dir,prev)
+    yes, prev = get_lidar("left",prev)
     print(yes)
     time.sleep(0.5)
