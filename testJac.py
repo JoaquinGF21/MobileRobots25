@@ -13,10 +13,7 @@ while(True):
     landmarks = camera.find_landmarks()
     
     print(landmarks)
-    if not landmarks[0]:
-        print(landmarks)
-    else:
-        print(landmarks[0])
+    print(landmarks[0])
 # def rotate(deg):
 #     axel = 115
 #     wheel_diameter = 90
