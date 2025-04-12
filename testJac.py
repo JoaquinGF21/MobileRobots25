@@ -18,7 +18,8 @@ while(True):
             print("I found it!")
             Chris_R.set_left_motor_speed(25)
             Chris_R.set_right_motor_speed(25)
-        
+        else: 
+            Chris_R.stop_motors
 
 
 
