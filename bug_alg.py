@@ -48,9 +48,9 @@ def get_lidar(dir,prev):
     #sets initial prev to be an array
     if prev == None:
         prev = [0] * len(sight)
-    for i in range(-5,6):
+    for i in range(-10,11):
         idx = center + i
-        if prev[idx] != sight[idx]:
+        if prev[idx] != sight[idx] and sight[idx] != -1:
             temp.append(sight[idx])
         else:
             print(f"repeat :{prev[idx]}")
