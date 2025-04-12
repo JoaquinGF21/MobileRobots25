@@ -81,7 +81,7 @@ while(True):
         print("ello")
     previousTime = currentTime
     
-    if front_dist_curr < 300:
+    if front_dist_curr < 500:
         break
     time.sleep(0.7)
     
