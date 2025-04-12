@@ -32,8 +32,8 @@ camera.set_landmark_colors(color,0.1)
 base_speed = 25
 target = 320
 
-kp = 0.005
-ki = 0.001
+kp = 0.01
+ki = 0.005
 kd = 0.02
 dt = 0
 integral = 0
