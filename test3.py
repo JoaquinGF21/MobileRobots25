@@ -40,7 +40,7 @@ def track_pink_landmark():
             
             # Find landmarks in the current frame
             try:
-                landmarks = robot.camera.find_landmarks(area_threshold=500)
+                landmarks = robot.camera.find_landmarks()
             except Exception as e:
                 print(f"Error detecting landmarks: {e}")
                 landmarks = []
@@ -85,9 +85,6 @@ def track_pink_landmark():
                 robot.stop_motors()
                 # Reset the integral term when no target is visible
                 integral = 0.0
-            
-            # Short delay to prevent CPU overuse
-            time.sleep(0.05)
             
     except KeyboardInterrupt:
         print("Tracking stopped by user")
