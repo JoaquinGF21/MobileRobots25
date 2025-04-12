@@ -62,8 +62,10 @@ time.sleep(5)
 
 
 front_dist_curr = 900
-while(front_dist_curr > 500):
-
+while(True):
+    camera.set_landmark_colors(color,0.1)
+    landmarks = camera.find_landmarks()
+    
     currentTime = time.perf_counter()
     Lidar_f = [179,180,181]
     temp_array = Chris_R.get_range_image()
@@ -73,8 +75,11 @@ while(front_dist_curr > 500):
     Chris_R.set_right_motor_speed(base_speed)
     
     dt = currentTime - previousTime
-    adj, previousError, integral = PID(500, front_dist_curr, previousError, integral, dt)
+    adj, previousError, integral = PID(320, landmarks[0].x, previousError, integral, dt)
     previousTime = currentTime
+    
+    if front_dist_curr < 600:
+        break
     time.sleep(0.7)
     
 Chris_R.stop_motors
