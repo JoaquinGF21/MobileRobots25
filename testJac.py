@@ -14,11 +14,12 @@ while(True):
     
     if landmarks:
         print(landmarks[0].x)
-        if landmarks[0].x == 320:
+        if landmarks[0].x < 320:
             print("I found it!")
             Chris_R.set_left_motor_speed(25)
             Chris_R.set_right_motor_speed(25)
-        
+        else: 
+            Chris_R.stop_motors
 
 
 
