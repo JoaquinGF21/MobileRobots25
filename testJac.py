@@ -41,7 +41,8 @@ while(True):
     
     if landmarks:
         print(landmarks[0].x)
-        break
+        if landmarks[0].x > 320:
+            break
         # Chris_R.set_left_motor_speed(max(-75,min(75,base_speed + adj)))
         # Chris_R.set_right_motor_speed(base_speed)
         
@@ -49,7 +50,7 @@ while(True):
         Chris_R.set_left_motor_speed(15)
         Chris_R.set_right_motor_speed(-15)
 
-Chris_R.stop_motors
+Chris_R.stop_motors()
 
 
 
