@@ -52,19 +52,26 @@ def get_lidar(dir,prev):
         idx = center + i
         if prev[idx] != sight[idx] and sight[idx] != -1:
             temp.append(sight[idx])
-        else:
-            print(f"repeat :{prev[idx]}")
+        
     prev = sight.copy()
     return min(temp),prev
     
             
-    
+def rotate(deg):
+    axel = 115
+    wheel_diameter = 90
+    rotations = (axel * deg) / (360 * wheel_diameter)
+    Chris_R.run_left_motor_for_rotations(rotations, 20, False)
+    Chris_R.run_right_motor_for_rotations(-rotations,20, False)
+      
     
 def objectDetection():
     prev = None
     while (True):
-        reading, prev = get_lidar("forw",prev)
-        print(reading)
+        forw, prev = get_lidar("forw",prev)
+        if forw < range :
+            
+            WallFollow(range)
         time.sleep(.5)
     
         
