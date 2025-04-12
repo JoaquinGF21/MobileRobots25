@@ -93,27 +93,6 @@ def identify_color(r, g, b):
         return best_color[0]
     
     return "Unknown"
-=======
-range = 500
-
-Chris_R = HamBot()
-camera = Chris_R.camera
-# color = (158,0,255)
-# camera.set_landmark_colors(color,0.1)
-# while(True):
-#     camera.set_landmark_colors(color,0.1)
-#     landmarks = camera.find_landmarks()
-    
-#     print(landmarks)
-#     print(landmarks[0])
-while True:
-    lidar = Chris_R.get_range_image()
-    for n in lidar:
-        if n < range and n >= 0:
-            print(n)
-    time.sleep(2)
-
->>>>>>> 66287cea86a6308d00d976bb8f1938a248069312
 
 def detect_color():
     """Detect color using the robot's camera with multiple sampling zones"""
