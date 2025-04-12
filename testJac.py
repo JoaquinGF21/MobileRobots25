@@ -58,7 +58,7 @@ while(True):
     time.sleep(0.3)
 Chris_R.stop_motors()
 
-time.sleep(5)
+time.sleep(0.5)
 
 
 front_dist_curr = 900
@@ -75,7 +75,10 @@ while(True):
     Chris_R.set_right_motor_speed(base_speed)
     
     dt = currentTime - previousTime
-    adj, previousError, integral = PID(320, landmarks[0].x, previousError, integral, dt)
+    if landmarks:
+        adj, previousError, integral = PID(320, landmarks[0].x, previousError, integral, dt)
+    else:
+        print("ello")
     previousTime = currentTime
     
     if front_dist_curr < 600:
