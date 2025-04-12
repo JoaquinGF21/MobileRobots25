@@ -14,7 +14,7 @@ while(True):
     landmarks = camera.find_landmarks()
     
     if landmarks:
-        print(Landmark.x)
+        print(Landmark.landmark.x)
 
 
 
