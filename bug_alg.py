@@ -1,18 +1,13 @@
 from robot_systems.robot import HamBot
 import math
 import time
-
-Lidar_l = [89,90,91]
-Lidar_r = [269,270,271]
-Lidar_f = [179,180,181]
-Lidar_b = [359,0,1]
-base_speed = 50
+base_speed = 30
 target = 500
 
 kp = 0.05
 ki = 0.001
 kd = 0.2
-
+range = 500
 Chris_R = HamBot()
 time.sleep(22)
 
@@ -70,14 +65,30 @@ def objectDetection():
     while (True):
         forw, prev = get_lidar("forw",prev)
         if forw < range :
-            
+            rotate(90)
             WallFollow(range)
         time.sleep(.5)
     
         
 
-def WallFollow(dist_from_line):
-    print()
+def WallFollow(range):
+    tprev = time.perf_counter()
+    prev = None
+    left_s, prev = get_lidar("left",prev)
+    adj = 0
+    dt = 0
+    integral = 0
+    p_error = 0.0
+    while True:
+        Chris_R.set_left_motor_speed(max(-75,min(75,base_speed + adj)))
+        Chris_R.set_right_motor_speed(base_speed)
+        
+        left_s, prev = get_lidar("left",prev)
+        tcurrent = time.perf_counter()
+        dt = tcurrent - tprev
+        PID(range,left_s,p_error,integral,dt)
+        tprev = tcurrent
+    
 i = 1
 while True:
     print(f"interation {i}")
