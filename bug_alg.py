@@ -46,18 +46,16 @@ def get_lidar(dir,prev):
     temp = []
     #sets initial prev to be an array
     if prev == None:
-        prev = []
-        for i in range(0,15):
-            prev.append(0)
+        prev [0] * len(sight)
     sight = Chris_R.get_range_image()
     
     for i in range(-5,11):
         idx = center + i
         if prev[idx] != sight[idx]:
             temp.append(sight[idx])
-            prev[idx] = sight[idx]
         else:
             print(f"repeat :{prev[idx]}")
+    prev = sight.copy()
     return min(temp),prev
     
             
