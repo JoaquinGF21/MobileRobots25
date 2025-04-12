@@ -36,9 +36,6 @@ color = (158,0,255)
 camera.set_landmark_colors(color,0.1)
 
 
-Lidar_f = [179,180,181]
-temp_array = Chris_R.get_range_image()
-front_dist_curr = min(temp_array[Lidar_f[0]], temp_array[Lidar_f[1]], temp_array[Lidar_f[2]])
 
 while(True):
     camera.set_landmark_colors(color,0.1)
@@ -55,7 +52,12 @@ while(True):
         Chris_R.set_left_motor_speed(15)
         Chris_R.set_right_motor_speed(-15)
 
-while(front_dist_curr < 300):
+front_dist_curr = 900
+while(front_dist_curr > 500):
+    Lidar_f = [179,180,181]
+    temp_array = Chris_R.get_range_image()
+    front_dist_curr = min(temp_array[Lidar_f[0]], temp_array[Lidar_f[1]], temp_array[Lidar_f[2]])
+
     Chris_R.set_left_motor_speed(50)
     Chris_R.set_right_motor_speed(50)
     
