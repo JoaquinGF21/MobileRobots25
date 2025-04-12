@@ -78,7 +78,8 @@ while(True):
     if landmarks:
         adj, previousError, integral = PID(320, landmarks[0].x, previousError, integral, dt)
     else:
-        print("ello")
+        Chris_R.set_left_motor_speed(45)
+        Chris_R.set_right_motor_speed(50)
     previousTime = currentTime
     
     if front_dist_curr < 500:
