@@ -14,18 +14,20 @@ time.sleep(1)
 
 def PID(target, current,prev_error,integral,dt):
     err = target - current
-    
-    #Proportional
-    p_term = kp * err
-    
-    #integral
-    integral += err * dt
-    i_term = ki * integral
-    #derivative
-    derivative = (err -prev_error)/dt
-    d_term = kd * derivative
-    
-    adj = p_term + i_term + d_term
+    if abs(err) > 5:
+        #Proportional
+        p_term = kp * err
+        
+        #integral
+        integral += err * dt
+        i_term = ki * integral
+        #derivative
+        derivative = (err -prev_error)/dt
+        d_term = kd * derivative
+        
+        adj = p_term + i_term + d_term
+    else:
+        adj = 0
     
     return adj, err, integral
 def get_lidar(dir):
@@ -51,20 +53,19 @@ def get_lidar(dir):
 
 def WallFollow(target):
     adj = 0
+    perror = 0.0
+    integral = 0
+    ptime = time.time()
+    
     while True:
+        ctime = time.time()
         Chris_R.set_left_motor_speed(max(-50,min(50,base_speed + adj)))
         Chris_R.set_right_motor_speed(max(-50,min(50,base_speed - adj)))
         
         left_s = get_lidar("left")
-        
-        if left_s > 0:
-            err = target - left_s
-            if abs(err) > 5:
-                pterm = kp * err
-            else:
-                pterm = 0    
-            adj = pterm
-            print(adj)
+        dt = ctime - ptime
+        ptime = ctime
+        adj,perror,integral = PID(target,left_s,perror,integral,dt)
         time.sleep(0.1)
 try:
     WallFollow(target)
