@@ -60,5 +60,7 @@ def WallFollow(target):
         pterm = kp * err
         adj += err
         time.sleep(0.1)
-
-WallFollow(target)
+try:
+    WallFollow(target)
+except (KeyboardInterrupt):
+    Chris_R.disconnect_robot()

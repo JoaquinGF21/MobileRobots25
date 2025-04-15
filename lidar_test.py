@@ -6,7 +6,7 @@ import time
 
 Chris_R = HamBot()
 time.sleep(5)
-def get_lidar(dir,prev):
+def get_lidar(dir):
     directions= {
         "left" : 90,
         "right": 270,
@@ -17,21 +17,17 @@ def get_lidar(dir,prev):
     temp = []
     sight = Chris_R.get_range_image()
     #sets initial prev to be an array
-    if prev == None:
-        prev = [0] * len(sight)
     for i in range(-10,11):
         idx = center + i
         if sight[idx] != -1:
             temp.append(sight[idx])
         
-    prev = sight.copy()
     if temp:
-        return min(temp), prev
+        return min(temp)
     else:
-        return [-1], prev
+        return [-1]
     
 while True:
-    prev = None
-    temp, prev = get_lidar("left",prev)
+    temp = get_lidar("left")
     print(temp)
     time.sleep(0.1)
