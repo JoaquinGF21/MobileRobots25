@@ -48,6 +48,8 @@ def get_lidar(dir,prev):
             temp.append(sight[idx])
         
     prev = sight.copy()
+    print(f"Temp: {temp}")
+    print(f"prev: {prev}")
     try:
         return min(temp),prev
     except:
