@@ -5,7 +5,7 @@ import math
 import time
 
 Chris_R = HamBot()
-time.sleep(22)
+time.sleep(5)
 def get_lidar(dir,prev):
     directions= {
         "left" : 90,
@@ -28,9 +28,10 @@ def get_lidar(dir,prev):
     if temp:
         return min(temp), prev
     else:
-        return None, prev
+        return [-1], prev
     
 while True:
     prev = None
     temp, prev = get_lidar("left",prev)
+    print(temp)
     time.sleep(0.1)
