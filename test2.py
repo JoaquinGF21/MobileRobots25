@@ -74,11 +74,12 @@ def WallFollow(target):
         dt = ctime - ptime
         ptime = ctime
         if forw_s < 400:
-            Chris_R.stop_motors()
-            time.sleep(0.1)
-            rotate(90)
+            forw_w = (400 - forw_s)/400
+            eff_s = left_s - (forw_w*100)
+        else:
+            eff_s = left_s
         
-        adj,perror,integral = PID(target,left_s,perror,integral,dt)
+        adj,perror,integral = PID(target,eff_s,perror,integral,dt)
         print(adj)
         time.sleep(0.2)
 try:
