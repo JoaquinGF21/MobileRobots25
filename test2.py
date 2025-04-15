@@ -6,9 +6,9 @@ import time
 base_speed = 30
 target = 250
 
-kp = 0.05
+kp = 0.04
 ki = 0
-kd = 0.001
+kd = 0.04
 Chris_R = HamBot()
 time.sleep(1)
 
@@ -41,7 +41,7 @@ def get_lidar(dir):
     temp = []
     sight = Chris_R.get_range_image()
     #sets initial prev to be an array
-    for i in range(-10,11):
+    for i in range(-2,15):
         idx = center + i
         if sight[idx] != -1:
             temp.append(sight[idx])
@@ -67,7 +67,7 @@ def WallFollow(target):
         ptime = ctime
         adj,perror,integral = PID(target,left_s,perror,integral,dt)
         print(adj)
-        time.sleep(0.1)
+        time.sleep(0.2)
 try:
     WallFollow(target)
 except (KeyboardInterrupt):
