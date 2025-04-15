@@ -8,7 +8,7 @@ target = 250
 
 kp = 0.04
 ki = 0
-kd = 0.04
+kd = 0.045
 Chris_R = HamBot()
 time.sleep(1)
 
@@ -68,14 +68,15 @@ def WallFollow(target):
         Chris_R.set_left_motor_speed(max(-50,min(50,base_speed + adj)))
         Chris_R.set_right_motor_speed(max(-50,min(50,base_speed - adj)))
         
-        left_s = get_lidar("left",-2,15)
+        left_s = get_lidar("left",-2,20)
         forw_s = get_lidar("forw",-10,15)
         
         dt = ctime - ptime
         ptime = ctime
-        if forw_s < 400:
-            forw_w = (400 - forw_s)/400
-            eff_s = left_s - (forw_w*100)
+        if forw_s < 500:
+            forw_s = get_lidar("forw",-30,15)
+            forw_w = (500 - forw_s)/500
+            eff_s = left_s - (forw_w*600)
         else:
             eff_s = left_s
         
