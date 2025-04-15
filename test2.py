@@ -47,7 +47,7 @@ def get_lidar(dir):
     if temp:
         return min(temp)
     else:
-        return [-1]
+        return -1
 
 def WallFollow(target):
     adj = 0
@@ -56,9 +56,10 @@ def WallFollow(target):
         Chris_R.set_right_motor_speed(base_speed)
         
         left_s = get_lidar("left")
-        err = target - left_s
-        pterm = kp * err
-        adj += err
+        if left_s > 0:
+            err = target - left_s
+            pterm = kp * err
+            adj += err
         time.sleep(0.1)
 try:
     WallFollow(target)
