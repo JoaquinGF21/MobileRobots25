@@ -6,7 +6,7 @@ import time
 base_speed = 30
 target = 250
 
-kp = 0.001
+kp = 0.01
 ki = 0.002
 kd = 0.005
 Chris_R = HamBot()
@@ -61,7 +61,7 @@ def WallFollow(target):
             err = target - left_s
             pterm = kp * err
             adj += pterm
-            
+            print(adj)
         time.sleep(0.1)
 try:
     WallFollow(target)
