@@ -4,7 +4,7 @@ from robot_systems.camera import Camera
 import math
 import time
 base_speed = 30
-target = 200
+target = 250
 
 kp = 0.001
 ki = 0.002
@@ -56,11 +56,11 @@ def WallFollow(target):
         Chris_R.set_right_motor_speed(base_speed)
         
         left_s = get_lidar("left")
-        print(left_s)
+        
         if left_s > 0:
             err = target - left_s
             pterm = kp * err
-            adj += err
+            adj += pterm
             
         time.sleep(0.1)
 try:
