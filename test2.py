@@ -30,7 +30,7 @@ def PID(target, current,prev_error,integral,dt):
         adj = 0
     
     return adj, err, integral
-def get_lidar(dir):
+def get_lidar(dir,rL,rU):
     directions= {
         "left" : 90,
         "right": 270,
@@ -41,7 +41,7 @@ def get_lidar(dir):
     temp = []
     sight = Chris_R.get_range_image()
     #sets initial prev to be an array
-    for i in range(-2,15):
+    for i in range(rL,rU):
         idx = center + i
         if sight[idx] != -1:
             temp.append(sight[idx])
@@ -62,9 +62,13 @@ def WallFollow(target):
         Chris_R.set_left_motor_speed(max(-50,min(50,base_speed + adj)))
         Chris_R.set_right_motor_speed(max(-50,min(50,base_speed - adj)))
         
-        left_s = get_lidar("left")
+        left_s = get_lidar("left",-2,15)
+        forw_s = get_lidar("forw",-10,15)
+        
         dt = ctime - ptime
         ptime = ctime
+        if forw_s < 600:
+            adj,perror,integral = PID(target + 250,left_s,perror,integral,dt)
         adj,perror,integral = PID(target,left_s,perror,integral,dt)
         print(adj)
         time.sleep(0.2)
