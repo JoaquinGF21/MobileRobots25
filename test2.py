@@ -50,7 +50,13 @@ def get_lidar(dir,rL,rU):
         return min(temp)
     else:
         return -1
-
+def rotate(deg):
+    axel = 152
+    wheel_diameter = 90
+    rotations = (axel * deg) / (360 * wheel_diameter)
+    Chris_R.run_left_motor_for_rotations(rotations, 20, False)
+    Chris_R.run_right_motor_for_rotations(-rotations,20, False)
+    
 def WallFollow(target):
     adj = 0
     perror = 0.0
@@ -67,8 +73,11 @@ def WallFollow(target):
         
         dt = ctime - ptime
         ptime = ctime
-        if forw_s < 600:
-            adj,perror,integral = PID(target + 250,left_s,perror,integral,dt)
+        if forw_s < 400:
+            Chris_R.stop_motors()
+            time.sleep(0.1)
+            rotate(90)
+        
         adj,perror,integral = PID(target,left_s,perror,integral,dt)
         print(adj)
         time.sleep(0.2)
