@@ -8,7 +8,7 @@ target = 300
 
 kp = 0.001
 ki = 0.002
-kd = 0.05
+kd = 0.005
 target = 500
 Chris_R = HamBot()
 time.sleep(22)
@@ -48,12 +48,10 @@ def get_lidar(dir,prev):
             temp.append(sight[idx])
         
     prev = sight.copy()
-    print(f"Temp: {temp}")
-    print(f"prev: {prev}")
-    try:
-        return min(temp),prev
-    except:
-        pass
+    if temp:
+        return min(temp), prev
+    else:
+        return None, prev
     
 
 def WallFollow(target):
@@ -72,6 +70,6 @@ def WallFollow(target):
         dt = tcurrent - tprev
         adj, p_error, integral  = PID(target,left_s,p_error,integral,dt)
         tprev = tcurrent
-        time.sleep(0.7)
+        time.sleep(0.2)
 
 WallFollow(target)
