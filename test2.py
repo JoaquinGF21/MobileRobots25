@@ -4,14 +4,13 @@ from robot_systems.camera import Camera
 import math
 import time
 base_speed = 30
-target = 300
+target = 200
 
 kp = 0.001
 ki = 0.002
 kd = 0.005
-target = 500
 Chris_R = HamBot()
-time.sleep(22)
+time.sleep(1)
 
 def PID(target, current,prev_error,integral,dt):
     err = target - current
@@ -29,7 +28,7 @@ def PID(target, current,prev_error,integral,dt):
     adj = p_term + i_term + d_term
     
     return adj, err, integral
-def get_lidar(dir,prev):
+def get_lidar(dir):
     directions= {
         "left" : 90,
         "right": 270,
@@ -40,36 +39,26 @@ def get_lidar(dir,prev):
     temp = []
     sight = Chris_R.get_range_image()
     #sets initial prev to be an array
-    if prev == None:
-        prev = [0] * len(sight)
     for i in range(-10,11):
         idx = center + i
-        if prev[idx] != sight[idx] and sight[idx] != -1:
+        if sight[idx] != -1:
             temp.append(sight[idx])
         
-    prev = sight.copy()
     if temp:
-        return min(temp), prev
+        return min(temp)
     else:
-        return None, prev
-    
+        return [-1]
 
 def WallFollow(target):
-    tprev = time.perf_counter()
-    prev = None
     adj = 0
-    dt = 0
-    integral = 0
-    p_error = 0.0
     while True:
-        Chris_R.set_left_motor_speed(max(-75,min(75,base_speed + adj)))
+        Chris_R.set_left_motor_speed(max(-50,min(50,base_speed + adj)))
         Chris_R.set_right_motor_speed(base_speed)
         
-        left_s, prev = get_lidar("left",prev)
-        tcurrent = time.perf_counter()
-        dt = tcurrent - tprev
-        adj, p_error, integral  = PID(target,left_s,p_error,integral,dt)
-        tprev = tcurrent
-        time.sleep(1)
+        left_s = get_lidar("left")
+        err = target - left_s
+        pterm = kp * err
+        adj += err
+        time.sleep(0.1)
 
 WallFollow(target)
