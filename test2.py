@@ -4,10 +4,10 @@ from robot_systems.camera import Camera
 import math
 import time
 base_speed = 30
-target = 500
+target = 300
 
-kp = 0.01
-ki = 0.001
+kp = 0.001
+ki = 0.002
 kd = 0.05
 target = 500
 Chris_R = HamBot()
