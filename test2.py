@@ -72,7 +72,7 @@ def motionToGoal(color):
         else:
             adjl = 0
             adjr = 0
-        if forw < 650:
+        if forw > 500:
             Chris_R.set_left_motor_speed(base_speed + adjl)
             Chris_R.set_right_motor_speed(base_speed + adjr)
         else:
@@ -126,7 +126,7 @@ def main():
             goal_reached = motionToGoal(color)
             if goal_reached:
                 break
-            if forw < 300 and forw > 0:
+            if forw < 400 and forw > 0:
                 rotate(90)
                 time.sleep(0.1)
                 WallFollow(target,color)
