@@ -3,7 +3,7 @@ from robot_systems.robot import HamBot
 import math
 import time
 base_speed = 30
-target = 250
+target = 300
 
 kp = 0.06
 ki = 0.001
@@ -118,13 +118,15 @@ def main():
     time.sleep(1.5)
     color = (158,0,255)
     goal_reached = False
+    camera.set_landmark_colors(color)
     try:
         while(not goal_reached):
+            landmark = camera.find_landmarks()
             forw = get_lidar("forw",-20,20)
             goal_reached = motionToGoal(color)
             if goal_reached:
                 break
-            if forw < 400 and forw > 0:
+            if not landmark and forw < 400 and forw > 0:
                 rotate(90)
                 WallFollow(target,color)
             time.sleep(0.05)
