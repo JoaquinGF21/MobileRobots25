@@ -70,8 +70,8 @@ def motionToGoal(color):
             adjl = -2
             adjr = 2
         if 280 <= landmarkx <= 360:
-            Chris_R.set_left_motor_speed(base_speed)
-            Chris_R.set_right_motor_speed(base_speed)
+            adjl = 0
+            adjr = 0
         Chris_R.set_left_motor_speed(base_speed + adjl)
         Chris_R.set_right_motor_speed(base_speed + adjr)
     else:
