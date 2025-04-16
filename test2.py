@@ -85,13 +85,15 @@ def motionToGoal(color):
     return False
                 
                 
-def WallFollow(target):
+def WallFollow(target,color):
     adj = 0
     perror = 0.0
     integral = 0
     ptime = time.time()
+    camera.set_landmark_colors(color)
+    landmark = camera.find_landmarks()
     
-    while True:
+    while not landmark:
         ctime = time.time()
         Chris_R.set_left_motor_speed(max(-50,min(50,base_speed + adj)))
         Chris_R.set_right_motor_speed(max(-50,min(50,base_speed - adj)))
@@ -117,8 +119,12 @@ def main():
     color = (158,0,255)
     goal_reached = False
     try:
-        while(goal_reached == False):
+        while(not goal_reached):
+            forw = get_lidar("forw",-20,20)
             goal_reached = motionToGoal(color)
+            if forw < 350:
+                rotate(90)
+                WallFollow(target,color)
     except KeyboardInterrupt:
         Chris_R.disconnect_robot()
 main()
