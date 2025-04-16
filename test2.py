@@ -62,14 +62,14 @@ def motionToGoal(color):
     
     landmark = camera.find_landmarks()
     if landmark:
-        landmark = landmark[0].x
-        if landmark.x < 280:
+        landmarkx = landmark[0].x
+        if landmarkx < 280:
             adjl = 2
             adjl = -2
-        if landmark.x > 360:
+        if landmarkx > 360:
             adjl = -2
             adjr = 2
-        if 280 <= landmark.x <= 360:
+        if 280 <= landmarkx <= 360:
             Chris_R.set_left_motor_speed(base_speed)
             Chris_R.set_right_motor_speed(base_speed)
         Chris_R.set_left_motor_speed(base_speed + adjl)
