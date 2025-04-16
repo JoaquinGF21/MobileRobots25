@@ -72,7 +72,7 @@ def motionToGoal(color):
         else:
             adjl = 0
             adjr = 0
-        if landmark[0].width * landmark[0].height < camera.width * camera.height/3:
+        if forw < 650:
             Chris_R.set_left_motor_speed(base_speed + adjl)
             Chris_R.set_right_motor_speed(base_speed + adjr)
         else:
