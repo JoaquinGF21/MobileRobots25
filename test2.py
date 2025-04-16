@@ -127,7 +127,8 @@ def main():
             if goal_reached:
                 break
             if forw < 300 and forw > 0:
-                rotate(95)
+                rotate(90)
+                time.sleep(0.1)
                 WallFollow(target,color)
             time.sleep(0.05)
     except KeyboardInterrupt:
