@@ -122,9 +122,11 @@ def main():
         while(not goal_reached):
             forw = get_lidar("forw",-20,20)
             goal_reached = motionToGoal(color)
+            print("before")
+            print(forw)
             if forw < 350:
-                rotate(90)
-                WallFollow(target,color)
+                # rotate(90)
+                # WallFollow(target,color)
             time.sleep(0.05)
     except KeyboardInterrupt:
         Chris_R.disconnect_robot()
