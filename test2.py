@@ -80,8 +80,8 @@ def motionToGoal(color):
             Chris_R.stop_motors()
             return True
     else:
-        Chris_R.set_left_motor_speed(10)
-        Chris_R.set_right_motor_speed(-10)
+        Chris_R.set_left_motor_speed(-10)
+        Chris_R.set_right_motor_speed(10)
     return False
                 
                 
@@ -92,7 +92,6 @@ def WallFollow(target,color):
     ptime = time.time()
     camera.set_landmark_colors(color)
     landmark = camera.find_landmarks()
-    
     while not landmark:
         ctime = time.time()
         Chris_R.set_left_motor_speed(max(-50,min(50,base_speed + adj)))
@@ -112,6 +111,7 @@ def WallFollow(target,color):
         
         adj,perror,integral = PID(target,eff_s,perror,integral,dt)
         print(adj)
+        landmark = camera.find_landmarks()
         time.sleep(0.05)
 def main():
     Chris_R.stop_motors()
