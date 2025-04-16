@@ -59,7 +59,7 @@ def rotate(deg):
     
 def motionToGoal(color):
     camera.set_landmark_colors(color,0.25)
-    
+    forw = get_lidar("forw",-10,10)
     landmark = camera.find_landmarks()
     if landmark:
         landmarkx = landmark[0].x
@@ -69,11 +69,15 @@ def motionToGoal(color):
         if landmarkx > 360:
             adjl = -2
             adjr = 2
-        if 280 <= landmarkx <= 360:
+        else:
             adjl = 0
             adjr = 0
-        Chris_R.set_left_motor_speed(base_speed + adjl)
-        Chris_R.set_right_motor_speed(base_speed + adjr)
+        if forw > 500:
+            Chris_R.set_left_motor_speed(base_speed + adjl)
+            Chris_R.set_right_motor_speed(base_speed + adjl)
+        else:
+            print("Good job. Everything is pink")
+            Chris_R.stop_motors()
     else:
         Chris_R.set_left_motor_speed(10)
         Chris_R.set_right_motor_speed(-10)
@@ -109,6 +113,9 @@ def main():
     Chris_R.stop_motors()
     time.sleep(1)
     color = (158,0,255)
-    while(True):
-        motionToGoal(color)
+    try:
+        while(True):
+            motionToGoal(color)
+    except KeyboardInterrupt:
+        Chris_R.disconnect_robot()
 main()
