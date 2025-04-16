@@ -84,7 +84,7 @@ def WallFollow(target):
         sm_adj = 0.7 * adj + 0.3 * prev_adj
         prevadj = sm_adj
         print(sm_adj)
-        time.sleep(0.01)
+        time.sleep(0.05)
 try:
     WallFollow(target)
 except (KeyboardInterrupt):
