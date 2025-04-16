@@ -102,7 +102,7 @@ def WallFollow(target,color):
         
         dt = ctime - ptime
         ptime = ctime
-        if forw_s < 500:
+        if forw_s < 600:
             forw_s = get_lidar("forw",-30,15)
             forw_w = (500 - forw_s)/500
             eff_s = left_s - (forw_w*600)
@@ -126,7 +126,7 @@ def main():
             goal_reached = motionToGoal(color)
             if goal_reached:
                 break
-            if not landmark and forw < 400 and forw > 0:
+            if forw < 400 and forw > 0:
                 rotate(90)
                 WallFollow(target,color)
             time.sleep(0.05)
