@@ -59,6 +59,7 @@ def rotate(deg):
     
 def WallFollow(target):
     adj = 0
+    sm_adj = 0
     perror = 0.0
     integral = 0
     ptime = time.time()
@@ -81,7 +82,7 @@ def WallFollow(target):
             eff_s = left_s
         
         adj,perror,integral = PID(target,eff_s,perror,integral,dt)
-        sm_adj = 0.7 * adj + 0.3 * prev_adj
+        sm_adj = 0.7 * adj + 0.3 * prevadj
         prevadj = sm_adj
         print(sm_adj)
         time.sleep(0.05)
