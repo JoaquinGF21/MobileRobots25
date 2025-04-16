@@ -1,5 +1,4 @@
 from robot_systems.robot import HamBot
-from robot_systems.camera import Camera
 
 import math
 import time
@@ -10,7 +9,7 @@ kp = 0.06
 ki = 0.001
 kd = 0.03
 Chris_R = HamBot()
-time.sleep(1)
+camera = Chris_R.camera
 
 def PID(target, current,prev_error,integral,dt):
     err = target - current
@@ -57,6 +56,29 @@ def rotate(deg):
     Chris_R.run_left_motor_for_rotations(rotations, 20, False)
     Chris_R.run_right_motor_for_rotations(-rotations,20, False)
     
+    
+def motionToGoal(color):
+    camera.set_landmark_colors(color,0.25)
+    
+    landmark = camera.find_landmarks()
+    if landmark:
+        landmark = landmark[0].x
+        if landmark.x < 280:
+            adjl = 2
+            adjl = -2
+        if landmark.x > 360:
+            adjl = -2
+            adjr = 2
+        if 280 <= landmark.x <= 360:
+            Chris_R.set_left_motor_speed(base_speed)
+            Chris_R.set_right_motor_speed(base_speed)
+        Chris_R.set_left_motor_speed(base_speed + adjl)
+        Chris_R.set_right_motor_speed(base_speed + adjr)
+    else:
+        Chris_R.set_left_motor_speed(10)
+        Chris_R.set_right_motor_speed(-10)
+                
+                
 def WallFollow(target):
     adj = 0
     perror = 0.0
@@ -83,7 +105,10 @@ def WallFollow(target):
         adj,perror,integral = PID(target,eff_s,perror,integral,dt)
         print(adj)
         time.sleep(0.05)
-try:
-    WallFollow(target)
-except (KeyboardInterrupt):
-    Chris_R.disconnect_robot()
+def main():
+    Chris_R.stop_motors()
+    time.sleep(1)
+    color = (158,0,255)
+    while(True):
+        motionToGoal(color)
+main()
