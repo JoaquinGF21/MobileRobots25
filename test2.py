@@ -62,11 +62,11 @@ def WallFollow(target):
     perror = 0.0
     integral = 0
     ptime = time.time()
-    
+    prevadj = 0
     while True:
         ctime = time.time()
-        Chris_R.set_left_motor_speed(max(-50,min(50,base_speed + adj)))
-        Chris_R.set_right_motor_speed(max(-50,min(50,base_speed - adj)))
+        Chris_R.set_left_motor_speed(max(-50,min(50,base_speed + sm_adj)))
+        Chris_R.set_right_motor_speed(max(-50,min(50,base_speed - sm_adj)))
         
         left_s = get_lidar("left",-2,20)
         forw_s = get_lidar("forw",-10,15)
@@ -81,7 +81,9 @@ def WallFollow(target):
             eff_s = left_s
         
         adj,perror,integral = PID(target,eff_s,perror,integral,dt)
-        print(adj)
+        sm_adj = 0.7 * adj + 0.3 * prev_adj
+        prevadj = sm_adj
+        print(sm_adj)
         time.sleep(0.01)
 try:
     WallFollow(target)
