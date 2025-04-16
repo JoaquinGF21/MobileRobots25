@@ -82,7 +82,7 @@ def WallFollow(target):
         
         adj,perror,integral = PID(target,eff_s,perror,integral,dt)
         print(adj)
-        time.sleep(0.2)
+        time.sleep(0.01)
 try:
     WallFollow(target)
 except (KeyboardInterrupt):
