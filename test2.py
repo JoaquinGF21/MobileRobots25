@@ -116,7 +116,7 @@ def WallFollow(target,color):
 def main():
     Chris_R.stop_motors()
     time.sleep(1.5)
-    color = (199,0,255)
+    color = (155,0,255)
     goal_reached = False
     camera.set_landmark_colors(color)
     try:
@@ -127,7 +127,7 @@ def main():
             if goal_reached:
                 break
             if forw < 300 and forw > 0:
-                rotate(90)
+                rotate(95)
                 WallFollow(target,color)
             time.sleep(0.05)
     except KeyboardInterrupt:
