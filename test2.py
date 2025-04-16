@@ -116,7 +116,7 @@ def WallFollow(target,color):
 def main():
     Chris_R.stop_motors()
     time.sleep(1.5)
-    color = (158,0,255)
+    color = (199,0,255)
     goal_reached = False
     camera.set_landmark_colors(color)
     try:
