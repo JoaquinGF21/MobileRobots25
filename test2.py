@@ -125,6 +125,7 @@ def main():
             if forw < 350:
                 rotate(90)
                 WallFollow(target,color)
+            time.sleep(0.05)
     except KeyboardInterrupt:
         Chris_R.disconnect_robot()
 main()
