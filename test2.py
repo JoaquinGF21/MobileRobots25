@@ -72,15 +72,17 @@ def motionToGoal(color):
         else:
             adjl = 0
             adjr = 0
-        if forw > 500:
+        if forw > 350:
             Chris_R.set_left_motor_speed(base_speed + adjl)
-            Chris_R.set_right_motor_speed(base_speed + adjl)
+            Chris_R.set_right_motor_speed(base_speed + adjr)
         else:
-            print("Good job. Everything is pink")
+            print("\033[38;2;158;0;255mGood job, Everything is pink(158,0,255)!\033[0m")
             Chris_R.stop_motors()
+            return True
     else:
         Chris_R.set_left_motor_speed(10)
         Chris_R.set_right_motor_speed(-10)
+    return False
                 
                 
 def WallFollow(target):
@@ -113,9 +115,10 @@ def main():
     Chris_R.stop_motors()
     time.sleep(1)
     color = (158,0,255)
+    goal_reached = False
     try:
-        while(True):
-            motionToGoal(color)
+        while(goal_reached == False):
+            goal_reached = motionToGoal(color)
     except KeyboardInterrupt:
         Chris_R.disconnect_robot()
 main()
