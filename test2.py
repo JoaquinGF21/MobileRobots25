@@ -21,6 +21,7 @@ def PID(target, current,prev_error,integral,dt):
         #integral
         integral += err * dt
         i_term = ki * integral
+        
         #derivative
         derivative = (err -prev_error)/dt
         d_term = kd * derivative
@@ -40,6 +41,7 @@ def get_lidar(dir,rL,rU):
     center = directions.get(dir)
     temp = []
     sight = Chris_R.get_range_image()
+    
     #sets initial prev to be an array
     for i in range(rL,rU):
         idx = center + i
@@ -65,10 +67,10 @@ def motionToGoal(color):
     if landmark:
         print("Landmark found!")
         landmarkx = landmark[0].x
-        if landmarkx < camera.width/2 - 40:
+        if landmarkx < 280:
             adjl = 2
             adjr = -2
-        elif landmarkx > camera.width/2 + 40:
+        elif landmarkx > 360:
             adjl = -2
             adjr = 2
         else:
@@ -96,6 +98,7 @@ def WallFollow(target,color):
     ptime = time.time()
     camera.set_landmark_colors(color,.25)
     landmark = camera.find_landmarks()
+    
     while not landmark:
         ctime = time.time()
         Chris_R.set_left_motor_speed(max(-50,min(50,base_speed + adj)))
@@ -105,6 +108,7 @@ def WallFollow(target,color):
         forw_s = get_lidar("forw",-10,15)
         dt = ctime - ptime
         ptime = ctime
+        
         if forw_s < 600:
             forw_s = get_lidar("forw",-30,15)
             forw_w = (500 - forw_s)/500
