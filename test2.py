@@ -73,7 +73,7 @@ def motionToGoal(color):
         else:
             adjl = 0
             adjr = 0
-        if landmark[0].width * landmark[0].height < camera.width * camera.height:
+        if landmark[0].width * landmark[0].height < camera.width * camera.height/1.15:
             Chris_R.set_left_motor_speed(base_speed + adjl)
             Chris_R.set_right_motor_speed(base_speed + adjr)
         else:
@@ -81,8 +81,8 @@ def motionToGoal(color):
             Chris_R.stop_motors()
             return True
     else:
-        Chris_R.set_left_motor_speed(10)
-        Chris_R.set_right_motor_speed(-10)
+        Chris_R.set_left_motor_speed(-10)
+        Chris_R.set_right_motor_speed(10)
     return False
                 
                 
@@ -100,7 +100,8 @@ def WallFollow(target,color):
         
         left_s = get_lidar("left",-2,20)
         forw_s = get_lidar("forw",-10,15)
-        
+        if left_s > 700:
+            break
         dt = ctime - ptime
         ptime = ctime
         if forw_s < 600:
@@ -132,6 +133,7 @@ def main():
                 time.sleep(0.1)
                 WallFollow(target,color)
             time.sleep(0.05)
+        Chris_R.disconnect_robot()
     except KeyboardInterrupt:
         Chris_R.disconnect_robot()
 main()
