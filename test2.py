@@ -2,7 +2,7 @@ from robot_systems.robot import HamBot
 
 import math
 import time
-base_speed = 30
+base_speed = 20
 target = 300
 
 kp = 0.06
@@ -98,7 +98,7 @@ def WallFollow(target,color):
         Chris_R.set_left_motor_speed(max(-50,min(50,base_speed + adj)))
         Chris_R.set_right_motor_speed(max(-50,min(50,base_speed - adj)))
         
-        left_s = get_lidar("left",5,20)
+        left_s = get_lidar("left",-2,20)
         forw_s = get_lidar("forw",-10,15)
         dt = ctime - ptime
         ptime = ctime
@@ -112,7 +112,7 @@ def WallFollow(target,color):
         adj,perror,integral = PID(target,eff_s,perror,integral,dt)
         print(adj)
         landmark = camera.find_landmarks()
-        time.sleep(0.05)
+        time.sleep(0.08)
 def main():
     Chris_R.stop_motors()
     time.sleep(1.5)
