@@ -72,7 +72,7 @@ def motionToGoal(color):
         else:
             adjl = 0
             adjr = 0
-        if forw > 500:
+        if landmark[0].width * landmark[0].height < camera.width * camera.height:
             Chris_R.set_left_motor_speed(base_speed + adjl)
             Chris_R.set_right_motor_speed(base_speed + adjr)
         else:
@@ -102,7 +102,7 @@ def WallFollow(target,color):
         
         dt = ctime - ptime
         ptime = ctime
-        if landmark[0].width * landmark[0].height < camera.width * camera.height/1.5:
+        if forw_s < 600:
             forw_s = get_lidar("forw",-30,15)
             forw_w = (500 - forw_s)/500
             eff_s = left_s - (forw_w*600)
