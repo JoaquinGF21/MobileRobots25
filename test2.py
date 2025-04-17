@@ -47,7 +47,7 @@ def get_lidar(dir,rL,rU):
             temp.append(sight[idx])
         
     if temp:
-        return statistics.mean(temp)
+        return min(temp)
     else:
         return -1
 def rotate(deg):
@@ -66,11 +66,11 @@ def motionToGoal(color):
         print("Landmark found!")
         landmarkx = landmark[0].x
         if landmarkx < 280:
-            adjl = -5
-            adjr = 5
+            adjl = -2
+            adjr = 2
         if landmarkx > 360:
-            adjl = 5
-            adjr = -5
+            adjl = 2
+            adjr = -2
         else:
             adjl = 0
             adjr = 0
@@ -126,7 +126,7 @@ def main():
     try:
         while(not goal_reached):
             landmark = camera.find_landmarks()
-            forw = get_lidar("forw",-5,5)
+            forw = get_lidar("forw",-10,10)
             goal_reached = motionToGoal(color)
             if goal_reached:
                 break
