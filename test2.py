@@ -3,7 +3,7 @@ from robot_systems.robot import HamBot
 import math
 import time
 base_speed = 20
-target = 300
+target = 200
 
 kp = 0.06
 ki = 0.001
