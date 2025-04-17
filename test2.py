@@ -65,11 +65,11 @@ def motionToGoal(color):
         print("Landmark found!")
         landmarkx = landmark[0].x
         if landmarkx < 280:
-            adjl = 10
-            adjr = -10
+            adjl = -5
+            adjr = 5
         if landmarkx > 360:
-            adjl = -10
-            adjr = 10
+            adjl = 5
+            adjr = -5
         else:
             adjl = 0
             adjr = 0
