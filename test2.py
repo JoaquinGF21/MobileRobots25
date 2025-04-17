@@ -62,6 +62,7 @@ def motionToGoal(color):
     forw = get_lidar("forw",-10,10)
     landmark = camera.find_landmarks()
     if landmark:
+        print("Landmark found!")
         landmarkx = landmark[0].x
         if landmarkx < 280:
             adjl = 2
@@ -126,7 +127,7 @@ def main():
             goal_reached = motionToGoal(color)
             if goal_reached:
                 break
-            if forw < 400 and forw > 0:
+            if forw < 300 and forw > 0:
                 rotate(90)
                 time.sleep(0.1)
                 WallFollow(target,color)
