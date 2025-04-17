@@ -2,6 +2,7 @@ from robot_systems.robot import HamBot
 
 import math
 import time
+import statistics
 base_speed = 20
 target = 200
 
@@ -46,7 +47,7 @@ def get_lidar(dir,rL,rU):
             temp.append(sight[idx])
         
     if temp:
-        return min(temp)
+        return statistics.mean(temp)
     else:
         return -1
 def rotate(deg):
@@ -100,7 +101,7 @@ def WallFollow(target,color):
         Chris_R.set_left_motor_speed(max(-50,min(50,base_speed + adj)))
         Chris_R.set_right_motor_speed(max(-50,min(50,base_speed - adj)))
         
-        left_s = get_lidar("left",-2,20)
+        left_s = get_lidar("left",-20,20)
         forw_s = get_lidar("forw",-10,15)
         dt = ctime - ptime
         ptime = ctime
@@ -115,6 +116,7 @@ def WallFollow(target,color):
         print(adj)
         landmark = camera.find_landmarks()
         time.sleep(0.08)
+        
 def main():
     Chris_R.stop_motors()
     time.sleep(1.5)
