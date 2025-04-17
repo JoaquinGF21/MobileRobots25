@@ -98,10 +98,8 @@ def WallFollow(target,color):
         Chris_R.set_left_motor_speed(max(-50,min(50,base_speed + adj)))
         Chris_R.set_right_motor_speed(max(-50,min(50,base_speed - adj)))
         
-        left_s = get_lidar("left",-2,20)
+        left_s = get_lidar("left",5,20)
         forw_s = get_lidar("forw",-10,15)
-        if left_s > 800:
-            break
         dt = ctime - ptime
         ptime = ctime
         if forw_s < 600:
