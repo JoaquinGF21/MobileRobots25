@@ -102,7 +102,7 @@ def WallFollow(target,color):
         
         dt = ctime - ptime
         ptime = ctime
-        if forw_s < 600:
+        if landmark[0].width * landmark[0].height < camera.width * camera.height/1.5:
             forw_s = get_lidar("forw",-30,15)
             forw_w = (500 - forw_s)/500
             eff_s = left_s - (forw_w*600)
