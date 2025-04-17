@@ -65,10 +65,10 @@ def motionToGoal(color):
     if landmark:
         print("Landmark found!")
         landmarkx = landmark[0].x
-        if landmarkx < 280:
+        if landmarkx < camera.width/2 - 40:
             adjl = 2
             adjr = -2
-        if landmarkx > 360:
+        if landmarkx > camera.width/2 + 40:
             adjl = -2
             adjr = 2
         else:
@@ -94,7 +94,7 @@ def WallFollow(target,color):
     perror = 0.0
     integral = 0
     ptime = time.time()
-    camera.set_landmark_colors(color)
+    camera.set_landmark_colors(color,.25)
     landmark = camera.find_landmarks()
     while not landmark:
         ctime = time.time()
@@ -120,9 +120,9 @@ def WallFollow(target,color):
 def main():
     Chris_R.stop_motors()
     time.sleep(1.5)
-    color = (155,0,255)
+    color = (200,0,255)
     goal_reached = False
-    camera.set_landmark_colors(color)
+    camera.set_landmark_colors(color,0.25)
     try:
         while(not goal_reached):
             landmark = camera.find_landmarks()
