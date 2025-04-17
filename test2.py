@@ -66,9 +66,9 @@ def motionToGoal(color):
         print("Landmark found!")
         landmarkx = landmark[0].x
         if landmarkx < camera.width/2 - 40:
-            adjl = 10
+            adjl = 2
             adjr = -2
-        if landmarkx > camera.width/2 + 40:
+        elif landmarkx > camera.width/2 + 40:
             adjl = -2
             adjr = 2
         else:
