@@ -33,7 +33,7 @@ base_speed = 50
 target = 320
 
 kp = 0.005
-ki = 0.002
+ki = 0.001
 kd = 0.05
 dt = 0
 integral = 0
