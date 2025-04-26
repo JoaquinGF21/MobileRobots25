@@ -67,7 +67,7 @@ class Maze:
     
     def print_maze(self, current_pos=None, visited=None, frontier=None, path=None):
         """
-        Print the maze in the console with various markers:
+        Print the maze in the console with various markers and larger cells:
         - 🤖: Current position
         - 📍: Visited cells
         - ⭐: Cells in frontier (next to consider)
@@ -83,31 +83,37 @@ class Maze:
             
         # Clear the console for animation effect
         os.system('cls' if os.name == 'nt' else 'clear')
-            
+        
+        # Cell width (adjust for larger cells)
+        cell_width = 3
+        
         # Print the top border
-        print(' ' + '_' * (self.width * 2 - 1))
+        print(' ' + '_' * (self.width * (cell_width + 1) - 1))
         
         for row in range(self.height):
-            # Print the west wall for each row
+            # First line of the cell row (contains North walls and cell content)
             print('|', end='')
             
             for col in range(self.width):
                 # Choose symbol for cell based on priorities
-                cell_symbol = ' '
+                cell_symbol = ' ' * cell_width
                 if (row, col) == current_pos:
-                    cell_symbol = '🤖'
+                    # Center the emoji in the cell
+                    cell_symbol = ' 🤖 '
                 elif (row, col) in path:
-                    cell_symbol = '🚩'
+                    cell_symbol = ' 🚩 '
                 elif (row, col) in frontier:
-                    cell_symbol = '⭐'
+                    cell_symbol = ' ⭐ '
                 elif (row, col) in visited:
-                    cell_symbol = '📍'
+                    cell_symbol = ' 📍 '
                 
                 # Print south wall (if present)
                 if self.grid[row][col].walls['S']:
-                    print(f'{cell_symbol}_', end='')
+                    print(f'{cell_symbol}', end='')
+                    print('_' * cell_width, end='')
                 else:
-                    print(f'{cell_symbol} ', end='')
+                    print(f'{cell_symbol}', end='')
+                    print(' ' * cell_width, end='')
                 
                 # Print east wall (if present and not at the east edge)
                 if col < self.width - 1:
