@@ -1,3 +1,7 @@
+import time
+import os
+import heapq
+
 class Cell:
     def __init__(self, row, col):
         self.row = row
@@ -61,11 +65,25 @@ class Maze:
                 if not cell.walls['W'] and col > 0:
                     self.graph[(row, col)].append((row, col-1))
     
-    def print_maze(self, path=None):
+    def print_maze(self, current_pos=None, visited=None, frontier=None, path=None):
         """
-        Print the maze in the console.
-        If path is provided, mark cells in the path.
+        Print the maze in the console with various markers:
+        - 🤖: Current position
+        - 📍: Visited cells
+        - ⭐: Cells in frontier (next to consider)
+        - 🚩: Final path
         """
+        # Convert None to empty sets for easier checking
+        if visited is None:
+            visited = set()
+        if frontier is None:
+            frontier = set()
+        if path is None:
+            path = set()
+            
+        # Clear the console for animation effect
+        os.system('cls' if os.name == 'nt' else 'clear')
+            
         # Print the top border
         print(' ' + '_' * (self.width * 2 - 1))
         
@@ -74,20 +92,22 @@ class Maze:
             print('|', end='')
             
             for col in range(self.width):
-                # Print the cell and the east wall
-                cell_in_path = path is not None and (row, col) in path
+                # Choose symbol for cell based on priorities
+                cell_symbol = ' '
+                if (row, col) == current_pos:
+                    cell_symbol = '🤖'
+                elif (row, col) in path:
+                    cell_symbol = '🚩'
+                elif (row, col) in frontier:
+                    cell_symbol = '⭐'
+                elif (row, col) in visited:
+                    cell_symbol = '📍'
                 
                 # Print south wall (if present)
                 if self.grid[row][col].walls['S']:
-                    if cell_in_path:
-                        print('*_', end='')
-                    else:
-                        print('_', end=' ')
+                    print(f'{cell_symbol}_', end='')
                 else:
-                    if cell_in_path:
-                        print('* ', end='')
-                    else:
-                        print(' ', end=' ')
+                    print(f'{cell_symbol} ', end='')
                 
                 # Print east wall (if present and not at the east edge)
                 if col < self.width - 1:
@@ -99,8 +119,18 @@ class Maze:
                     print('|', end='')  # East border
             
             print()  # New line at the end of the row
+        
+        # Print legend
+        print("\nLegend:")
+        print("🤖 = Current position")
+        print("📍 = Visited cell")
+        print("⭐ = Frontier cell (to be visited)")
+        print("🚩 = Final path")
     
-    def dijkstra(self, start_pos, end_pos):
+    def dijkstra_visualized(self, start_pos, end_pos, delay=0.5):
+        """
+        Run Dijkstra's algorithm with visualization at each step
+        """
         # Reset all cells
         for row in range(self.height):
             for col in range(self.width):
@@ -113,23 +143,39 @@ class Maze:
         self.grid[start_row][start_col].distance = 0
         
         # Priority queue for Dijkstra's algorithm
-        import heapq
         queue = [(0, start_pos)]
+        
+        # Keep track of visited cells and the frontier
+        visited = set()
+        
+        print("\nStarting Dijkstra's algorithm...")
+        time.sleep(1)
         
         while queue:
             current_distance, current_pos = heapq.heappop(queue)
             current_row, current_col = current_pos
             
-            # If we've reached the end, we're done
-            if current_pos == end_pos:
-                break
-                
-            # If we've already visited this cell, skip it
-            if self.grid[current_row][current_col].visited:
+            # Skip if already visited
+            if current_pos in visited:
                 continue
                 
             # Mark as visited
+            visited.add(current_pos)
             self.grid[current_row][current_col].visited = True
+            
+            # Get the current frontier (cells in the queue)
+            frontier = set([pos for _, pos in queue])
+            
+            # Visualize the current state
+            self.print_maze(current_pos, visited, frontier)
+            print(f"\nCurrent position: {current_pos}")
+            print(f"Distance from start: {current_distance}")
+            
+            # If we've reached the end, we're done
+            if current_pos == end_pos:
+                print("\nReached the destination!")
+                time.sleep(delay)
+                break
             
             # Check all neighbors
             for neighbor_pos in self.graph[current_pos]:
@@ -146,6 +192,8 @@ class Maze:
                     self.grid[neighbor_row][neighbor_col].distance = new_distance
                     self.grid[neighbor_row][neighbor_col].previous = current_pos
                     heapq.heappush(queue, (new_distance, neighbor_pos))
+            
+            time.sleep(delay)  # Pause to see the visualization
         
         # Reconstruct the path
         path = []
@@ -155,9 +203,21 @@ class Maze:
             current_row, current_col = current
             current = self.grid[current_row][current_col].previous
             if current is None:
+                print("\nNo path exists!")
                 return None  # No path exists
         path.append(start_pos)
         path.reverse()
+        
+        # Visualize the final path
+        print("\nFinal path found!")
+        self.print_maze(None, visited, None, set(path))
+        print(f"\nPath from {start_pos} to {end_pos}:")
+        for i, pos in enumerate(path):
+            if i < len(path) - 1:
+                print(pos, end=" → ")
+            else:
+                print(pos)
+        print(f"Total distance: {self.grid[end_pos[0]][end_pos[1]].distance}")
         
         return path
 
@@ -208,26 +268,20 @@ def main():
     # Create our sample maze
     maze = create_sample_maze()
     
+    # Print the initial maze
     print("Original Maze:")
     maze.print_maze()
-    print("\n")
+    time.sleep(2)  # Give time to see the initial maze
     
     # Find the shortest path from top-left to bottom-right
     start_pos = (0, 0)
     end_pos = (4, 4)
-    path = maze.dijkstra(start_pos, end_pos)
     
-    if path:
-        print(f"Shortest path from {start_pos} to {end_pos}:")
-        for pos in path:
-            print(pos, end=" -> ")
-        print("DONE")
-        print("\n")
-        
-        print("Maze with path marked (cells with * are in the path):")
-        maze.print_maze(path)
-    else:
-        print(f"No path found from {start_pos} to {end_pos}")
+    # Run Dijkstra's algorithm with visualization
+    path = maze.dijkstra_visualized(start_pos, end_pos, delay=0.8)
+    
+    # Wait for user to press Enter before exiting
+    input("\nPress Enter to exit...")
 
 
 if __name__ == "__main__":
