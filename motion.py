@@ -33,5 +33,9 @@ class Movement:
                 Movement.rotate(-90)
     
 Movement.face('W')
-Movement.forward(3.5)
+Movement.forward(1.63)
+Movement.forward(1.63)
+Movement.face('E')
+Movement.forward(1.63)
+Movement.forward(1.63)
     
