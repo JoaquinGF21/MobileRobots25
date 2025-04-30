@@ -21,7 +21,7 @@ class Movement:
     
     def face(direction):
    
-        currentDirection = 90
+        currentDirection = 0
         
         match(direction):
             case "N":
@@ -31,7 +31,7 @@ class Movement:
                 targetAngle = 0
             
             case "S":
-                targetAngle = 0
+                targetAngle = 180
                 
             case "W":
                 targetAngle = 270
@@ -42,19 +42,19 @@ class Movement:
             print("The current direction is " + direction)
             Movement.forward(1.63)
         
-        elif turnAngle > 0 and turnAngle < 180:
+        elif turnAngle == 270:
             Movement.rotate(-90)
             time.sleep(.5)
             print("The current direction is " + direction)
             Movement.forward(1.63)
-            currentDirection = 0  
+            currentDirection = 270  
                
-        elif turnAngle < 0:
+        elif turnAngle == 90:
             Movement.rotate(90)
             time.sleep(.5)
             print("The current direction is " + direction)
             Movement.forward(1.63)
-            currentDirection = 180
+            currentDirection = 90
             
         elif turnAngle == 180:
             Movement.rotate(90)
@@ -63,7 +63,7 @@ class Movement:
             time.sleep(.5)
             print("The current direction is " + direction)
             Movement.forward(1.63)
-            currentDirection = 90
+            currentDirection = 180
         
 
 Movement.face('W')
