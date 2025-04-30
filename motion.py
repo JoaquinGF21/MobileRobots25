@@ -22,7 +22,7 @@ class Movement:
                 pass
             
             case "E":
-                Movement.rotate(-90)
+                Movement.rotate(90)
             
             case "S":
                 Movement.rotate(90)
