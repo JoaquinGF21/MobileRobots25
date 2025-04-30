@@ -11,10 +11,12 @@ class Movement:
         rotations = (axel * deg) / (360 * wheel_diameter)
         Chris_R.run_left_motor_for_rotations(rotations, 25, False)
         Chris_R.run_right_motor_for_rotations(-rotations,25, True)
+        time.sleep(.5)
         
     def forward(rotations):
         Chris_R.run_left_motor_for_rotations(rotations, 35, False)
         Chris_R.run_right_motor_for_rotations(rotations, 35, True)
+        time.sleep(.5)
     
     def face(direction):     
         match(direction):
@@ -23,14 +25,17 @@ class Movement:
             
             case "E":
                 Movement.rotate(90)
+                time.sleep(.5)
             
             case "S":
                 Movement.rotate(90)
                 time.sleep(.5)
                 Movement.rotate(90)
+                time.sleep(.5)
                 
             case "W":
                 Movement.rotate(-90)
+                time.sleep(.5)
     
 Movement.face('W')
 Movement.forward(1.63)
