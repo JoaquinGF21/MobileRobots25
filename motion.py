@@ -32,6 +32,6 @@ class Movement:
             case("W"):
                 rotate(-90)
     
-face('W')
-forward(3.5)
+Movement.face('W')
+Movement.forward(3.5)
     
