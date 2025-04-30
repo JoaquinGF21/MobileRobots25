@@ -16,6 +16,23 @@ class Movement:
     def forward(rotations):
         Chris_R.run_left_motor_for_rotations(rotations, 35, False)
         Chris_R.run_right_motor_for_rotations(rotations, 35, True)
-        
-x = Chris_R.get_heading()
-print(x)
+    
+    def face(direction):     
+        match(direction):
+            case("N"):
+                return()
+            
+            case("E"):
+                Movement.rotate(-90)
+            
+            case("S"):
+                Movement.rotate(90)
+                time.sleep(.5)
+                Movement.rotate(90)
+                
+            case("W"):
+                Movement.rotate(-90)
+    
+    face(W)
+    forward(3.5)
+    
