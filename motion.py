@@ -43,14 +43,14 @@ class Movement:
             Movement.forward(1.63)
         
         elif turnAngle > 0 and turnAngle < 180:
-            Movement.rotate(90)
+            Movement.rotate(-90)
             time.sleep(.5)
             print("The current direction is " + direction)
             Movement.forward(1.63)
             currentDirection = 0  
                
         elif turnAngle < 0:
-            Movement.rotate(-90)
+            Movement.rotate(90)
             time.sleep(.5)
             print("The current direction is " + direction)
             Movement.forward(1.63)
