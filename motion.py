@@ -19,4 +19,3 @@ class Movement:
         
 
 Chris_R.get_heading()
-print(Chris_R.get_heading)
