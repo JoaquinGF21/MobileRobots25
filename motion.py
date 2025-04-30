@@ -22,6 +22,8 @@ class Movement:
     def face(direction):
    
         currentDirection = Chris_R.get_heading()
+        direction = "N"
+        print("The current direction is " + direction)
         
         match(direction):
             case "N":
@@ -39,21 +41,31 @@ class Movement:
         turnAngle = currentDirection - targetAngle
         
         if turnAngle == 0:
-            return()
+            print("The current direction is " + direction)
+            Movement.forward(1.63)
         
         elif turnAngle > 0 and turnAngle != 180:
+            direction = "E"
             Movement.rotate(90)
             time.sleep(.5)
+            print("The current direction is " + direction)
+            Movement.forward(1.63)
             
         elif turnAngle < 0:
+            direction = "W"
             Movement.rotate(-90)
             time.sleep(.5)
+            print("The current direction is " + direction)
+            Movement.forward(1.63)
             
         elif turnAngle == 180:
+            direction = "S"
             Movement.rotate(90)
             time.sleep(.5)
             Movement.rotate(90)
             time.sleep(.5)
+            print("The current direction is " + direction)
+            Movement.forward(1.63)
         
 
 Movement.face('W')
