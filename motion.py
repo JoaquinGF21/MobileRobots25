@@ -20,7 +20,7 @@ class Movement:
         Chris_R.run_right_motor_for_rotations(rotations, 35, True)
         time.sleep(.5)
     
-    def face(direction, currentDirection):     
+    def face(direction):     
         match(direction):
             case "N":
                 pass
