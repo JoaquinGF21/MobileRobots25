@@ -17,5 +17,5 @@ class Movement:
         Chris_R.run_left_motor_for_rotations(rotations, 35, False)
         Chris_R.run_right_motor_for_rotations(rotations, 35, True)
         
-
-Chris_R.get_heading()
+x = Chris_R.get_heading()
+print(x)
