@@ -5,7 +5,6 @@ Chris_R = HamBot()
 time.sleep(2)
 
 class Movement:
-    currentDirection = Chris_R.get_heading()
     
     def rotate(deg):
         axel = 192
@@ -20,8 +19,10 @@ class Movement:
         Chris_R.run_right_motor_for_rotations(rotations, 35, True)
         time.sleep(.5)
     
-    def face(direction, currentDirection):
+    def face(direction):
    
+        currentDirection = Chris_R.get_heading()
+        
         match(direction):
             case "N":
                 targetAngle = 90
