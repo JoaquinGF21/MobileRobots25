@@ -21,8 +21,7 @@ class Movement:
     
     def face(direction):
    
-        currentDirection = Chris_R.get_heading()
-        direction = "N"
+        currentDirection = 90
         
         match(direction):
             case "N":
@@ -43,33 +42,33 @@ class Movement:
             print("The current direction is " + direction)
             Movement.forward(1.63)
         
-        elif turnAngle > 0 and turnAngle != 180:
-            direction = "E"
+        elif turnAngle > 0 and turnAngle < 180:
             Movement.rotate(90)
             time.sleep(.5)
             print("The current direction is " + direction)
             Movement.forward(1.63)
-            
+            currentDirection = 0  
+               
         elif turnAngle < 0:
-            direction = "W"
             Movement.rotate(-90)
             time.sleep(.5)
             print("The current direction is " + direction)
             Movement.forward(1.63)
+            currentDirection = 180
             
         elif turnAngle == 180:
-            direction = "S"
             Movement.rotate(90)
             time.sleep(.5)
             Movement.rotate(90)
             time.sleep(.5)
             print("The current direction is " + direction)
             Movement.forward(1.63)
+            currentDirection = 90
         
 
 Movement.face('W')
+Movement.face('W')
 Movement.face('N')
-Movement.face('E')
 
 """
 Hard coded maze from cell 8 through entire thing and back to cell 8
