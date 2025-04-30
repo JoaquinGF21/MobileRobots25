@@ -1,294 +1,136 @@
-import time
-import os
 import heapq
 
-class Cell:
-    def __init__(self, row, col):
-        self.row = row
-        self.col = col
-        # Walls in each direction (North, West, East, South)
-        # True means there is a wall, False means there is no wall
-        self.walls = {'N': True, 'W': True, 'E': True, 'S': True}
-        # For Dijkstra's algorithm, we'll need these properties
-        self.distance = float('inf')
-        self.visited = False
-        self.previous = None
-        
-    def __repr__(self):
-        return f"Cell({self.row}, {self.col})"
-        
-class Maze:
-    def __init__(self, height, width):
-        self.height = height
-        self.width = width
-        # Create the grid of cells
-        self.grid = [[Cell(i, j) for j in range(width)] for i in range(height)]
-        # Graph representation as adjacency list
-        self.graph = {}
-        
-    def remove_wall(self, row, col, direction):
-        # Remove a wall between two cells
-        if direction not in ['N', 'W', 'E', 'S']:
-            raise ValueError("Direction must be 'N', 'W', 'E', or 'S'")
-            
-        # Remove the wall from the current cell
-        self.grid[row][col].walls[direction] = False
-        
-        # Remove the opposite wall from the adjacent cell
-        if direction == 'N' and row > 0:
-            self.grid[row-1][col].walls['S'] = False
-        elif direction == 'S' and row < self.height - 1:
-            self.grid[row+1][col].walls['N'] = False
-        elif direction == 'E' and col < self.width - 1:
-            self.grid[row][col+1].walls['W'] = False
-        elif direction == 'W' and col > 0:
-            self.grid[row][col-1].walls['E'] = False
-            
-    def build_graph(self):
-        # Convert the maze into a graph (adjacency list)
-        for row in range(self.height):
-            for col in range(self.width):
-                cell = self.grid[row][col]
-                self.graph[(row, col)] = []
-                
-                # Check all four directions
-                # North
-                if not cell.walls['N'] and row > 0:
-                    self.graph[(row, col)].append((row-1, col))
-                # South
-                if not cell.walls['S'] and row < self.height - 1:
-                    self.graph[(row, col)].append((row+1, col))
-                # East
-                if not cell.walls['E'] and col < self.width - 1:
-                    self.graph[(row, col)].append((row, col+1))
-                # West
-                if not cell.walls['W'] and col > 0:
-                    self.graph[(row, col)].append((row, col-1))
-    
-    def print_maze(self, current_pos=None, visited=None, frontier=None, path=None):
-        """
-        Print the maze in the console with various markers and larger cells:
-        - 🤖: Current position
-        - 📍: Visited cells
-        - ⭐: Cells in frontier (next to consider)
-        - 🚩: Final path
-        """
-        # Convert None to empty sets for easier checking
-        if visited is None:
-            visited = set()
-        if frontier is None:
-            frontier = set()
-        if path is None:
-            path = set()
-            
-        # Clear the console for animation effect
-        os.system('cls' if os.name == 'nt' else 'clear')
-        
-        # Cell width (adjust for larger cells)
-        cell_width = 3
-        
-        # Print the top border
-        print(' ' + '_' * (self.width * (cell_width + 1) - 1))
-        
-        for row in range(self.height):
-            # First line of the cell row (contains North walls and cell content)
-            print('|', end='')
-            
-            for col in range(self.width):
-                # Choose symbol for cell based on priorities
-                cell_symbol = ' ' * cell_width
-                if (row, col) == current_pos:
-                    # Center the emoji in the cell
-                    cell_symbol = ' 🤖 '
-                elif (row, col) in path:
-                    cell_symbol = ' 🚩 '
-                elif (row, col) in frontier:
-                    cell_symbol = ' ⭐ '
-                elif (row, col) in visited:
-                    cell_symbol = ' 📍 '
-                
-                # Print south wall (if present)
-                if self.grid[row][col].walls['S']:
-                    print(f'{cell_symbol}', end='')
-                    print('_' * cell_width, end='')
-                else:
-                    print(f'{cell_symbol}', end='')
-                    print(' ' * cell_width, end='')
-                
-                # Print east wall (if present and not at the east edge)
-                if col < self.width - 1:
-                    if self.grid[row][col].walls['E']:
-                        print('|', end='')
-                    else:
-                        print(' ', end='')
-                else:
-                    print('|', end='')  # East border
-            
-            print()  # New line at the end of the row
-        
-        # Print legend
-        print("\nLegend:")
-        print("🤖 = Current position")
-        print("📍 = Visited cell")
-        print("⭐ = Frontier cell (to be visited)")
-        print("🚩 = Final path")
-    
-    def dijkstra_visualized(self, start_pos, end_pos, delay=0.5):
-        """
-        Run Dijkstra's algorithm with visualization at each step
-        """
-        # Reset all cells
-        for row in range(self.height):
-            for col in range(self.width):
-                self.grid[row][col].distance = float('inf')
-                self.grid[row][col].visited = False
-                self.grid[row][col].previous = None
-                
-        # Set the start cell's distance to 0
-        start_row, start_col = start_pos
-        self.grid[start_row][start_col].distance = 0
-        
-        # Priority queue for Dijkstra's algorithm
-        queue = [(0, start_pos)]
-        
-        # Keep track of visited cells and the frontier
-        visited = set()
-        
-        print("\nStarting Dijkstra's algorithm...")
-        time.sleep(1)
-        
-        while queue:
-            current_distance, current_pos = heapq.heappop(queue)
-            current_row, current_col = current_pos
-            
-            # Skip if already visited
-            if current_pos in visited:
-                continue
-                
-            # Mark as visited
-            visited.add(current_pos)
-            self.grid[current_row][current_col].visited = True
-            
-            # Get the current frontier (cells in the queue)
-            frontier = set([pos for _, pos in queue])
-            
-            # Visualize the current state
-            self.print_maze(current_pos, visited, frontier)
-            print(f"\nCurrent position: {current_pos}")
-            print(f"Distance from start: {current_distance}")
-            
-            # If we've reached the end, we're done
-            if current_pos == end_pos:
-                print("\nReached the destination!")
-                time.sleep(delay)
-                break
-            
-            # Check all neighbors
-            for neighbor_pos in self.graph[current_pos]:
-                neighbor_row, neighbor_col = neighbor_pos
-                
-                # The weight is 1 for all connections in a simple maze
-                weight = 1
-                
-                # Calculate new distance
-                new_distance = current_distance + weight
-                
-                # If we've found a shorter path, update it
-                if new_distance < self.grid[neighbor_row][neighbor_col].distance:
-                    self.grid[neighbor_row][neighbor_col].distance = new_distance
-                    self.grid[neighbor_row][neighbor_col].previous = current_pos
-                    heapq.heappush(queue, (new_distance, neighbor_pos))
-            
-            time.sleep(delay)  # Pause to see the visualization
-        
-        # Reconstruct the path
-        path = []
-        current = end_pos
-        while current != start_pos:
-            path.append(current)
-            current_row, current_col = current
-            current = self.grid[current_row][current_col].previous
-            if current is None:
-                print("\nNo path exists!")
-                return None  # No path exists
-        path.append(start_pos)
-        path.reverse()
-        
-        # Visualize the final path
-        print("\nFinal path found!")
-        self.print_maze(None, visited, None, set(path))
-        print(f"\nPath from {start_pos} to {end_pos}:")
-        for i, pos in enumerate(path):
-            if i < len(path) - 1:
-                print(pos, end=" → ")
-            else:
-                print(pos)
-        print(f"Total distance: {self.grid[end_pos[0]][end_pos[1]].distance}")
-        
-        return path
-
-
-def create_sample_maze():
+def dijkstra_path_directions(adjacency_list, start, end):
     """
-    Create a sample 5x5 maze with a specific path from (0,0) to (4,4)
+    Finds the shortest path between start and end using Dijkstra's algorithm
+    and returns directions to move between cells.
+    
+    Parameters:
+    adjacency_list: dict - where adjacency_list[node] gives neighbors of node
+    start: int - starting position (0-8)
+    end: int - ending position (0-8)
+    
+    Returns:
+    A list of directions ('N', 'S', 'E', 'W') to follow
     """
-    maze = Maze(5, 5)
+    # Initialize distances and previous nodes
+    distances = {node: float('inf') for node in adjacency_list}
+    distances[start] = 0
+    previous = {node: None for node in adjacency_list}
     
-    # Create a winding path from top-left to bottom-right
-    # Starting from (0,0), remove walls to create a path
+    # Priority queue
+    queue = [(0, start)]
+    visited = set()
     
-    # Row 0: move right
-    maze.remove_wall(0, 0, 'E')
-    maze.remove_wall(0, 1, 'E')
-    maze.remove_wall(0, 2, 'S')
+    # Dijkstra's algorithm
+    while queue:
+        current_distance, current = heapq.heappop(queue)
+        
+        # If we've reached the end, we're done
+        if current == end:
+            break
+            
+        # Skip if already visited
+        if current in visited:
+            continue
+            
+        # Mark as visited
+        visited.add(current)
+        
+        # Check all neighbors
+        for neighbor in adjacency_list[current]:
+            # Weight is 1 for all connections in a simple maze
+            new_distance = current_distance + 1
+            
+            # If we've found a shorter path, update it
+            if new_distance < distances[neighbor]:
+                distances[neighbor] = new_distance
+                previous[neighbor] = current
+                heapq.heappush(queue, (new_distance, neighbor))
     
-    # Row 1: move down then right
-    maze.remove_wall(1, 2, 'E')
-    maze.remove_wall(1, 3, 'S')
+    # If we couldn't reach the end
+    if previous[end] is None:
+        return None
     
-    # Row 2: move down then left
-    maze.remove_wall(2, 3, 'W')
-    maze.remove_wall(2, 2, 'W')
-    maze.remove_wall(2, 1, 'S')
+    # Reconstruct the path (cell positions)
+    cell_path = []
+    current = end
     
-    # Row 3: move right then down
-    maze.remove_wall(3, 1, 'E')
-    maze.remove_wall(3, 2, 'E')
-    maze.remove_wall(3, 3, 'E')
-    maze.remove_wall(3, 4, 'S')
+    while current != start:
+        cell_path.append(current)
+        current = previous[current]
     
-    # Add some additional paths to make it more interesting
-    # These create loops/alternative paths
-    maze.remove_wall(1, 0, 'S')
-    maze.remove_wall(2, 0, 'E')
-    maze.remove_wall(0, 4, 'S')
-    maze.remove_wall(1, 4, 'S')
+    cell_path.append(start)
+    cell_path.reverse()
     
-    # Build the graph based on the walls we've removed
-    maze.build_graph()
+    # Convert cell path to directions
+    directions = []
+    for i in range(len(cell_path) - 1):
+        current_cell = cell_path[i]
+        next_cell = cell_path[i + 1]
+        
+        # Convert 1D index to 2D position
+        current_row, current_col = current_cell // 3, current_cell % 3
+        next_row, next_col = next_cell // 3, next_cell % 3
+        
+        # Determine direction
+        if next_row > current_row:   # Moving South
+            directions.append('S')
+        elif next_row < current_row: # Moving North
+            directions.append('N')
+        elif next_col > current_col: # Moving East
+            directions.append('E')
+        elif next_col < current_col: # Moving West
+            directions.append('W')
     
-    return maze
+    return directions
 
 
-def main():
-    # Create our sample maze
-    maze = create_sample_maze()
+# Example usage with the discovered maze
+def test_discovered_maze():
+    # This is what your partner's discovery code would provide
+    # Using grid numbering:
+    # 0 1 2
+    # 3 4 5
+    # 6 7 8
+    adjacency_list = {
+        0: [1, 3],        # Top-left can go right or down
+        1: [0, 4],     # Top-middle 
+        2: [5],           # Top-right
+        3: [0, 6],        # Middle-left
+        4: [1, 5],  # Middle-center
+        5: [2, 8],        # Middle-right
+        6: [3, 7],           # Bottom-left
+        7: [6, 8],     # Bottom-middle
+        8: [5 ,7]         # Bottom-right
+    }
     
-    # Print the initial maze
-    print("Original Maze:")
-    maze.print_maze()
-    time.sleep(2)  # Give time to see the initial maze
+    # Find path from start to end
+    start = 0  # Top-left
+    end = 8    # Bottom-right
     
-    # Find the shortest path from top-left to bottom-right
-    start_pos = (0, 0)
-    end_pos = (4, 4)
+    directions = dijkstra_path_directions(adjacency_list, start, end)
     
-    # Run Dijkstra's algorithm with visualization
-    path = maze.dijkstra_visualized(start_pos, end_pos, delay=0.8)
+    if directions:
+        print(f"Directions from {start} to {end}:")
+        print(" → ".join(directions))
+        print(f"Number of steps: {len(directions)}")
+    else:
+        print(f"No path exists from {start} to {end}")
+
+    # Let's try another example with different start/end
+    start2 = 2  # Top-right
+    end2 = 6    # Bottom-left
     
-    # Wait for user to press Enter before exiting
-    input("\nPress Enter to exit...")
+    directions2 = dijkstra_path_directions(adjacency_list, start2, end2)
+    
+    if directions2:
+        print(f"\nDirections from {start2} to {end2}:")
+        print(" → ".join(directions2))
+        print(f"Number of steps: {len(directions2)}")
+    else:
+        print(f"\nNo path exists from {start2} to {end2}")
 
 
 if __name__ == "__main__":
-    main()
+    test_discovered_maze()
