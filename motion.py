@@ -5,6 +5,8 @@ Chris_R = HamBot()
 time.sleep(2)
 
 class Movement:
+    currentDirection = "N"
+    
     def rotate(deg):
         axel = 192
         wheel_diameter = 90
@@ -18,7 +20,7 @@ class Movement:
         Chris_R.run_right_motor_for_rotations(rotations, 35, True)
         time.sleep(.5)
     
-    def face(direction):     
+    def face(direction, currentDirection):     
         match(direction):
             case "N":
                 pass
@@ -43,4 +45,17 @@ Movement.forward(1.63)
 Movement.face('E')
 Movement.forward(1.63)
 Movement.forward(1.63)
+Movement.face('E')
+Movement.forward(1.63)
+Movement.face('E')
+Movement.forward(1.63)
+Movement.face('W')
+Movement.forward(1.63)
+Movement.face('W')
+Movement.forward(1.63)
+Movement.face('S')
+Movement.forward(1.63)
+Movement.forward(1.63)
+Movement.face('S')
+
     
