@@ -19,18 +19,18 @@ class Movement:
     def face(direction):     
         match(direction):
             case "N":
-                return()
+                pass
             
             case "E":
-                rotate(-90)
+                Movement.rotate(-90)
             
             case "S":
-                rotate(90)
+                Movement.rotate(90)
                 time.sleep(.5)
-                rotate(90)
+                Movement.rotate(90)
                 
             case "W":
-                rotate(-90)
+                Movement.rotate(-90)
     
 Movement.face('W')
 Movement.forward(3.5)
