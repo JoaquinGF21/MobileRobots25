@@ -20,8 +20,6 @@ class Movement:
         time.sleep(.5)
     
     def face(direction):
-   
-        currentDirection = 0
         
         match(direction):
             case "N":
