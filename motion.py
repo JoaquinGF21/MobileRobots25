@@ -24,16 +24,16 @@ class Movement:
         
         match(direction):
             case "N":
-                targetAngle = 0
+                targetAngle = 90
                 
             case "E":
-                targetAngle = 270
+                targetAngle = 0
             
             case "S":
-                targetAngle = 180
+                targetAngle = 270
                 
             case "W":
-                targetAngle = 90
+                targetAngle = 180
                 
         turnAngle = targetAngle - Movement.currentDirection
         
