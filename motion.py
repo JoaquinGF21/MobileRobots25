@@ -5,6 +5,7 @@ Chris_R = HamBot()
 time.sleep(2)
 
 class Movement:
+    currentDirection = 0
     
     def rotate(deg):
         axel = 192
