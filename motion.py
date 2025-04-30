@@ -1,10 +1,9 @@
 from robot_systems.robot import HamBot
 import math
 import time
-
-
 Chris_R = HamBot()
 time.sleep(2)
+
 class Movement:
     def rotate(deg):
         axel = 192
@@ -23,16 +22,16 @@ class Movement:
                 return()
             
             case("E"):
-                Movement.rotate(-90)
+                rotate(-90)
             
             case("S"):
-                Movement.rotate(90)
+                rotate(90)
                 time.sleep(.5)
-                Movement.rotate(90)
+                rotate(90)
                 
             case("W"):
-                Movement.rotate(-90)
+                rotate(-90)
     
-    face(W)
+    face('W')
     forward(3.5)
     
