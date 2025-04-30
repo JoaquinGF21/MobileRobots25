@@ -23,7 +23,6 @@ class Movement:
    
         currentDirection = Chris_R.get_heading()
         direction = "N"
-        print("The current direction is " + direction)
         
         match(direction):
             case "N":
@@ -38,7 +37,7 @@ class Movement:
             case "W":
                 targetAngle = 270
                 
-        turnAngle = currentDirection - targetAngle
+        turnAngle = targetAngle - currentDirection
         
         if turnAngle == 0:
             print("The current direction is " + direction)
