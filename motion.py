@@ -69,6 +69,8 @@ class Movement:
         
 
 Movement.face('W')
+Movement.face('N')
+Movement.face('E')
 
 """
 Hard coded maze from cell 8 through entire thing and back to cell 8
