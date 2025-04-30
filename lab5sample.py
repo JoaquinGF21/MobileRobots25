@@ -1,3 +1,11 @@
+from motion import Movement
+from robot_systems.robot import HamBot
+import math
+import time
+
+Chris_R = HamBot()
+time.sleep(2)
+Movement = Movement()
 import heapq
 
 def dijkstra_path_directions(adjacency_list, start, end):

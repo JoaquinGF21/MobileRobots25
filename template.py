@@ -4,4 +4,4 @@ import time
 
 
 Chris_R = HamBot()
-time.sleep(22)
+time.sleep(2)
