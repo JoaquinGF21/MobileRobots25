@@ -1,6 +1,6 @@
 from motion import Movement
 from motion import Chris_R
-import math
+import pickle
 import time
 time.sleep(2)
 
@@ -118,10 +118,18 @@ def dfs(graph, current, visited, path):
             moveto(neighbor,current)
             path.append(current)  # robot returns (backtracks)
             print(f"Back to cell: {current}")
+            
+def downloadPickle(adjacency_list, output_file):
+    with open(output_file, 'wb') as f:
+    # Use pickle.dump to serialize and save the adjacency list
+        pickle.dump(adjacency_list, f)
+        print("Pickle successfully saved!")
+    
 def main():
     blank_maze = create_adj_list(3)
     visited = set()
     path = list()
     dfs(blank_maze,0,visited,path)
+    downloadPickle(blank_maze, "MazeFile.pkl")
     
 main()

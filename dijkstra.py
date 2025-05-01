@@ -1,6 +1,6 @@
 import heapq
 from motion import Movement, Chris_R
-
+import pickle
 
 def dijkstra_path_directions(adjacency_list, start, end):
     """
@@ -8,7 +8,7 @@ def dijkstra_path_directions(adjacency_list, start, end):
     and returns directions to move between cells.
     
     Parameters:
-    adjacency_list: dict - where adjacency_list[node] gives neighbors of node
+    adjacency_list: dict - where adjacency_list[node] gives a list of (neighbor, weight) tuples
     start: int - starting position (0-8)
     end: int - ending position (0-8)
     
@@ -40,9 +40,9 @@ def dijkstra_path_directions(adjacency_list, start, end):
         visited.add(current)
         
         # Check all neighbors
-        for neighbor in adjacency_list[current]:
-            # Weight is 1 for all connections in a simple maze
-            new_distance = current_distance + 1
+        for neighbor, weight in adjacency_list[current]:
+            # Use the weight from the adjacency list
+            new_distance = current_distance + weight
             
             # If we've found a shorter path, update it
             if new_distance < distances[neighbor]:
@@ -71,9 +71,9 @@ def dijkstra_path_directions(adjacency_list, start, end):
         current_cell = cell_path[i]
         next_cell = cell_path[i + 1]
         
-        # Convert 1D index to 2D position
-        current_row, current_col = current_cell // 3, current_cell % 3
-        next_row, next_col = next_cell // 3, next_cell % 3
+        # Convert 1D index to 2D position (assuming 3x3 grid)
+        current_row, current_col = divmod(current_cell, 3)
+        next_row, next_col = divmod(next_cell, 3)
         
         # Determine direction
         if next_row > current_row:   # Moving South
@@ -177,28 +177,34 @@ def navigate_maze(adjacency_list, start, end):
         print(f"No path exists from {start} to {end}")
         return False
 
-
+def readPickle(pickle_file):
+        with open(pickle_file, 'rb') as f:
+        # Use pickle.load to deserialize the adjacency list
+            adjacency_list = pickle.load(f)
+        return adjacency_list
+    
 # Example maze for testing
 def main():
     # Define maze structure
-    adjacency_list = {
-        0: [1, 3],        # Top-left can go right or down
-        1: [0, 4],        # Top-middle 
-        2: [5],           # Top-right
-        3: [0, 6],        # Middle-left
-        4: [1, 5],        # Middle-center
-        5: [2, 8],        # Middle-right
-        6: [3, 7],        # Bottom-left
-        7: [6, 8],        # Bottom-middle
-        8: [5, 7]         # Bottom-right
-    }
+    # adjacency_list = {
+    #     0: [1, 3],        # Top-left can go right or down
+    #     1: [0, 4],        # Top-middle 
+    #     2: [5],           # Top-right
+    #     3: [0, 6],        # Middle-left
+    #     4: [1, 5],        # Middle-center
+    #     5: [2, 8],        # Middle-right
+    #     6: [3, 7],        # Bottom-left
+    #     7: [6, 8],        # Bottom-middle
+    #     8: [5, 7]         # Bottom-right
+    # }
     
-    # First test the path without moving the robot
+    # # First test the path without moving the robot
     start = 0  # Top-left
     end = 8    # Bottom-right
-    # test_path(adjacency_list, start, end)
+    # # test_path(adjacency_list, start, end)
     
-    # # Uncomment the line below when ready to navigate with the robot
+    # # # Uncomment the line below when ready to navigate with the robot
+    adjacency_list = readPickle("MazeFile.pkl")
     navigate_maze(adjacency_list, start, end)
     
     # # You can also test other start-end combinations
