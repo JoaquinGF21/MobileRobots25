@@ -1,8 +1,7 @@
 from motion import Movement
+from motion import Chris_R
 import math
 import time
-
-move = Movement()
 time.sleep(2)
 
 def get_lidar(dir,rL,rU):
@@ -51,7 +50,7 @@ def get_direction(from_node, to_node, size=3):
 def moveto(frm,to):
     direction = get_direction(frm,to)
     if direction:
-        move.face(direction)
+        Movement.face(direction)
     
 def create_adj_list(size):
     width = height = size
@@ -124,7 +123,5 @@ def main():
     # visited = set()
     # path = list()
     # dfs(blank_maze,0,visited,path)
-    move.face('W')
-    move.face('N',0)
     
 main()
