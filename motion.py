@@ -16,7 +16,7 @@ class Movement:
         
     def forward(rotations):
         Chris_R.run_left_motor_for_rotations(rotations, 35, False)
-        Chris_R.run_right_motor_for_rotations(rotations, 35, True)
+        Chris_R.run_right_motor_for_rotations(rotations, 35,True)
         time.sleep(.5)
     
     def face(direction, frw_mv=1.62):
@@ -68,13 +68,18 @@ class Movement:
         """
         Follows a path given as a list of directions ('N', 'S', 'E', 'W')
         
-        Parameters:
-        directions: list - A list of direction characters ('N', 'S', 'E', 'W')
-        """
-        print("Starting path following with directions:", directions)
-        for direction in directions:
-            Movement.face(direction)
-        print("Path complete!")
+"""
+# Movement.face('W')
+# Movement.face('W')
+# Movement.face('N')
+# Movement.face('S')
+# Movement.face('E')
+"""
+
+# Movement.face('E')
+# Movement.face('S')
+# Movement.face('W')
+# Movement.face('S')
 
 
 # Example usage with directions list
@@ -83,33 +88,4 @@ test_directions = ['W', 'W', 'N', 'N', 'E', 'S', 'E', 'S']
 Movement.follow_path(test_directions)
 
 # Example of how to use with Dijkstra's algorithm output
-"""
-# Import your Dijkstra implementation
-from dijkstra import dijkstra_path_directions
-
-# Define the adjacency list (your maze structure)
-adjacency_list = {
-    0: [1, 3],
-    1: [0, 4],
-    2: [5],
-    3: [0, 6],
-    4: [1, 5],
-    5: [2, 8],
-    6: [3, 7],
-    7: [6, 8],
-    8: [5, 7]
-}
-
-# Find path from start to end
-start = 0  # Top-left
-end = 8    # Bottom-right
-
-# Get directions using Dijkstra's algorithm
-directions = dijkstra_path_directions(adjacency_list, start, end)
-
-# Follow the path if directions exist
-if directions:
-    Movement.follow_path(directions)
-else:
-    print("No path exists from start to end")
 """
