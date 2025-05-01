@@ -94,7 +94,7 @@ def test_path(adjacency_list, start, end):
     Prints the direction list and visualizes the maze path.
     
     Parameters:
-    adjacency_list: dict - The maze structure
+    adjacency_list: dict - The maze structure with weights
     start: int - Starting position (0-8)
     end: int - Ending position (0-8)
     """
@@ -112,17 +112,17 @@ def test_path(adjacency_list, start, end):
         grid = [['□' for _ in range(3)] for _ in range(3)]
         
         # Mark the start position
-        start_row, start_col = start // 3, start % 3
+        start_row, start_col = divmod(start, 3)
         grid[start_row][start_col] = 'S'
         
         # Mark the end position
-        end_row, end_col = end // 3, end % 3
+        end_row, end_col = divmod(end, 3)
         grid[end_row][end_col] = 'E'
         
         # Reconstruct the path for visualization
         current_pos = start
         for direction in directions:
-            current_row, current_col = current_pos // 3, current_pos % 3
+            current_row, current_col = divmod(current_pos, 3)
             
             # Move to next position
             if direction == 'N':
@@ -178,38 +178,101 @@ def navigate_maze(adjacency_list, start, end):
         return False
 
 def readPickle(pickle_file):
-        with open(pickle_file, 'rb') as f:
+    with open(pickle_file, 'rb') as f:
         # Use pickle.load to deserialize the adjacency list
-            adjacency_list = pickle.load(f)
-        return adjacency_list
+        adjacency_list = pickle.load(f)
+    return adjacency_list
     
-# Example maze for testing
+def get_user_input():
+    """
+    Gets the start and end positions from the user.
+    
+    Returns:
+    start, end - tuple of integers representing start and end positions
+    """
+    print("\n=== MAZE NAVIGATION ===")
+    print("The maze is a 3x3 grid numbered 0-8 as follows:")
+    print("  0 1 2")
+    print("  3 4 5")
+    print("  6 7 8")
+    
+    while True:
+        try:
+            start = int(input("\nEnter the starting position (0-8): "))
+            if not 0 <= start <= 8:
+                print("Invalid position. Please enter a number between 0 and 8.")
+                continue
+                
+            end = int(input("Enter the destination position (0-8): "))
+            if not 0 <= end <= 8:
+                print("Invalid position. Please enter a number between 0 and 8.")
+                continue
+                
+            return start, end
+        except ValueError:
+            print("Invalid input. Please enter integers.")
+
 def main():
-    # Define maze structure
-    # adjacency_list = {
-    #     0: [1, 3],        # Top-left can go right or down
-    #     1: [0, 4],        # Top-middle 
-    #     2: [5],           # Top-right
-    #     3: [0, 6],        # Middle-left
-    #     4: [1, 5],        # Middle-center
-    #     5: [2, 8],        # Middle-right
-    #     6: [3, 7],        # Bottom-left
-    #     7: [6, 8],        # Bottom-middle
-    #     8: [5, 7]         # Bottom-right
-    # }
-    
-    # # First test the path without moving the robot
-    start = 0  # Top-left
-    end = 8    # Bottom-right
-    # # test_path(adjacency_list, start, end)
-    
-    # # # Uncomment the line below when ready to navigate with the robot
-    adjacency_list = readPickle("MazeFile.pkl")
-    navigate_maze(adjacency_list, start, end)
-    
-    # # You can also test other start-end combinations
-    # print("\nTesting another path:")
-    # test_path(adjacency_list, 2, 6)  # From top-right to bottom-left
+    # Load the adjacency list from the pickle file
+    try:
+        pickle_file = "MazeFile.pkl"
+        print(f"Loading maze data from {pickle_file}...")
+        adjacency_list = readPickle(pickle_file)
+        print("Maze loaded successfully!")
+        
+        # Display adjacency list structure (optional)
+        print("\nMaze structure:")
+        for node, neighbors in adjacency_list.items():
+            print(f"Node {node}: {neighbors}")
+        
+        # Get user input for start and end positions
+        start, end = get_user_input()
+        
+        # First test the path without moving the robot
+        print("\nSimulating path before robot movement...")
+        test_path(adjacency_list, start, end)
+        
+        # Ask the user if they want to navigate with the robot
+        while True:
+            choice = input("\nNavigate with the robot? (y/n): ").lower()
+            if choice in ('y', 'yes'):
+                print("\nNavigating maze with robot...")
+                navigate_maze(adjacency_list, start, end)
+                break
+            elif choice in ('n', 'no'):
+                print("Robot navigation cancelled.")
+                break
+            else:
+                print("Invalid input. Please enter 'y' or 'n'.")
+        
+        # Ask if they want to try another path
+        while True:
+            another = input("\nWould you like to try another path? (y/n): ").lower()
+            if another in ('y', 'yes'):
+                start, end = get_user_input()
+                test_path(adjacency_list, start, end)
+                
+                while True:
+                    choice = input("\nNavigate with the robot? (y/n): ").lower()
+                    if choice in ('y', 'yes'):
+                        navigate_maze(adjacency_list, start, end)
+                        break
+                    elif choice in ('n', 'no'):
+                        print("Robot navigation cancelled.")
+                        break
+                    else:
+                        print("Invalid input. Please enter 'y' or 'n'.")
+            elif another in ('n', 'no'):
+                print("Goodbye!")
+                break
+            else:
+                print("Invalid input. Please enter 'y' or 'n'.")
+                
+    except FileNotFoundError:
+        print(f"Error: Could not find the pickle file '{pickle_file}'")
+        print("Please run the maze scanning program first to generate the maze data.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
 
 if __name__ == "__main__":
