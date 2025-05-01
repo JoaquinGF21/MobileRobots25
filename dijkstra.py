@@ -196,14 +196,14 @@ def main():
     # First test the path without moving the robot
     start = 0  # Top-left
     end = 8    # Bottom-right
-    test_path(adjacency_list, start, end)
+    # test_path(adjacency_list, start, end)
     
-    # Uncomment the line below when ready to navigate with the robot
-    # navigate_maze(adjacency_list, start, end)
+    # # Uncomment the line below when ready to navigate with the robot
+    navigate_maze(adjacency_list, start, end)
     
-    # You can also test other start-end combinations
-    print("\nTesting another path:")
-    test_path(adjacency_list, 2, 6)  # From top-right to bottom-left
+    # # You can also test other start-end combinations
+    # print("\nTesting another path:")
+    # test_path(adjacency_list, 2, 6)  # From top-right to bottom-left
 
 
 if __name__ == "__main__":
