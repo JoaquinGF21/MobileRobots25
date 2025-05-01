@@ -96,10 +96,10 @@ def scan(maze, current):
         "E": (0, 1)
     }
     opposites = {
-        "N": "S",
-        "S": "N",
-        "W": "E",
-        "E": "W"
+        90 : "S",
+        270: "N",
+        180: "E",
+        0: "W"
     }
     for dir, (dr, dc) in directions.items():
         r, c = row + dr, col + dc
