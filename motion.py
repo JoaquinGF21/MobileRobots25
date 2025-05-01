@@ -64,19 +64,19 @@ class Movement:
             Movement.forward(1.63)
             Movement.currentDirection = targetAngle
         
-
+"""
 Movement.face('W')
 Movement.face('W')
 Movement.face('N')
 Movement.face('S')
 Movement.face('E')
-
 """
+
 Movement.face('S')
 Movement.face('W')
 Movement.face('N')
 Movement.face('W')
-"""
+
 
 
 """
