@@ -1,10 +1,7 @@
-from robot_systems.robot import HamBot
 from motion import Movement
+from motion import Chris_R
 import math
 import time
-
-move = Movement()
-Chris_R = HamBot()
 time.sleep(2)
 
 def get_lidar(dir,rL,rU):
@@ -53,7 +50,7 @@ def get_direction(from_node, to_node, size=3):
 def moveto(frm,to):
     direction = get_direction(frm,to)
     if direction:
-        move.face(direction)
+        Movement.face(direction)
     
 def create_adj_list(size):
     width = height = size
@@ -122,11 +119,9 @@ def dfs(graph, current, visited, path):
             path.append(current)  # robot returns (backtracks)
             print(f"Back to cell: {current}")
 def main():
-    # blank_maze = create_adj_list(3)
-    # visited = set()
-    # path = list()
-    # dfs(blank_maze,0,visited,path)
-    move.face('W')
-    move.face('N',0)
+    blank_maze = create_adj_list(3)
+    visited = set()
+    path = list()
+    dfs(blank_maze,0,visited,path)
     
 main()
