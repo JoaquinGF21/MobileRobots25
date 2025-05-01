@@ -75,7 +75,7 @@ Movement.face('E')
 Movement.face('E')
 Movement.face('S')
 Movement.face('W')
-Movement.face('E')
+Movement.face('S')
 
 
 
