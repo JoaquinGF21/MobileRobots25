@@ -1,4 +1,5 @@
 import heapq
+from motion import Movement
 
 def dijkstra_path_directions(adjacency_list, start, end):
     """
@@ -86,10 +87,72 @@ def dijkstra_path_directions(adjacency_list, start, end):
     return directions
 
 
-def get_path_for_movement(adjacency_list, start, end):
+def test_path(adjacency_list, start, end):
     """
-    A wrapper function that gets path directions that can be directly used with 
-    the Movement.follow_path() method.
+    Test function to visualize path without moving the robot.
+    Prints the direction list and visualizes the maze path.
+    
+    Parameters:
+    adjacency_list: dict - The maze structure
+    start: int - Starting position (0-8)
+    end: int - Ending position (0-8)
+    """
+    directions = dijkstra_path_directions(adjacency_list, start, end)
+    
+    if directions:
+        print("\n=== PATH TEST ===")
+        print(f"Start position: {start}")
+        print(f"End position: {end}")
+        print(f"Direction list: {directions}")
+        print(f"Path: {' → '.join(directions)}")
+        print(f"Number of steps: {len(directions)}")
+        
+        # Visualize the maze (3x3 grid)
+        grid = [['□' for _ in range(3)] for _ in range(3)]
+        
+        # Mark the start position
+        start_row, start_col = start // 3, start % 3
+        grid[start_row][start_col] = 'S'
+        
+        # Mark the end position
+        end_row, end_col = end // 3, end % 3
+        grid[end_row][end_col] = 'E'
+        
+        # Reconstruct the path for visualization
+        current_pos = start
+        for direction in directions:
+            current_row, current_col = current_pos // 3, current_pos % 3
+            
+            # Move to next position
+            if direction == 'N':
+                current_row -= 1
+            elif direction == 'S':
+                current_row += 1
+            elif direction == 'E':
+                current_col += 1
+            elif direction == 'W':
+                current_col -= 1
+                
+            current_pos = current_row * 3 + current_col
+            
+            # Mark the path (but don't overwrite start or end)
+            if grid[current_row][current_col] not in ['S', 'E']:
+                grid[current_row][current_col] = '■'
+        
+        # Print the maze visualization
+        print("\nMaze path visualization:")
+        print("  0 1 2")
+        for i, row in enumerate(grid):
+            print(f"{i} {' '.join(row)}")
+            
+        print("\nReady to execute this path! Run navigate_maze() to move the robot.")
+    else:
+        print(f"No path exists from {start} to {end}")
+
+
+def navigate_maze(adjacency_list, start, end):
+    """
+    Calculates the path and directly controls the robot to navigate from start to end.
     
     Parameters:
     adjacency_list: dict - The maze structure
@@ -97,7 +160,7 @@ def get_path_for_movement(adjacency_list, start, end):
     end: int - Ending position (0-8)
     
     Returns:
-    List of directions or None if no path exists
+    True if navigation was successful, False otherwise
     """
     directions = dijkstra_path_directions(adjacency_list, start, end)
     
@@ -105,19 +168,18 @@ def get_path_for_movement(adjacency_list, start, end):
         print(f"Path found from {start} to {end}:")
         print(" → ".join(directions))
         print(f"Number of steps: {len(directions)}")
-        return directions
+        
+        # Execute movement along the path
+        Movement.follow_path(directions)
+        return True
     else:
         print(f"No path exists from {start} to {end}")
-        return None
+        return False
 
 
-# Example showing how to use with Movement class
+# Example maze for testing
 def main():
-    # This is what your partner's discovery code would provide
-    # Using grid numbering:
-    # 0 1 2
-    # 3 4 5
-    # 6 7 8
+    # Define maze structure
     adjacency_list = {
         0: [1, 3],        # Top-left can go right or down
         1: [0, 4],        # Top-middle 
@@ -130,19 +192,17 @@ def main():
         8: [5, 7]         # Bottom-right
     }
     
-    # Find path from start to end
+    # First test the path without moving the robot
     start = 0  # Top-left
     end = 8    # Bottom-right
+    test_path(adjacency_list, start, end)
     
-    # Get directions for robot movement
-    directions = get_path_for_movement(adjacency_list, start, end)
+    # Uncomment the line below when ready to navigate with the robot
+    # navigate_maze(adjacency_list, start, end)
     
-    if directions:
-        # This is where you would call Movement.follow_path(directions)
-        print("Ready to execute movement with directions:", directions)
-        # Uncomment the line below when integrating with your Movement class
-        # from motion import Movement
-        # Movement.follow_path(directions)
+    # You can also test other start-end combinations
+    print("\nTesting another path:")
+    test_path(adjacency_list, 2, 6)  # From top-right to bottom-left
 
 
 if __name__ == "__main__":
