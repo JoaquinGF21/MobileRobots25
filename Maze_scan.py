@@ -11,9 +11,11 @@ def get_lidar(dir,rL,rU):
         "N" : 180,
         "S" : 0
     }
-    center = directions.get(dir)
     temp = []
     sight = Chris_R.get_range_image()
+    orientation = Movement.currentDirection
+    robot_dir_angle = directions.get(dir)
+    center = (orientation - 90 + robot_dir_angle) % 360
     
     #sets initial prev to be an array
     for i in range(rL,rU):
@@ -50,7 +52,7 @@ def get_direction(from_node, to_node, size=3):
 def moveto(frm,to):
     direction = get_direction(frm,to)
     if direction:
-        Movement.face(direction)
+        Movement.face(direction,1.59)
     
 def create_adj_list(size):
     width = height = size
@@ -100,8 +102,10 @@ def scan(maze, current):
             neighbor = r * size + c
             dist = get_lidar(dir, -10, 10)
 
-            if dist >= 0 and dist < 600:
+            if dist >= 0 and dist < 500:
                 add_wall(maze, current, neighbor)
+                print(f"({dir},{current},{neighbor})")
+    
     
     
 def dfs(graph, current, visited, path):
@@ -126,6 +130,7 @@ def downloadPickle(adjacency_list, output_file):
         print("Pickle successfully saved!")
     
 def main():
+    global blank_maze
     blank_maze = create_adj_list(3)
     visited = set()
     path = list()

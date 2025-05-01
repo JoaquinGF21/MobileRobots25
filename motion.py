@@ -19,7 +19,7 @@ class Movement:
         Chris_R.run_right_motor_for_rotations(rotations, 35,True)
         time.sleep(.5)
     
-    def face(direction, frw_mv=1.62):
+    def face(direction, frw_mv=1.6):
         
         match(direction):
             case "N":
@@ -37,21 +37,21 @@ class Movement:
         turnAngle = (targetAngle - Movement.currentDirection) % 360
         
         if turnAngle == 0:
-            print("The current direction is " + direction)
+            # print("The current direction is " + direction)
             Movement.forward(frw_mv)
             Movement.currentDirection = targetAngle
         
         elif turnAngle == 270 or turnAngle == -90:
             Movement.rotate(90)
             time.sleep(.5)
-            print("The current direction is " + direction)
+            # print("The current direction is " + direction)
             Movement.forward(frw_mv)
             Movement.currentDirection = targetAngle  
                
         elif turnAngle == 90 or turnAngle == -270:
             Movement.rotate(-90)
             time.sleep(.5)
-            print("The current direction is " + direction)
+            # print("The current direction is " + direction)
             Movement.forward(frw_mv)
             Movement.currentDirection = targetAngle
             
@@ -60,7 +60,7 @@ class Movement:
             time.sleep(.5)
             Movement.rotate(90)
             time.sleep(.5)
-            print("The current direction is " + direction)
+            # print("The current direction is " + direction)
             Movement.forward(frw_mv)
             Movement.currentDirection = targetAngle
     
