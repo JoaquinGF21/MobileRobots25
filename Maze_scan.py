@@ -100,7 +100,7 @@ def scan(maze, current):
         r, c = row + dr, col + dc
         if 0 <= r < size and 0 <= c < size:
             neighbor = r * size + c
-            dist = get_lidar(dir, -10, 10)
+            dist = get_lidar(dir, -5, 6)
 
             if dist >= 0 and dist < 500:
                 add_wall(maze, current, neighbor)
