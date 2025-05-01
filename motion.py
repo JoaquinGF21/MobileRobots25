@@ -1,5 +1,4 @@
 from robot_systems.robot import HamBot
-import math
 import time
 Chris_R = HamBot()
 time.sleep(2)
@@ -35,34 +34,35 @@ class Movement:
             case "W":
                 targetAngle = 180
                 
-        turnAngle = targetAngle - Movement.currentDirection
+        turnAngle = (targetAngle - Movement.currentDirection) % 360
         
         if turnAngle == 0:
             print("The current direction is " + direction)
             Movement.forward(1.63)
+            Movement.currentDirection = targetAngle
         
-        elif turnAngle == 270:
+        elif turnAngle == 270 or turnAngle == -90:
             Movement.rotate(90)
             time.sleep(.5)
             print("The current direction is " + direction)
             Movement.forward(1.63)
-            Movement.currentDirection = 270  
+            Movement.currentDirection = targetAngle  
                
-        elif turnAngle == 90:
+        elif turnAngle == 90 or turnAngle == -270:
             Movement.rotate(-90)
             time.sleep(.5)
             print("The current direction is " + direction)
             Movement.forward(1.63)
-            Movement.currentDirection = 90
+            Movement.currentDirection = targetAngle
             
-        elif turnAngle == 180:
+        elif turnAngle == 180 or turnAngle == -180:
             Movement.rotate(90)
             time.sleep(.5)
             Movement.rotate(90)
             time.sleep(.5)
             print("The current direction is " + direction)
             Movement.forward(1.63)
-            Movement.currentDirection = 180
+            Movement.currentDirection = targetAngle
         
 
 Movement.face('W')
