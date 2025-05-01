@@ -1,5 +1,6 @@
 import heapq
-from motion import Movement
+from motion import Movement, Chris_R
+
 
 def dijkstra_path_directions(adjacency_list, start, end):
     """
