@@ -112,7 +112,7 @@ def dfs(graph, current, visited, path,size =3):
     visited.add(current)
     path.append(current)  # robot enters the cell
     print(f"In cell: {current} Visited: {visited}")
-    
+    time.sleep(0.5)
     scan(graph, current)
     
     # Check if all cells have been visited
