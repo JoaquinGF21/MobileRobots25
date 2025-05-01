@@ -63,4 +63,15 @@ class Movement:
             print("The current direction is " + direction)
             Movement.forward(frw_mv)
             Movement.currentDirection = targetAngle
+    
+    def follow_path(directions):
+        """
+        Follows a path given as a list of directions ('N', 'S', 'E', 'W')
         
+        Parameters:
+        directions: list - A list of direction characters ('N', 'S', 'E', 'W')
+        """
+        print("Starting path following with directions:", directions)
+        for direction in directions:
+            Movement.face(direction)
+        print("Path complete!")
