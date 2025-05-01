@@ -11,9 +11,11 @@ def get_lidar(dir,rL,rU):
         "N" : 180,
         "S" : 0
     }
-    center = directions.get(dir)
     temp = []
     sight = Chris_R.get_range_image()
+    orientation = Movement.currentDirection
+    robot_dir_angle = directions.get(dir)
+    center = (orientation - 90 + robot_dir_angle) % 360
     
     #sets initial prev to be an array
     for i in range(rL,rU):
