@@ -72,6 +72,14 @@ Movement.face('S')
 Movement.face('E')
 
 """
+Movement.face('S')
+Movement.face('W')
+Movement.face('N')
+Movement.face('W')
+"""
+
+
+"""
 Hard coded maze from cell 8 through entire thing and back to cell 8
 Movement.face('W')
 Movement.forward(1.63)
