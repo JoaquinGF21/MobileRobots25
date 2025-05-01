@@ -110,7 +110,7 @@ def scan(maze, current):
 def dfs(graph, current, visited, path):
     visited.add(current)
     path.append(current)  # robot enters the cell
-    print(f"In cell: {current}")
+    print(f"In cell: {current} Visited : {visited}")
 
     scan(graph,current)
     
