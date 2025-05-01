@@ -16,7 +16,7 @@ class Movement:
         
     def forward(rotations):
         Chris_R.run_left_motor_for_rotations(rotations, 35, False)
-        Chris_R.run_right_motor_for_rotations(rotations, 35, True)
+        Chris_R.run_right_motor_for_rotations(rotations, 35,True)
         time.sleep(.5)
     
     def face(direction, frw_mv=1.62):
@@ -72,10 +72,10 @@ Movement.face('S')
 Movement.face('E')
 """
 
-Movement.face('E')
-Movement.face('S')
-Movement.face('W')
-Movement.face('S')
+# Movement.face('E')
+# Movement.face('S')
+# Movement.face('W')
+# Movement.face('S')
 
 
 
