@@ -102,6 +102,8 @@ def scan(maze, current):
 
             if dist >= 0 and dist < 600:
                 add_wall(maze, current, neighbor)
+                print("({dir},{current},{neighbhor})")
+    
     
     
 def dfs(graph, current, visited, path):
