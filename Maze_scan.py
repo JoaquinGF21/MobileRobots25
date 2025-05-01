@@ -108,18 +108,24 @@ def scan(maze, current):
     
     
     
-def dfs(graph, current, visited, path):
+def dfs(graph, current, visited, path,size =3):
     visited.add(current)
     path.append(current)  # robot enters the cell
-    print(f"In cell: {current} Visited : {visited}")
-
-    scan(graph,current)
+    print(f"In cell: {current} Visited: {visited}")
     
+    scan(graph, current)
+    
+    # Check if all cells have been visited
+    if len(visited) == size * size:
+        print("All cells visited! Exploration complete.")
+        return True  # Signal that exploration is complete
+        
     for neighbor, _ in graph[current]:
         if neighbor not in visited:
-            moveto(current,neighbor)
-            dfs(graph, neighbor, visited, path)
-            moveto(neighbor,current)
+            moveto(current, neighbor)
+            if dfs(graph, neighbor, visited, path, size):
+                return True  # Propagate the completion signal up
+            moveto(neighbor, current)
             path.append(current)  # robot returns (backtracks)
             print(f"Back to cell: {current}")
             
