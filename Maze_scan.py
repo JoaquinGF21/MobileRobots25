@@ -9,10 +9,10 @@ time.sleep(2)
 
 def get_lidar(dir,rL,rU):
     directions= {
-        "left" : 90,
-        "right": 270,
-        "forw" : 180,
-        "back" : 0
+        "W" : 90,
+        "E" : 270,
+        "N" : 180,
+        "S" : 0
     }
     center = directions.get(dir)
     temp = []
@@ -36,7 +36,25 @@ def add_wall(graph, a, b):
 def pmaze(maze):
     for n,m in maze.items():
         print(n,m)
+def get_direction(from_node, to_node, size=3):
+    r1, c1 = divmod(from_node, size)
+    r2, c2 = divmod(to_node, size)
 
+    if r2 == r1 - 1 and c2 == c1:
+        return "N"
+    elif r2 == r1 + 1 and c2 == c1:
+        return "S"
+    elif r2 == r1 and c2 == c1 - 1:
+        return "W"
+    elif r2 == r1 and c2 == c1 + 1:
+        return "E"
+    else:
+        return None
+def moveto(frm,to):
+    direction = get_direction(frm,to)
+    if direction:
+        move.face(direction)
+    
 def create_adj_list(size):
     width = height = size
     graph = {}
@@ -66,26 +84,47 @@ def create_adj_list(size):
 
     return graph
     
-def scan(maze):
-    W,N,E,S = 180,90,0,270
+def scan(maze, current):
+    # Maze is 3x3, so determine row and col
+    size = 3
+    row, col = divmod(current, size)
+
+    # Neighbor directions with (row offset, col offset)
+    directions = {
+        "N": (-1, 0),
+        "S": (1, 0),
+        "W": (0, -1),
+        "E": (0, 1)
+    }
+
+    for dir, (dr, dc) in directions.items():
+        r, c = row + dr, col + dc
+        if 0 <= r < size and 0 <= c < size:
+            neighbor = r * size + c
+            dist = get_lidar(dir, 10, 10)
+
+            if dist >= 0 and dist < 600:
+                add_wall(maze, current, neighbor)
+    
     
 def dfs(graph, current, visited, path):
     visited.add(current)
     path.append(current)  # robot enters the cell
     print(f"In cell: {current}")
 
+    scan(graph,current)
+    
     for neighbor, _ in graph[current]:
         if neighbor not in visited:
+            moveto(current,neighbor)
             dfs(graph, neighbor, visited, path)
+            moveto(neighbor,current)
             path.append(current)  # robot returns (backtracks)
             print(f"Back to cell: {current}")
 def main():
     blank_maze = create_adj_list(3)
     visited = set()
     path = list()
-    add_wall(blank_maze,1,2)
-    add_wall(blank_maze,3,4)
-    add_wall(blank_maze,4,7)
     dfs(blank_maze,0,visited,path)
     
     
