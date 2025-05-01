@@ -20,7 +20,7 @@ def get_lidar(dir,rL,rU):
     
     #sets initial prev to be an array
     for i in range(rL,rU):
-        idx = center + i
+        idx = (center + i) % 360
         if sight[idx] != -1:
             temp.append(sight[idx])
         
@@ -101,7 +101,7 @@ def scan(maze, current):
         r, c = row + dr, col + dc
         if 0 <= r < size and 0 <= c < size:
             neighbor = r * size + c
-            dist = get_lidar(dir, 10, 10)
+            dist = get_lidar(dir, -10, 10)
 
             if dist >= 0 and dist < 600:
                 add_wall(maze, current, neighbor)
@@ -110,7 +110,7 @@ def scan(maze, current):
 def dfs(graph, current, visited, path):
     visited.add(current)
     path.append(current)  # robot enters the cell
-    print(f"In cell: {current}")
+    print(f"In cell: {current} Visited : {visited}")
 
     scan(graph,current)
     
