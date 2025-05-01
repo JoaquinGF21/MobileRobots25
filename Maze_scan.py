@@ -105,7 +105,7 @@ def scan(maze, current):
         r, c = row + dr, col + dc
         if 0 <= r < size and 0 <= c < size:
             neighbor = r * size + c
-            if dir != opposites(Movement.currentDirection):
+            if dir != opposites[Movement.currentDirection]:
                 dist = get_lidar(dir, -5, 6)
 
                 if dist >= 0 and dist < 500:
