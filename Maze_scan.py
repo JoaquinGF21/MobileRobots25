@@ -52,7 +52,7 @@ def get_direction(from_node, to_node, size=3):
 def moveto(frm,to):
     direction = get_direction(frm,to)
     if direction:
-        Movement.face(direction,1.59)
+        Movement.face(direction,1.57)
     
 def create_adj_list(size):
     width = height = size
