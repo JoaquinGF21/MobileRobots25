@@ -63,29 +63,4 @@ class Movement:
             print("The current direction is " + direction)
             Movement.forward(frw_mv)
             Movement.currentDirection = targetAngle
-    
-    def follow_path(directions):
-        """
-        Follows a path given as a list of directions ('N', 'S', 'E', 'W')
         
-"""
-# Movement.face('W')
-# Movement.face('W')
-# Movement.face('N')
-# Movement.face('S')
-# Movement.face('E')
-"""
-
-# Movement.face('E')
-# Movement.face('S')
-# Movement.face('W')
-# Movement.face('S')
-
-
-# Example usage with directions list
-# Uncomment to test
-test_directions = ['W', 'W', 'N', 'N', 'E', 'S', 'E', 'S']
-Movement.follow_path(test_directions)
-
-# Example of how to use with Dijkstra's algorithm output
-"""
