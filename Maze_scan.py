@@ -119,9 +119,9 @@ def dfs(graph, current, visited, path):
             path.append(current)  # robot returns (backtracks)
             print(f"Back to cell: {current}")
 def main():
-    # blank_maze = create_adj_list(3)
-    # visited = set()
-    # path = list()
-    # dfs(blank_maze,0,visited,path)
+    blank_maze = create_adj_list(3)
+    visited = set()
+    path = list()
+    dfs(blank_maze,0,visited,path)
     
 main()
