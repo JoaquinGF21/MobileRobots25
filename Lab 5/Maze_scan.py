@@ -52,7 +52,7 @@ def get_direction(from_node, to_node, size=3):
 def moveto(frm,to):
     direction = get_direction(frm,to)
     if direction:
-        Movement.face(direction,1.59)
+        Movement.face(direction,1.57)
     
 def create_adj_list(size):
     width = height = size
@@ -95,16 +95,23 @@ def scan(maze, current):
         "W": (0, -1),
         "E": (0, 1)
     }
-
+    opposites = {
+        90 : "S",
+        270: "N",
+        180: "E",
+        0: "W"
+    }
     for dir, (dr, dc) in directions.items():
         r, c = row + dr, col + dc
         if 0 <= r < size and 0 <= c < size:
             neighbor = r * size + c
-            dist = get_lidar(dir, -10, 10)
+            if dir != opposites[Movement.currentDirection]:
+                dist = get_lidar(dir, -5, 6)
 
-            if dist >= 0 and dist < 500:
-                add_wall(maze, current, neighbor)
-                print(f"({dir},{current},{neighbor})")
+                if dist >= 0 and dist < 500:
+                    add_wall(maze, current, neighbor)
+                    print(f"({dir},{current},{neighbor})")
+            
     
     
     
@@ -112,7 +119,7 @@ def dfs(graph, current, visited, path,size =3):
     visited.add(current)
     path.append(current)  # robot enters the cell
     print(f"In cell: {current} Visited: {visited}")
-    
+    time.sleep(0.5)
     scan(graph, current)
     
     # Check if all cells have been visited
